@@ -50,3 +50,4 @@ Make sure your Supabase project has:
 - At least the branches and admin password seeded
 
 The Supabase URL and anon key are already embedded in src/App.jsx.
+# tracom-nova
