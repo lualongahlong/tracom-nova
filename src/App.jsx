@@ -336,12 +336,12 @@ export default function App() {
             <div style={{ display: "flex", justifyContent: "center", gap: 24, marginBottom: 12 }}>
               {[["DAYS", cd.days], ["HRS", cd.hours], ["MINS", cd.mins]].map(([l, v]) => (
                 <div key={l}>
-                  <div style={{ fontFamily: "'Syne',sans-serif", fontSize: 26, fontWeight: 800, color: c.accent, lineHeight: 1 }}>{v}</div>
+                  <div style={{ fontFamily: "'Roboto',sans-serif", fontSize: 26, fontWeight: 800, color: c.accent, lineHeight: 1 }}>{v}</div>
                   <div style={{ fontSize: 9, color: c.muted, letterSpacing: 2, marginTop: 3 }}>{l} LEFT</div>
                 </div>
               ))}
             </div>
-            <p style={{ fontSize: 11, color: c.muted }}>Ends 31 Dec 2026 · Top 5 Officers + Top Branch win special prizes ★</p>
+            <p style={{ fontSize: 11, color: c.muted }}>Ends 2026 · Top 3 Officers + Top Branch win special prizes ★</p>
           </div>
 
           {/* Login */}
@@ -350,7 +350,7 @@ export default function App() {
               <>
                 <p style={{ fontSize: 10, color: c.muted, letterSpacing: 2, textAlign: "center", marginBottom: 18 }}>SELECT YOUR DETAILS TO ENTER</p>
                 <p style={{ fontSize: 10, color: c.muted, letterSpacing: 1.5, marginBottom: 8 }}>YOUR BRANCH</p>
-                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 6, marginBottom: 16 }}>
+                <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(140px, 1fr))", gap: 10, marginBottom: 20 }}>
                   {branches.map(b => (
                     <div key={b.id} onClick={() => { setSelBranch(b.name); setSelName(""); }}
                       style={{ padding: "9px 10px", borderRadius: 8, fontSize: 12, fontWeight: selBranch === b.name ? 600 : 400, lineHeight: 1.3, textAlign: "center", cursor: "pointer", background: selBranch === b.name ? c.chipSel : c.chip, border: `1px solid ${selBranch === b.name ? c.accent : c.border}`, color: selBranch === b.name ? (dark ? "#e0e7ff" : c.accent) : c.sub, transition: "all 0.13s" }}>
