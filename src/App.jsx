@@ -10,8 +10,7 @@ const api = async (path, opts = {}) => {
   });
   if (!res.ok) throw new Error(await res.text());
   const text = await res.text();
-  return text ? JSON.parse(text) : null;
-};
+  return text ? JSON.parse(text) : null;};
 const db = {
   get: (t, q = "") => api(`${t}?${q}`),
   post: (t, b) => api(t, { method: "POST", body: JSON.stringify(b) }),
@@ -226,7 +225,7 @@ export default function App() {
     <style>{`
       @import url('https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@400;500;600&display=swap');
       *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-      html, body { background: ${c.bg}; min-height: 100vh; }
+      html, body { background: ${c.bg}; min-height: 100vh; font-size: 16px; }
       ::-webkit-scrollbar { width: 4px; height: 4px; }
       ::-webkit-scrollbar-thumb { background: ${dark ? "rgba(255,255,255,0.1)" : "rgba(0,0,0,0.13)"}; border-radius: 4px; }
       input:focus, select:focus, textarea:focus { outline: none !important; border-color: ${c.accent} !important; box-shadow: 0 0 0 3px ${dark ? "rgba(99,102,241,0.12)" : "rgba(79,70,229,0.09)"} !important; }
@@ -320,19 +319,19 @@ export default function App() {
         <div style={{ borderBottom: `1px solid ${c.div}`, background: c.nav, backdropFilter: "blur(18px)", position: "sticky", top: 0, zIndex: 100 }}>
           <div style={{ maxWidth: 680, margin: "0 auto", padding: "0 18px", display: "flex", alignItems: "center", height: 50, justifyContent: "space-between" }}>
             <div style={{ display: "flex", alignItems: "center", gap: 7 }}>
-              <span style={{ fontSize: 17 }}>🏆</span>
-              <span style={{ fontFamily: "'Syne',sans-serif", fontWeight: 800, fontSize: 13, color: c.text }}>TRACOM Nova</span>
+              <span style={{ fontSize: 17 }}>💫</span>
+              <span style={{ fontFamily: "'Inter',sans-serif", fontWeight: 800, fontSize: 18, color: c.text }}>TRACOM Nova</span>
             </div>
             <Toggle />
           </div>
         </div>
 
-        <div style={{ maxWidth: 520, margin: "0 auto", padding: "0 18px 80px", position: "relative", zIndex: 1 }}>
+        <div style={{ maxWidth: "1200px", width: "95%", margin: "0 auto", padding: "0 18px 80px", position: "relative", zIndex: 1 }}>
 
           {/* Hero */}
           <div className="up" style={{ textAlign: "center", padding: "44px 0 32px" }}>
-            <div style={{ fontSize: 40, lineHeight: 1, marginBottom: 11 }}>🏆</div>
-            <h1 style={{ fontFamily: "'Syne',sans-serif", fontSize: 26, fontWeight: 800, letterSpacing: -0.3, marginBottom: 7, color: c.text }}>TRACOM Nova</h1>
+            <div style={{ fontSize: 40, lineHeight: 1, marginBottom: 11 }}>💫</div>
+            <h1 style={{ fontFamily: "'Inter',sans-serif", fontSize: 36, fontWeight: 800, letterSpacing: -0.3, marginBottom: 7, color: c.text }}>TRACOM Nova</h1>
             <p style={{ fontSize: 10, color: c.muted, letterSpacing: 2.5, marginBottom: 20 }}>CAMPAIGN LEADERBOARD & TRACKER</p>
             <div style={{ display: "flex", justifyContent: "center", gap: 24, marginBottom: 12 }}>
               {[["DAYS", cd.days], ["HRS", cd.hours], ["MINS", cd.mins]].map(([l, v]) => (
@@ -342,7 +341,7 @@ export default function App() {
                 </div>
               ))}
             </div>
-            <p style={{ fontSize: 11, color: c.muted }}>Ends 31 Dec 2026 · Top 3 Officers + Top Branch win special prizes ★</p>
+            <p style={{ fontSize: 11, color: c.muted }}>Ends 31 Dec 2026 · Top 5 Officers + Top Branch win special prizes ★</p>
           </div>
 
           {/* Login */}
@@ -962,7 +961,7 @@ function StaticPrizeCard({ p, c, card }) {
 function SpecialSection({ c, dark, card }) {
   return (
     <div style={{ ...card, padding: 18, border: `1px solid ${dark ? "rgba(255,215,0,0.15)" : "rgba(180,130,0,0.2)"}` }}>
-      <p style={{ fontFamily: "'Syne',sans-serif", fontSize: 9, color: "#d4a017", letterSpacing: 2, marginBottom: 13 }}>★ SPECIAL PRIZES — MINI-RETREAT CEREMONY</p>
+      <p style={{ fontFamily: "'Syne',sans-serif", fontSize: 9, color: "#d4a017", letterSpacing: 2, marginBottom: 13 }}>★ SPECIAL PRIZES — MINI-RETREAT event</p>
       <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 9 }}>
         {[{ icon: "🥇🥈🥉", title: "Top 3 Officers", desc: "Exclusive prize + public recognition at Mini-Retreat" }, { icon: "🏢", title: "Top Branch", desc: "Branch trophy + special mention at Mini-Retreat" }].map(item => (
           <div key={item.title} style={{ padding: "13px 14px", background: dark ? "rgba(255,215,0,0.028)" : "rgba(255,248,200,0.28)", border: `1px solid ${dark ? "rgba(255,215,0,0.08)" : "rgba(180,130,0,0.12)"}`, borderRadius: 9 }}>
