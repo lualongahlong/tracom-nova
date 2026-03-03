@@ -350,7 +350,7 @@ export default function App() {
               <>
                 <p style={{ fontSize: 10, color: c.muted, letterSpacing: 2, textAlign: "center", marginBottom: 18 }}>SELECT YOUR DETAILS TO ENTER</p>
                 <p style={{ fontSize: 10, color: c.muted, letterSpacing: 1.5, marginBottom: 8 }}>YOUR BRANCH</p>
-                <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(140px, 1fr))", gap: 10, marginBottom: 20 }}>
+                <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(140px, 1fr))", gap: 6, marginBottom: 16 }}>
                   {branches.map(b => (
                     <div key={b.id} onClick={() => { setSelBranch(b.name); setSelName(""); }}
                       style={{ padding: "9px 10px", borderRadius: 8, fontSize: 12, fontWeight: selBranch === b.name ? 600 : 400, lineHeight: 1.3, textAlign: "center", cursor: "pointer", background: selBranch === b.name ? c.chipSel : c.chip, border: `1px solid ${selBranch === b.name ? c.accent : c.border}`, color: selBranch === b.name ? (dark ? "#e0e7ff" : c.accent) : c.sub, transition: "all 0.13s" }}>
@@ -378,7 +378,7 @@ export default function App() {
                 )}
                 <button onClick={enterOfficer} disabled={!selBranch || !selName}
                   style={{ width: "100%", padding: "12px 0", fontSize: 13, fontWeight: 700, borderRadius: 8, border: "none", cursor: selBranch && selName ? "pointer" : "default", fontFamily: "'DM Sans',sans-serif", background: selBranch && selName ? `linear-gradient(135deg,${c.accent},#4338ca)` : c.blank, color: selBranch && selName ? "#fff" : c.muted, boxShadow: selBranch && selName ? `0 5px 20px ${dark ? "rgba(99,102,241,0.3)" : "rgba(79,70,229,0.18)"}` : "none", transition: "all 0.18s" }}>
-                  {selName ? `Enter as ${selName.split(" ")[0]} →` : "Select your name to continue"}
+                  {selName ? 'Enter as ' + selName + ' →' : "Select your name to continue"}
                 </button>
                 <button onClick={() => setAdminBox(true)} style={{ width: "100%", marginTop: 9, padding: "6px 0", background: "transparent", border: "none", color: c.muted, fontSize: 11, cursor: "pointer", fontFamily: "'DM Sans',sans-serif" }}>
                   Admin / Reporting Officer →
