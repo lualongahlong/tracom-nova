@@ -253,7 +253,7 @@ export default function App() {
   const changePw      = async () => { if (newPw.length < 6) { msg("Min 6 characters.", "err"); return; } setSLoading(true); try { await db.patch("config", "key=eq.admin_password", { value: newPw.trim() }); setAdminPwd(newPw.trim()); setNewPw(""); msg("✅ Password updated."); } catch (e) { msg(e.message, "err"); } setSLoading(false); };
 
   const card = { background: c.surface, border: `1px solid ${c.border}`, borderRadius: 10 };
-  const inp  = { width: "100%", padding: "10px 12px", background: c.inputBg, border: `1px solid ${c.inputBdr}`, borderRadius: 7, color: c.text, fontSize: 13, fontFamily: "'DM Sans',sans-serif", outline: "none", boxSizing: "border-box" };
+  const inp  = { width: "100%", padding: "10px 12px", background: c.inputBg, border: `1px solid ${c.inputBdr}`, borderRadius: 7, color: c.text, fontSize: 15, fontFamily: "'Inter',sans-serif", outline: "none", boxSizing: "border-box" };
 
   const Btn = ({ ch, onClick, v = "primary", sz = "md", disabled = false }) => {
     const p = { sm: "5px 10px", md: "9px 16px", lg: "12px 22px" };
@@ -265,7 +265,7 @@ export default function App() {
     }[v] || {};
     return (
       <button onClick={onClick} disabled={disabled}
-        style={{ padding: p[sz], background: disabled ? c.blank : s.bg, color: disabled ? c.muted : s.col, border: s.bdr, borderRadius: 6, cursor: disabled ? "default" : "pointer", fontWeight: 600, fontSize: sz === "sm" ? 11 : 13, fontFamily: "'DM Sans',sans-serif", whiteSpace: "nowrap", transition: "opacity 0.15s", opacity: disabled ? 0.4 : 1 }}>
+        style={{ padding: p[sz], background: disabled ? c.blank : s.bg, color: disabled ? c.muted : s.col, border: s.bdr, borderRadius: 6, cursor: disabled ? "default" : "pointer", fontWeight: 600, fontSize: sz === "sm" ? 11 : 13, fontFamily: "'Inter',sans-serif", whiteSpace: "nowrap", transition: "opacity 0.15s", opacity: disabled ? 0.4 : 1 }}>
         {ch}
       </button>
     );
@@ -283,14 +283,14 @@ export default function App() {
   const Pill = ({ status, label }) => {
     const map = { approved: ["rgba(74,222,128,0.08)", "#4ade80"], pending: ["rgba(250,204,21,0.08)", "#fbbf24"], rejected: ["rgba(248,113,113,0.08)", "#f87171"] };
     const [bg, col] = map[status] || map.pending;
-    return <span style={{ padding: "3px 8px", borderRadius: 4, fontSize: 10, fontWeight: 600, background: bg, color: col, whiteSpace: "nowrap", letterSpacing: 0.3 }}>{(label || status).toUpperCase()}</span>;
+    return <span style={{ padding: "3px 8px", borderRadius: 4, fontSize: 12, fontWeight: 600, background: bg, color: col, whiteSpace: "nowrap", letterSpacing: 0.3 }}>{(label || status).toUpperCase()}</span>;
   };
 
   const CSS = () => (
     <style>{`
-      @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=DM+Sans:wght@400;500;600&display=swap');
-      *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-      html, body { background: ${c.bg}; min-height: 100vh; font-size: 16px; overflow-x: hidden; max-width: 100vw; }
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');      *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+      html, body { background: ${c.bg}; min-height: 100vh; font-size: 17px; overflow-x: hidden; max-width: 100vw; }
+@media (max-width: 480px) { html { font-size: 15px; } }
       ::-webkit-scrollbar { width: 4px; height: 4px; }
       ::-webkit-scrollbar-thumb { background: ${dark ? "rgba(255,255,255,0.08)" : "rgba(0,0,0,0.1)"}; border-radius: 4px; }
       input:focus, select:focus, textarea:focus { outline: none !important; border-color: ${c.borderA} !important; box-shadow: none !important; }
@@ -326,23 +326,24 @@ export default function App() {
       .landing-grid { display: grid; grid-template-columns: 1fr; gap: 2.5rem; }
       @media (min-width: 901px) { .landing-grid { grid-template-columns: repeat(2, 1fr); gap: 2.5rem; } }
       .mobile-menu { animation: slideDown 0.18s ease both; }
+      
     `}</style>
   );
 
   if (loading) return (
-    <div style={{ minHeight: "100vh", background: c.bg, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 12, fontFamily: "'DM Sans',sans-serif" }}>
+    <div style={{ minHeight: "100vh", background: c.bg, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 12, fontFamily: "'Inter',sans-serif" }}>
       <CSS />
       <div style={{ width: 28, height: 28, border: `2px solid ${c.border}`, borderTop: `2px solid ${c.text}`, borderRadius: "50%", animation: "spin 0.7s linear infinite" }} />
-      <p style={{ color: c.muted, fontSize: 12 }}>Connecting…</p>
+      <p style={{ color: c.muted, fontSize: 14 }}>Connecting…</p>
     </div>
   );
 
   if (dbErr) return (
-    <div style={{ minHeight: "100vh", background: c.bg, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 12, padding: 24, fontFamily: "'DM Sans',sans-serif", textAlign: "center" }}>
+    <div style={{ minHeight: "100vh", background: c.bg, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 12, padding: 24, fontFamily: "'Inter',sans-serif", textAlign: "center" }}>
       <CSS />
       <div style={{ fontSize: 32 }}>⚠️</div>
-      <h2 style={{ fontFamily: "'Outfit',sans-serif", fontSize: 16, color: c.text, fontWeight: 700 }}>Database Connection Error</h2>
-      <p style={{ color: c.sub, fontSize: 13, maxWidth: 360, lineHeight: 1.65 }}>{dbErr}</p>
+      <h2 style={{ fontFamily: "'Inter',sans-serif", fontSize: 16, color: c.text, fontWeight: 700 }}>Database Connection Error</h2>
+      <p style={{ color: c.sub, fontSize: 15, maxWidth: 360, lineHeight: 1.65 }}>{dbErr}</p>
       <Btn ch="Retry" onClick={load} v="primary" />
     </div>
   );
@@ -352,12 +353,12 @@ export default function App() {
       <div style={{ maxWidth: 1160, margin: "0 auto", padding: "0 24px", display: "flex", alignItems: "center", height: 52, justifyContent: "space-between", gap: 16 }}>
         <div style={{ display: "flex", alignItems: "center", gap: 8, flexShrink: 0, padding: "4px 12px", border: `1px solid ${c.border}`, borderRadius: 7, background: c.chip }}>
           <span style={{ fontSize: 14 }}>🏆</span>
-          <span style={{ fontFamily: "'Outfit',sans-serif", fontWeight: 700, fontSize: 14, color: c.text, letterSpacing: 0.1 }}>GEAR Up</span>
+          <span style={{ fontFamily: "'Inter',sans-serif", fontWeight: 700, fontSize: 14, color: c.text, letterSpacing: 0.1 }}>GEAR Up</span>
         </div>
         <div style={{ display: "flex", gap: 5 }}>
           {[["📌 How to Earn", "rubrics"], ["🎁 Prizes", "catalogue"]].map(([lbl, sc]) => (
             <button key={sc} onClick={() => setScreen(sc)}
-              style={{ padding: "5px 12px", borderRadius: 6, border: `1px solid ${c.border}`, background: "transparent", color: c.sub, fontSize: 12, fontWeight: 500, cursor: "pointer", fontFamily: "'DM Sans',sans-serif", whiteSpace: "nowrap" }}>
+              style={{ padding: "5px 12px", borderRadius: 6, border: `1px solid ${c.border}`, background: "transparent", color: c.sub, fontSize: 14, fontWeight: 500, cursor: "pointer", fontFamily: "'Inter',sans-serif", whiteSpace: "nowrap" }}>
               {lbl}
             </button>
           ))}
@@ -368,21 +369,21 @@ export default function App() {
   );
 
   if (screen === "rubrics") return (
-    <div style={{ minHeight: "100vh", background: c.bg, color: c.text, fontFamily: "'DM Sans',sans-serif" }}>
+    <div style={{ minHeight: "100vh", background: c.bg, color: c.text, fontFamily: "'Inter',sans-serif" }}>
       <CSS />
       <MiniNav c={c} Toggle={Toggle} onBack={() => setScreen("landing")} />
       <div className="up" style={{ maxWidth: 640, margin: "0 auto", padding: "36px 20px" }}>
-        <p style={{ fontSize: 10, color: c.muted, letterSpacing: 2, marginBottom: 6, textTransform: "uppercase" }}>Points Guide</p>
-        <h2 style={{ fontFamily: "'Outfit',sans-serif", fontSize: 22, fontWeight: 700, marginBottom: 6, color: c.text }}>How to Earn Points</h2>
-        <p style={{ color: c.sub, fontSize: 13, marginBottom: 28, lineHeight: 1.6 }}>All eligible activities and their point values.</p>
+        <p style={{ fontSize: 12, color: c.muted, letterSpacing: 2, marginBottom: 6, textTransform: "uppercase" }}>Points Guide</p>
+        <h2 style={{ fontFamily: "'Inter',sans-serif", fontSize: 22, fontWeight: 700, marginBottom: 6, color: c.text }}>How to Earn Points</h2>
+        <p style={{ color: c.sub, fontSize: 15, marginBottom: 28, lineHeight: 1.6 }}>All eligible activities and their point values.</p>
         <div style={{ display: "flex", flexDirection: "column", gap: 1, ...card, overflow: "hidden" }}>
           {RUBRICS.map((r, i) => (
             <div key={r.id} style={{ padding: "13px 18px", display: "flex", alignItems: "center", gap: 13, borderBottom: i < RUBRICS.length - 1 ? `1px solid ${c.border}` : "none" }}>
               <span style={{ fontSize: 18, flexShrink: 0, width: 28, textAlign: "center" }}>{r.icon}</span>
-              <span style={{ flex: 1, fontSize: 13, fontWeight: 400, lineHeight: 1.45, color: c.text }}>{r.activity}</span>
+              <span style={{ flex: 1, fontSize: 15, fontWeight: 400, lineHeight: 1.45, color: c.text }}>{r.activity}</span>
               <div style={{ flexShrink: 0, textAlign: "right" }}>
-                <div style={{ fontFamily: "'Outfit',sans-serif", fontSize: 17, fontWeight: 700, color: c.text, lineHeight: 1 }}>{r.points}</div>
-                <div style={{ fontSize: 9, color: c.muted, letterSpacing: 1.5, marginTop: 2 }}>PTS</div>
+                <div style={{ fontFamily: "'Inter',sans-serif", fontSize: 17, fontWeight: 700, color: c.text, lineHeight: 1 }}>{r.points}</div>
+                <div style={{ fontSize: 11, color: c.muted, letterSpacing: 1.5, marginTop: 2 }}>PTS</div>
               </div>
             </div>
           ))}
@@ -392,17 +393,17 @@ export default function App() {
   );
 
   if (screen === "catalogue") return (
-    <div style={{ minHeight: "100vh", background: c.bg, color: c.text, fontFamily: "'DM Sans',sans-serif" }}>
+    <div style={{ minHeight: "100vh", background: c.bg, color: c.text, fontFamily: "'Inter',sans-serif" }}>
       <CSS />
       <MiniNav c={c} Toggle={Toggle} onBack={() => setScreen("landing")} />
       <div className="up" style={{ maxWidth: 820, margin: "0 auto", padding: "36px 20px" }}>
-        <p style={{ fontSize: 10, color: c.muted, letterSpacing: 2, marginBottom: 6, textTransform: "uppercase" }}>Rewards</p>
-        <h2 style={{ fontFamily: "'Outfit',sans-serif", fontSize: 22, fontWeight: 700, marginBottom: 6, color: c.text }}>Prize Catalogue</h2>
-        <p style={{ color: c.sub, fontSize: 13, marginBottom: 24, lineHeight: 1.6 }}>Earn points, spend them on any prize below.</p>
+        <p style={{ fontSize: 12, color: c.muted, letterSpacing: 2, marginBottom: 6, textTransform: "uppercase" }}>Rewards</p>
+        <h2 style={{ fontFamily: "'Inter',sans-serif", fontSize: 22, fontWeight: 700, marginBottom: 6, color: c.text }}>Prize Catalogue</h2>
+        <p style={{ color: c.sub, fontSize: 15, marginBottom: 24, lineHeight: 1.6 }}>Earn points, spend them on any prize below.</p>
         <div style={{ display: "flex", gap: 5, flexWrap: "wrap", marginBottom: 22 }}>
           {cats.map(ct => (
             <button key={ct} onClick={() => setCatF(ct)}
-              style={{ padding: "5px 12px", borderRadius: 5, border: `1px solid ${catF === ct ? c.borderA : c.border}`, background: catF === ct ? c.chipSel : "transparent", color: catF === ct ? c.text : c.sub, fontSize: 12, fontWeight: catF === ct ? 600 : 400, cursor: "pointer", fontFamily: "'DM Sans',sans-serif" }}>
+              style={{ padding: "5px 12px", borderRadius: 5, border: `1px solid ${catF === ct ? c.borderA : c.border}`, background: catF === ct ? c.chipSel : "transparent", color: catF === ct ? c.text : c.sub, fontSize: 14, fontWeight: catF === ct ? 600 : 400, cursor: "pointer", fontFamily: "'Inter',sans-serif" }}>
               {ct}
             </button>
           ))}
@@ -417,12 +418,12 @@ export default function App() {
 
   if (screen === "landing") {
     return (
-      <div style={{ minHeight: "100vh", background: c.bg, color: c.text, fontFamily: "'DM Sans',sans-serif" }}>
+      <div style={{ minHeight: "100vh", background: c.bg, color: c.text, fontFamily: "'Inter',sans-serif" }}>
         <CSS />
         <div style={{ background: dark ? "#1a1a1a" : "#eee", borderBottom: `1px solid ${c.border}`, padding: "6px 0", textAlign: "center" }}>
-          <div style={{ display: "flex", justifyContent: "center", alignItems: "center", gap: 12, fontSize: 11, fontWeight: 700, color: c.sub, letterSpacing: 1 }}>
+          <div style={{ display: "flex", justifyContent: "center", alignItems: "center", gap: 12, fontSize: 13, fontWeight: 700, color: c.sub, letterSpacing: 1 }}>
             <span style={{ color: "#f87171" }}>⏱️ CAMPAIGN ENDS IN:</span>
-            <div style={{ display: "flex", gap: 8, color: c.text, fontFamily: "'Outfit',sans-serif" }}>
+            <div style={{ display: "flex", gap: 8, color: c.text, fontFamily: "'Inter',sans-serif" }}>
               <span>{cd.days}D</span><span>{cd.hours}H</span><span>{cd.mins}M</span><span>{cd.secs}S</span>
             </div>
           </div>
@@ -432,21 +433,21 @@ export default function App() {
           <div className="landing-grid" style={{ paddingTop: "40px" }}>
             <div className="up">
               <div style={{ marginBottom: 32 }}>
-                <h1 style={{ fontFamily: "'Outfit',sans-serif", fontSize: "40px", fontWeight: 800, color: c.text, marginBottom: 10 }}>⚙️ GEAR Up</h1>
+                <h1 style={{ fontFamily: "'Inter',sans-serif", fontSize: "40px", fontWeight: 800, color: c.text, marginBottom: 10 }}>⚙️ GEAR Up</h1>
                 <p style={{ fontSize: 14, color: c.sub, lineHeight: 1.6 }}>Growth - Expertise - Autonomy - Readiness. Log your learning activities, earn points, and climb the ranks.</p>
               </div>
               <div style={{ ...card, padding: "28px", boxShadow: `0 10px 30px ${c.shadow}` }}>
                 {!adminBox ? (
                   <>
-                    <p style={{ fontSize: 11, color: c.muted, letterSpacing: 1.5, marginBottom: 20, textTransform: "uppercase", fontWeight: 700 }}>Officer Access</p>
-                    <label style={{ fontSize: 10, color: c.muted, display: "block", marginBottom: 7 }}>BRANCH</label>
+                    <p style={{ fontSize: 13, color: c.muted, letterSpacing: 1.5, marginBottom: 20, textTransform: "uppercase", fontWeight: 700 }}>Officer Access</p>
+                    <label style={{ fontSize: 12, color: c.muted, display: "block", marginBottom: 7 }}>BRANCH</label>
                     <select value={selBranch} onChange={e => { setSelBranch(e.target.value); setSelName(""); }} style={{ ...inp, marginBottom: 16 }}>
                       <option value="">Select branch...</option>
                       {branches.map(b => <option key={b.id} value={b.name}>{b.name}</option>)}
                     </select>
                     {selBranch && (
                       <>
-                        <label style={{ fontSize: 10, color: c.muted, display: "block", marginBottom: 7 }}>YOUR NAME</label>
+                        <label style={{ fontSize: 12, color: c.muted, display: "block", marginBottom: 7 }}>YOUR NAME</label>
                         <select value={selName} onChange={e => setSelName(e.target.value)} style={{ ...inp, marginBottom: 20 }}>
                           <option value="">Select name...</option>
                           {(byBranch[selBranch] || []).map(o => <option key={o.id} value={o.name}>{o.name}</option>)}
@@ -457,11 +458,11 @@ export default function App() {
                       style={{ width: "100%", padding: "12px", borderRadius: 8, background: selBranch && selName ? c.text : c.blank, color: selBranch && selName ? (dark ? "#000" : "#fff") : c.muted, border: "none", fontWeight: 700, cursor: "pointer" }}>
                       Enter Portal →
                     </button>
-                    <button onClick={() => setAdminBox(true)} style={{ width: "100%", marginTop: 16, background: "none", border: "none", color: c.muted, fontSize: 11, cursor: "pointer" }}>Admin Login</button>
+                    <button onClick={() => setAdminBox(true)} style={{ width: "100%", marginTop: 16, background: "none", border: "none", color: c.muted, fontSize: 13, cursor: "pointer" }}>Admin Login</button>
                   </>
                 ) : (
                   <div style={{ textAlign: "center" }}>
-                    <button onClick={() => setAdminBox(false)} style={{ background: "none", border: "none", color: c.sub, cursor: "pointer", fontSize: 12, marginBottom: 15 }}>← Back</button>
+                    <button onClick={() => setAdminBox(false)} style={{ background: "none", border: "none", color: c.sub, cursor: "pointer", fontSize: 14, marginBottom: 15 }}>← Back</button>
                     <input type="password" placeholder="Admin Password" value={adminIn} onChange={e => setAdminIn(e.target.value)} style={{ ...inp, marginBottom: 10 }} />
                     <Btn ch="Login as Admin" onClick={enterAdmin} />
                   </div>
@@ -470,8 +471,8 @@ export default function App() {
             </div>
             <div className="up" style={{ animationDelay: "0.1s" }}>
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", marginBottom: 16 }}>
-                <p style={{ fontSize: 11, color: c.muted, letterSpacing: 1.5, textTransform: "uppercase", fontWeight: 700 }}>Live Leaderboard</p>
-                <div style={{ fontSize: 10, color: c.goldText }}>Top 3 win Mystery Prizes!</div>
+                <p style={{ fontSize: 13, color: c.muted, letterSpacing: 1.5, textTransform: "uppercase", fontWeight: 700 }}>Live Leaderboard</p>
+                <div style={{ fontSize: 12, color: c.goldText }}>Top 3 win Mystery Prizes!</div>
               </div>
               <div style={{ ...card, overflow: "hidden" }}>
                 {sorted.slice(0, 5).map((o, i) => (
@@ -480,17 +481,17 @@ export default function App() {
                       {i === 0 ? "🥇" : i === 1 ? "🥈" : i === 2 ? "🥉" : `#${i + 1}`}
                     </span>
                     <div style={{ flex: 1 }}>
-                      <div style={{ fontSize: 13, fontWeight: 600 }}>{o.name}</div>
-                      <div style={{ fontSize: 10, color: c.muted }}>{o.unit}</div>
+                      <div style={{ fontSize: 15, fontWeight: 600 }}>{o.name}</div>
+                      <div style={{ fontSize: 12, color: c.muted }}>{o.unit}</div>
                     </div>
                     <div style={{ textAlign: "right" }}>
-                      <div style={{ fontFamily: "'Outfit',sans-serif", fontWeight: 800, color: c.text }}>{o.total_points}</div>
-                      <div style={{ fontSize: 8, color: c.muted, textTransform: "uppercase" }}>PTS</div>
+                      <div style={{ fontFamily: "'Inter',sans-serif", fontWeight: 800, color: c.text }}>{o.total_points}</div>
+                      <div style={{ fontSize: 10, color: c.muted, textTransform: "uppercase" }}>PTS</div>
                     </div>
                   </div>
                 ))}
               </div>
-              <p style={{ textAlign: "center", marginTop: 12, fontSize: 11, color: c.muted }}>Only showing top 5. Sign in to see your full rank!</p>
+              <p style={{ textAlign: "center", marginTop: 12, fontSize: 13, color: c.muted }}>Only showing top 5. Sign in to see your full rank!</p>
             </div>
           </div>
         </div>
@@ -515,12 +516,12 @@ export default function App() {
   const activeLabel = TABS.find(t => t.id === tab)?.label || "";
 
   return (
-    <div style={{ minHeight: "100vh", background: c.bg, color: c.text, fontFamily: "'DM Sans',sans-serif", overflowX: "hidden" }}>
+    <div style={{ minHeight: "100vh", background: c.bg, color: c.text, fontFamily: "'Inter',sans-serif", overflowX: "hidden" }}>
       <CSS />
 
       {/* Toast */}
       {toast && (
-        <div style={{ position: "fixed", top: 16, right: 16, zIndex: 9999, padding: "10px 16px", borderRadius: 8, fontSize: 12, fontWeight: 600, background: toast.type === "err" ? "#dc2626" : (dark ? "#1a1a1a" : "#111"), color: "#fff", border: `1px solid ${toast.type === "err" ? "rgba(220,38,38,0.3)" : c.border}`, boxShadow: `0 4px 20px ${c.shadow}`, animation: "toastIn 0.2s ease", maxWidth: 280 }}>
+        <div style={{ position: "fixed", top: 16, right: 16, zIndex: 9999, padding: "10px 16px", borderRadius: 8, fontSize: 14, fontWeight: 600, background: toast.type === "err" ? "#dc2626" : (dark ? "#1a1a1a" : "#111"), color: "#fff", border: `1px solid ${toast.type === "err" ? "rgba(220,38,38,0.3)" : c.border}`, boxShadow: `0 4px 20px ${c.shadow}`, animation: "toastIn 0.2s ease", maxWidth: 280 }}>
           {toast.text}
         </div>
       )}
@@ -530,14 +531,14 @@ export default function App() {
         <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.65)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 200, backdropFilter: "blur(10px)", padding: 20 }}>
           <div style={{ ...card, width: "100%", maxWidth: 300, padding: 28, textAlign: "center", animation: "pop 0.25s ease", boxShadow: `0 20px 60px ${c.shadow}` }}>
             <div style={{ fontSize: 44, marginBottom: 12 }}>{confirm.icon}</div>
-            <h3 style={{ fontFamily: "'Outfit',sans-serif", fontSize: 15, fontWeight: 700, color: c.text, marginBottom: 4 }}>{confirm.name}</h3>
-            <p style={{ color: c.sub, fontSize: 12, marginBottom: 6, lineHeight: 1.5 }}>{confirm.desc}</p>
-            <p style={{ color: c.muted, fontSize: 11, lineHeight: 1.7, marginBottom: 22 }}>
+            <h3 style={{ fontFamily: "'Inter',sans-serif", fontSize: 15, fontWeight: 700, color: c.text, marginBottom: 4 }}>{confirm.name}</h3>
+            <p style={{ color: c.sub, fontSize: 14, marginBottom: 6, lineHeight: 1.5 }}>{confirm.desc}</p>
+            <p style={{ color: c.muted, fontSize: 13, lineHeight: 1.7, marginBottom: 22 }}>
               Costs <strong style={{ color: c.text }}>{confirm.cost} pts</strong>. You'll have <strong style={{ color: c.text }}>{myAvail - confirm.cost} pts</strong> remaining.
             </p>
             <div style={{ display: "flex", gap: 8 }}>
-              <button onClick={() => redeemP(confirm)} style={{ flex: 1, padding: "10px 0", background: c.text, color: dark ? "#0a0a0a" : "#fff", fontWeight: 600, fontSize: 13, borderRadius: 7, border: "none", cursor: "pointer", fontFamily: "'DM Sans',sans-serif" }}>Confirm</button>
-              <button onClick={() => setConfirm(null)} style={{ padding: "10px 14px", background: "transparent", border: `1px solid ${c.border}`, color: c.sub, fontSize: 13, borderRadius: 7, cursor: "pointer", fontFamily: "'DM Sans',sans-serif" }}>Cancel</button>
+              <button onClick={() => redeemP(confirm)} style={{ flex: 1, padding: "10px 0", background: c.text, color: dark ? "#0a0a0a" : "#fff", fontWeight: 600, fontSize: 15, borderRadius: 7, border: "none", cursor: "pointer", fontFamily: "'Inter',sans-serif" }}>Confirm</button>
+              <button onClick={() => setConfirm(null)} style={{ padding: "10px 14px", background: "transparent", border: `1px solid ${c.border}`, color: c.sub, fontSize: 15, borderRadius: 7, cursor: "pointer", fontFamily: "'Inter',sans-serif" }}>Cancel</button>
             </div>
           </div>
         </div>
@@ -550,15 +551,15 @@ export default function App() {
           {/* Logo — desktop sidebar shows it; mobile topbar shows it */}
           <button onClick={() => setScreen("landing")}
             style={{ display: "flex", alignItems: "center", gap: 7, background: c.chip, border: `1px solid ${c.border}`, borderRadius: 7, cursor: "pointer", flexShrink: 0, padding: "4px 11px" }}>
-            <span style={{ fontSize: 13 }}>🏆</span>
-            <span style={{ fontFamily: "'Outfit',sans-serif", fontWeight: 700, fontSize: 13, color: c.text }}>GEAR Up</span>
+            <span style={{ fontSize: 15 }}>🏆</span>
+            <span style={{ fontFamily: "'Inter',sans-serif", fontWeight: 700, fontSize: 15, color: c.text }}>GEAR Up</span>
           </button>
 
           {/* Desktop: tab row */}
           <div className="desktop-tabs" style={{ gap: 1, flex: 1, minWidth: 0 }}>
             {TABS.map(tb => (
               <button key={tb.id} onClick={() => setTab(tb.id)}
-                style={{ padding: "5px 12px", borderRadius: 6, border: "none", background: tab === tb.id ? c.chipSel : "transparent", color: tab === tb.id ? c.text : c.sub, fontSize: 12, fontWeight: tab === tb.id ? 600 : 400, cursor: "pointer", whiteSpace: "nowrap", flexShrink: 0, fontFamily: "'DM Sans',sans-serif", transition: "all 0.12s" }}>
+                style={{ padding: "5px 12px", borderRadius: 6, border: "none", background: tab === tb.id ? c.chipSel : "transparent", color: tab === tb.id ? c.text : c.sub, fontSize: 14, fontWeight: tab === tb.id ? 600 : 400, cursor: "pointer", whiteSpace: "nowrap", flexShrink: 0, fontFamily: "'Inter',sans-serif", transition: "all 0.12s" }}>
                 {tb.label}
               </button>
             ))}
@@ -566,18 +567,18 @@ export default function App() {
 
           {/* Mobile: current tab label + hamburger */}
           <div className="hamburger-btn" style={{ flex: 1, display: "flex", alignItems: "center", gap: 6, minWidth: 0 }}>
-            <span style={{ fontSize: 12, fontWeight: 600, color: c.text, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{activeLabel}</span>
+            <span style={{ fontSize: 14, fontWeight: 600, color: c.text, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{activeLabel}</span>
           </div>
 
           {/* Right side */}
           <div style={{ display: "flex", alignItems: "center", gap: 8, flexShrink: 0 }}>
             {!isAdmin && myOf && (
               <div style={{ textAlign: "right" }}>
-                <div style={{ fontFamily: "'Outfit',sans-serif", fontSize: 13, color: c.text, fontWeight: 700, lineHeight: 1 }}>{myAvail} <span style={{ fontSize: 9, fontWeight: 400, color: c.muted }}>PTS</span></div>
-                <div style={{ fontSize: 9, color: c.muted }}>Rank #{myRank}</div>
+                <div style={{ fontFamily: "'Inter',sans-serif", fontSize: 15, color: c.text, fontWeight: 700, lineHeight: 1 }}>{myAvail} <span style={{ fontSize: 11, fontWeight: 400, color: c.muted }}>PTS</span></div>
+                <div style={{ fontSize: 11, color: c.muted }}>Rank #{myRank}</div>
               </div>
             )}
-            <div style={{ width: 28, height: 28, borderRadius: "50%", background: c.chipSel, border: `1px solid ${c.border}`, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 9, fontWeight: 700, color: c.text, flexShrink: 0 }}>
+            <div style={{ width: 28, height: 28, borderRadius: "50%", background: c.chipSel, border: `1px solid ${c.border}`, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 11, fontWeight: 700, color: c.text, flexShrink: 0 }}>
               {isAdmin ? "AD" : (user ? initials(user.name) : "?")}
             </div>
             {/* Hamburger button — mobile only */}
@@ -588,7 +589,7 @@ export default function App() {
               <span style={{ width: 14, height: 1.5, background: c.text, borderRadius: 2, transition: "all 0.18s", transform: menuOpen ? "rotate(-45deg) translate(4px, -4px)" : "none" }} />
             </button>
             <button onClick={() => { setScreen("landing"); setSelBranch(""); setSelName(""); setAdminIn(""); setAdminBox(false); setMenuOpen(false); }}
-              style={{ padding: "3px 9px", background: "transparent", border: `1px solid ${c.border}`, borderRadius: 5, color: c.sub, cursor: "pointer", fontSize: 10, fontFamily: "'DM Sans',sans-serif" }}>
+              style={{ padding: "3px 9px", background: "transparent", border: `1px solid ${c.border}`, borderRadius: 5, color: c.sub, cursor: "pointer", fontSize: 12, fontFamily: "'Inter',sans-serif" }}>
               Exit
             </button>
             <Toggle />
@@ -600,7 +601,7 @@ export default function App() {
           <div className="mobile-menu hamburger-btn" style={{ borderTop: `1px solid ${c.border}`, background: c.nav, padding: "8px 18px 12px" }}>
             {TABS.map(tb => (
               <button key={tb.id} onClick={() => { setTab(tb.id); setMenuOpen(false); }}
-                style={{ display: "block", width: "100%", textAlign: "left", padding: "11px 14px", borderRadius: 7, border: "none", background: tab === tb.id ? c.chipSel : "transparent", color: tab === tb.id ? c.text : c.sub, fontSize: 14, fontWeight: tab === tb.id ? 600 : 400, cursor: "pointer", fontFamily: "'DM Sans',sans-serif", marginBottom: 2 }}>
+                style={{ display: "block", width: "100%", textAlign: "left", padding: "11px 14px", borderRadius: 7, border: "none", background: tab === tb.id ? c.chipSel : "transparent", color: tab === tb.id ? c.text : c.sub, fontSize: 14, fontWeight: tab === tb.id ? 600 : 400, cursor: "pointer", fontFamily: "'Inter',sans-serif", marginBottom: 2 }}>
                 {tb.label}
               </button>
             ))}
@@ -614,14 +615,14 @@ export default function App() {
           <div style={{ padding: "0 14px 14px", borderBottom: `1px solid ${c.border}`, marginBottom: 12 }}>
             <button onClick={() => setScreen("landing")}
               style={{ display: "flex", alignItems: "center", gap: 7, background: c.chip, border: `1px solid ${c.border}`, borderRadius: 7, cursor: "pointer", padding: "6px 10px", width: "100%", justifyContent: "flex-start" }}>
-              <span style={{ fontSize: 13 }}>🏆</span>
-              <span style={{ fontFamily: "'Outfit',sans-serif", fontWeight: 700, fontSize: 12, color: c.text }}>GEAR Up</span>
+              <span style={{ fontSize: 15 }}>🏆</span>
+              <span style={{ fontFamily: "'Inter',sans-serif", fontWeight: 700, fontSize: 14, color: c.text }}>GEAR Up</span>
             </button>
           </div>
           <nav style={{ display: "flex", flexDirection: "column", gap: 2 }}>
             {TABS.map(tb => (
               <button key={tb.id} onClick={() => setTab(tb.id)}
-                style={{ padding: "8px 14px", borderRadius: 6, border: "none", background: tab === tb.id ? c.chipSel : "transparent", color: tab === tb.id ? c.text : c.sub, fontSize: 12, fontWeight: tab === tb.id ? 600 : 400, cursor: "pointer", textAlign: "left", fontFamily: "'DM Sans',sans-serif" }}>
+                style={{ padding: "8px 14px", borderRadius: 6, border: "none", background: tab === tb.id ? c.chipSel : "transparent", color: tab === tb.id ? c.text : c.sub, fontSize: 14, fontWeight: tab === tb.id ? 600 : 400, cursor: "pointer", textAlign: "left", fontFamily: "'Inter',sans-serif" }}>
                 {tb.label}
               </button>
             ))}
@@ -653,20 +654,20 @@ export default function App() {
                     border: `2px solid ${tier.color}55`,
                     boxShadow: `0 0 0 4px ${tier.color}18`,
                     display: "flex", alignItems: "center", justifyContent: "center",
-                    fontSize: 12, fontWeight: 800, color: c.text,
+                    fontSize: 14, fontWeight: 800, color: c.text,
                   }}>
                     {user ? initials(user.name) : "?"}
                   </div>
                   <div style={{ flex: 1, minWidth: 0 }}>
-                    <div style={{ fontFamily: "'Outfit',sans-serif", fontSize: 15, fontWeight: 700, color: c.text, lineHeight: 1.2 }}>{user?.name}</div>
-                    <div style={{ fontSize: 11, color: c.sub, marginTop: 2, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{user?.unit}</div>
+                    <div style={{ fontFamily: "'Inter',sans-serif", fontSize: 15, fontWeight: 700, color: c.text, lineHeight: 1.2 }}>{user?.name}</div>
+                    <div style={{ fontSize: 13, color: c.sub, marginTop: 2, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{user?.unit}</div>
                   </div>
                   <div style={{ textAlign: "right", flexShrink: 0 }}>
                     <div style={{ display: "flex", alignItems: "baseline", gap: 3, justifyContent: "flex-end" }}>
-                      <span style={{ fontFamily: "'Outfit',sans-serif", fontSize: 28, fontWeight: 800, color: c.text, lineHeight: 1 }}>{tierPts}</span>
-                      <span style={{ fontSize: 10, color: c.muted }}>pts</span>
+                      <span style={{ fontFamily: "'Inter',sans-serif", fontSize: 28, fontWeight: 800, color: c.text, lineHeight: 1 }}>{tierPts}</span>
+                      <span style={{ fontSize: 12, color: c.muted }}>pts</span>
                     </div>
-                    <div style={{ fontSize: 9, color: c.muted, marginTop: 2 }}>Rank #{myRank} · {myAvail} avail.</div>
+                    <div style={{ fontSize: 11, color: c.muted, marginTop: 2 }}>Rank #{myRank} · {myAvail} avail.</div>
                   </div>
                 </div>
 
@@ -677,13 +678,13 @@ export default function App() {
                 <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 10 }}>
                   <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
                     <span style={{ fontSize: 15 }}>{tier.icon}</span>
-                    <span style={{ fontFamily: "'Outfit',sans-serif", fontSize: 13, fontWeight: 700, color: tier.color, letterSpacing: 0.3 }}>{tier.name}</span>
+                    <span style={{ fontFamily: "'Inter',sans-serif", fontSize: 15, fontWeight: 700, color: tier.color, letterSpacing: 0.3 }}>{tier.name}</span>
                   </div>
                   {isChamp
-                    ? <span style={{ fontSize: 10, color: c.goldText, fontWeight: 600 }}>★ Max Tier Reached</span>
+                    ? <span style={{ fontSize: 12, color: c.goldText, fontWeight: 600 }}>★ Max Tier Reached</span>
                     : <div style={{ display: "flex", alignItems: "center", gap: 4 }}>
-                        <span style={{ fontSize: 10, color: c.muted }}>{tierPtsLeft} pts to</span>
-                        <span style={{ fontSize: 10, color: c.text, fontWeight: 600 }}>{nextTier.icon} {nextTier.name}</span>
+                        <span style={{ fontSize: 12, color: c.muted }}>{tierPtsLeft} pts to</span>
+                        <span style={{ fontSize: 12, color: c.text, fontWeight: 600 }}>{nextTier.icon} {nextTier.name}</span>
                       </div>
                   }
                 </div>
@@ -700,16 +701,16 @@ export default function App() {
                   }} />
                 </div>
                 <div style={{ display: "flex", justifyContent: "space-between", marginTop: 5 }}>
-                  <span style={{ fontSize: 9, color: c.muted }}>{tier.min} pts</span>
-                  {!isChamp && <span style={{ fontSize: 9, color: c.muted }}>{nextTier.min} pts</span>}
+                  <span style={{ fontSize: 11, color: c.muted }}>{tier.min} pts</span>
+                  {!isChamp && <span style={{ fontSize: 11, color: c.muted }}>{nextTier.min} pts</span>}
                 </div>
               </div>
               {/* ── End Tier Dashboard Card ── */}
 
-              <h2 style={{ fontFamily: "'Outfit',sans-serif", fontSize: 18, fontWeight: 700, marginBottom: 4, color: c.text }}>Log an Activity</h2>
-              <p style={{ color: c.sub, fontSize: 12, marginBottom: 20, lineHeight: 1.65 }}>Select what you did — points are awarded once your Reporting Officer approves.</p>
+              <h2 style={{ fontFamily: "'Inter',sans-serif", fontSize: 18, fontWeight: 700, marginBottom: 4, color: c.text }}>Log an Activity</h2>
+              <p style={{ color: c.sub, fontSize: 14, marginBottom: 20, lineHeight: 1.65 }}>Select what you did — points are awarded once your Reporting Officer approves.</p>
 
-              <p style={{ fontSize: 10, color: c.muted, letterSpacing: 1.5, marginBottom: 10, textTransform: "uppercase" }}>Select Activity *</p>
+              <p style={{ fontSize: 12, color: c.muted, letterSpacing: 1.5, marginBottom: 10, textTransform: "uppercase" }}>Select Activity *</p>
               <div style={{ display: "flex", flexDirection: "column", gap: 1, ...card, overflow: "hidden", marginBottom: 18 }}>
                 {RUBRICS.map((r, idx) => {
                   const sel = form.rubricId === String(r.id);
@@ -718,27 +719,27 @@ export default function App() {
                       className="row-hover"
                       style={{ padding: "11px 16px", cursor: "pointer", display: "flex", alignItems: "center", gap: 10, borderBottom: idx < RUBRICS.length - 1 ? `1px solid ${c.border}` : "none", background: sel ? c.chipSel : "transparent", transition: "background 0.1s" }}>
                       <span style={{ fontSize: 16, flexShrink: 0, width: 24, textAlign: "center" }}>{r.icon}</span>
-                      <span style={{ flex: 1, fontSize: 12, fontWeight: sel ? 600 : 400, color: c.text, lineHeight: 1.4 }}>{r.activity}</span>
-                      <span style={{ fontFamily: "'Outfit',sans-serif", fontSize: 13, fontWeight: 700, color: sel ? c.text : c.muted, flexShrink: 0 }}>+{r.points}</span>
-                      {sel && <span style={{ fontSize: 11, color: c.text, flexShrink: 0 }}>✓</span>}
+                      <span style={{ flex: 1, fontSize: 14, fontWeight: sel ? 600 : 400, color: c.text, lineHeight: 1.4 }}>{r.activity}</span>
+                      <span style={{ fontFamily: "'Inter',sans-serif", fontSize: 15, fontWeight: 700, color: sel ? c.text : c.muted, flexShrink: 0 }}>+{r.points}</span>
+                      {sel && <span style={{ fontSize: 13, color: c.text, flexShrink: 0 }}>✓</span>}
                     </div>
                   );
                 })}
               </div>
 
               <div style={{ ...card, padding: 20 }}>
-                <label style={{ fontSize: 10, color: c.muted, letterSpacing: 1.5, display: "block", marginBottom: 7, textTransform: "uppercase" }}>Date *</label>
+                <label style={{ fontSize: 12, color: c.muted, letterSpacing: 1.5, display: "block", marginBottom: 7, textTransform: "uppercase" }}>Date *</label>
                 <input type="date" value={form.date} onChange={e => setForm(p => ({ ...p, date: e.target.value }))} style={{ ...inp, marginBottom: 16 }} />
-                <label style={{ fontSize: 10, color: c.muted, letterSpacing: 1.5, display: "block", marginBottom: 7, textTransform: "uppercase" }}>Description / Evidence *</label>
+                <label style={{ fontSize: 12, color: c.muted, letterSpacing: 1.5, display: "block", marginBottom: 7, textTransform: "uppercase" }}>Description / Evidence *</label>
                 <textarea value={form.desc} onChange={e => setForm(p => ({ ...p, desc: e.target.value }))} placeholder='e.g. Attended "Leadership in Action" workshop, full day.' rows={3} style={{ ...inp, resize: "vertical", lineHeight: 1.6, marginBottom: 16 }} />
                 {form.rubricId && (
                   <div style={{ padding: "10px 14px", background: c.infoBg, border: `1px solid ${c.infoBdr}`, borderRadius: 7, marginBottom: 14, display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-                    <span style={{ fontSize: 12, color: c.sub }}>Points upon approval</span>
-                    <span style={{ fontFamily: "'Outfit',sans-serif", fontSize: 20, fontWeight: 800, color: c.text }}>+{RUBRICS.find(r => r.id === parseInt(form.rubricId))?.points}</span>
+                    <span style={{ fontSize: 14, color: c.sub }}>Points upon approval</span>
+                    <span style={{ fontFamily: "'Inter',sans-serif", fontSize: 20, fontWeight: 800, color: c.text }}>+{RUBRICS.find(r => r.id === parseInt(form.rubricId))?.points}</span>
                   </div>
                 )}
                 <button onClick={submitAct} disabled={!form.rubricId || !form.date || !form.desc.trim()}
-                  style={{ width: "100%", padding: "11px 0", fontSize: 13, fontWeight: 600, borderRadius: 7, border: `1px solid ${form.rubricId && form.date && form.desc.trim() ? c.borderA : c.border}`, cursor: form.rubricId && form.date && form.desc.trim() ? "pointer" : "default", fontFamily: "'DM Sans',sans-serif", background: form.rubricId && form.date && form.desc.trim() ? c.text : "transparent", color: form.rubricId && form.date && form.desc.trim() ? (dark ? "#0a0a0a" : "#fff") : c.muted, transition: "all 0.16s" }}>
+                  style={{ width: "100%", padding: "11px 0", fontSize: 15, fontWeight: 600, borderRadius: 7, border: `1px solid ${form.rubricId && form.date && form.desc.trim() ? c.borderA : c.border}`, cursor: form.rubricId && form.date && form.desc.trim() ? "pointer" : "default", fontFamily: "'Inter',sans-serif", background: form.rubricId && form.date && form.desc.trim() ? c.text : "transparent", color: form.rubricId && form.date && form.desc.trim() ? (dark ? "#0a0a0a" : "#fff") : c.muted, transition: "all 0.16s" }}>
                   Submit for Approval →
                 </button>
               </div>
@@ -748,7 +749,7 @@ export default function App() {
           {/* ── Leaderboard ── */}
           {tab === "leaderboard" && (
             <div className="up" style={{ width: "100%", minWidth: 0 }}>
-              <p style={{ fontSize: 10, color: c.muted, letterSpacing: 2, marginBottom: 16, textTransform: "uppercase" }}>Top 3 Officers</p>
+              <p style={{ fontSize: 12, color: c.muted, letterSpacing: 2, marginBottom: 16, textTransform: "uppercase" }}>Top 3 Officers</p>
               <div className="portal-top3" style={{ display: "grid", gridTemplateColumns: "1fr 1.12fr 1fr", gap: 8, maxWidth: 500, marginBottom: 32 }}>
                 {[sorted[1], sorted[0], sorted[2]].map((o, i) => {
                   if (!o) return <div key={i} />;
@@ -759,24 +760,24 @@ export default function App() {
                   return (
                     <div key={o.id} style={{ ...card, padding: pos === 1 ? "20px 12px" : "14px 10px", textAlign: "center", border: isMe ? `1px solid ${c.borderA}` : pos === 1 ? `1px solid ${c.gold}` : `1px solid ${c.border}`, background: pos === 1 ? (dark ? "rgba(201,162,39,0.05)" : "rgba(255,248,210,0.5)") : c.surface }}>
                       <div style={{ fontSize: pos === 1 ? 28 : 22, marginBottom: 9 }}>{["🥈","🥇","🥉"][i]}</div>
-                      <div style={{ fontFamily: "'Outfit',sans-serif", fontSize: 12, fontWeight: 700, color: c.text, lineHeight: 1.3, marginBottom: 2 }}>{o.name}</div>
-                      <div style={{ fontSize: 9, color: c.sub, marginBottom: 10, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{o.unit}</div>
-                      <div style={{ fontFamily: "'Outfit',sans-serif", fontSize: pos === 1 ? 22 : 17, fontWeight: 800, color: col, lineHeight: 1 }}>{o.total_points}</div>
-                      <div style={{ fontSize: 9, color: c.muted, marginBottom: 4 }}>pts</div>
+                      <div style={{ fontFamily: "'Inter',sans-serif", fontSize: 14, fontWeight: 700, color: c.text, lineHeight: 1.3, marginBottom: 2 }}>{o.name}</div>
+                      <div style={{ fontSize: 11, color: c.sub, marginBottom: 10, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{o.unit}</div>
+                      <div style={{ fontFamily: "'Inter',sans-serif", fontSize: pos === 1 ? 22 : 17, fontWeight: 800, color: col, lineHeight: 1 }}>{o.total_points}</div>
+                      <div style={{ fontSize: 11, color: c.muted, marginBottom: 4 }}>pts</div>
                       {mv && (
                         <div style={{ display: "flex", gap: 4, justifyContent: "center", flexWrap: "wrap" }}>
-                          {mv.rankDiff !== 0 && <span style={{ fontSize: 9, fontWeight: 700, color: mv.rankDiff > 0 ? "#4ade80" : "#f87171" }}>{mv.rankDiff > 0 ? `▲${mv.rankDiff}` : `▼${Math.abs(mv.rankDiff)}`}</span>}
-                          {mv.ptsDiff > 0 && <span style={{ fontSize: 9, color: c.muted }}>+{mv.ptsDiff}pts</span>}
+                          {mv.rankDiff !== 0 && <span style={{ fontSize: 11, fontWeight: 700, color: mv.rankDiff > 0 ? "#4ade80" : "#f87171" }}>{mv.rankDiff > 0 ? `▲${mv.rankDiff}` : `▼${Math.abs(mv.rankDiff)}`}</span>}
+                          {mv.ptsDiff > 0 && <span style={{ fontSize: 11, color: c.muted }}>+{mv.ptsDiff}pts</span>}
                         </div>
                       )}
-                      <div style={{ fontSize: 9, color: c.goldText, marginTop: 4 }}>★ Special Prize</div>
+                      <div style={{ fontSize: 11, color: c.goldText, marginTop: 4 }}>★ Special Prize</div>
                     </div>
                   );
                 })}
               </div>
               <div className="portal-leaderboard-grid">
                 <div style={{ minWidth: 0 }}>
-                  <p style={{ fontSize: 10, color: c.muted, letterSpacing: 2, marginBottom: 12, textTransform: "uppercase" }}>All Officers</p>
+                  <p style={{ fontSize: 12, color: c.muted, letterSpacing: 2, marginBottom: 12, textTransform: "uppercase" }}>All Officers</p>
                   <div style={{ ...card, overflow: "hidden" }}>
                     {sorted.slice(3).map((o, i) => {
                       const isMe = user && o.id === user.id;
@@ -784,20 +785,20 @@ export default function App() {
                       return (
                         <div key={o.id} className="row-hover"
                           style={{ display: "flex", alignItems: "center", gap: 10, padding: "11px 16px", borderBottom: `1px solid ${c.border}`, background: isMe ? c.infoBg : "transparent" }}>
-                          <span style={{ fontFamily: "'Outfit',sans-serif", fontSize: 11, color: c.muted, width: 24, flexShrink: 0 }}>#{i + 4}</span>
+                          <span style={{ fontFamily: "'Inter',sans-serif", fontSize: 13, color: c.muted, width: 24, flexShrink: 0 }}>#{i + 4}</span>
                           <div style={{ flex: 1, minWidth: 0 }}>
-                            <div style={{ fontSize: 12, fontWeight: 600, color: c.text, display: "flex", alignItems: "center", gap: 5 }}>
+                            <div style={{ fontSize: 14, fontWeight: 600, color: c.text, display: "flex", alignItems: "center", gap: 5 }}>
                               {o.name}
-                              {isMe && <span style={{ fontSize: 9, color: c.sub, background: c.chipSel, padding: "1px 5px", borderRadius: 3, fontWeight: 600, border: `1px solid ${c.border}` }}>YOU</span>}
+                              {isMe && <span style={{ fontSize: 11, color: c.sub, background: c.chipSel, padding: "1px 5px", borderRadius: 3, fontWeight: 600, border: `1px solid ${c.border}` }}>YOU</span>}
                             </div>
-                            <div style={{ fontSize: 9, color: c.muted, marginTop: 1, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{o.unit}</div>
+                            <div style={{ fontSize: 11, color: c.muted, marginTop: 1, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{o.unit}</div>
                           </div>
                           <div style={{ textAlign: "right", flexShrink: 0 }}>
-                            <div style={{ fontFamily: "'Outfit',sans-serif", fontSize: 14, fontWeight: 700, color: c.text }}>{o.total_points}</div>
+                            <div style={{ fontFamily: "'Inter',sans-serif", fontSize: 14, fontWeight: 700, color: c.text }}>{o.total_points}</div>
                             {mv && (
                               <div style={{ display: "flex", gap: 3, justifyContent: "flex-end", marginTop: 1 }}>
-                                {mv.rankDiff !== 0 && <span style={{ fontSize: 9, fontWeight: 700, color: mv.rankDiff > 0 ? "#4ade80" : "#f87171" }}>{mv.rankDiff > 0 ? `▲${mv.rankDiff}` : `▼${Math.abs(mv.rankDiff)}`}</span>}
-                                {mv.ptsDiff > 0 && <span style={{ fontSize: 9, color: c.muted }}>+{mv.ptsDiff}pts</span>}
+                                {mv.rankDiff !== 0 && <span style={{ fontSize: 11, fontWeight: 700, color: mv.rankDiff > 0 ? "#4ade80" : "#f87171" }}>{mv.rankDiff > 0 ? `▲${mv.rankDiff}` : `▼${Math.abs(mv.rankDiff)}`}</span>}
+                                {mv.ptsDiff > 0 && <span style={{ fontSize: 11, color: c.muted }}>+{mv.ptsDiff}pts</span>}
                               </div>
                             )}
                           </div>
@@ -807,19 +808,19 @@ export default function App() {
                   </div>
                 </div>
                 <div>
-                  <p style={{ fontSize: 10, color: c.muted, letterSpacing: 2, marginBottom: 4, textTransform: "uppercase" }}>Branch Standings</p>
-                  <p style={{ fontSize: 9, color: c.muted, marginBottom: 12, lineHeight: 1.5 }}>Avg pts per officer</p>
+                  <p style={{ fontSize: 12, color: c.muted, letterSpacing: 2, marginBottom: 4, textTransform: "uppercase" }}>Branch Standings</p>
+                  <p style={{ fontSize: 11, color: c.muted, marginBottom: 12, lineHeight: 1.5 }}>Avg pts per officer</p>
                   <div style={{ ...card, overflow: "hidden" }}>
                     {unitScores.map((u, i) => (
                       <div key={u.unit} style={{ padding: "11px 13px", display: "flex", alignItems: "center", gap: 8, borderBottom: i < unitScores.length - 1 ? `1px solid ${c.border}` : "none", background: i === 0 ? (dark ? "rgba(201,162,39,0.04)" : "rgba(255,248,210,0.4)") : "transparent" }}>
-                        <span style={{ fontSize: 12 }}>{["🥇","🥈","🥉","4️⃣","5️⃣","6️⃣","7️⃣"][i]}</span>
+                        <span style={{ fontSize: 14 }}>{["🥇","🥈","🥉","4️⃣","5️⃣","6️⃣","7️⃣"][i]}</span>
                         <div style={{ flex: 1, minWidth: 0 }}>
-                          <div style={{ fontSize: 11, fontWeight: 600, color: i === 0 ? c.goldText : c.text, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{u.unit}</div>
-                          <div style={{ fontSize: 9, color: c.muted }}>{u.count} officers</div>
+                          <div style={{ fontSize: 13, fontWeight: 600, color: i === 0 ? c.goldText : c.text, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{u.unit}</div>
+                          <div style={{ fontSize: 11, color: c.muted }}>{u.count} officers</div>
                         </div>
                         <div style={{ textAlign: "right", flexShrink: 0 }}>
-                          <div style={{ fontFamily: "'Outfit',sans-serif", fontSize: 15, fontWeight: 700, color: i === 0 ? c.goldText : c.text }}>{u.avg}</div>
-                          <div style={{ fontSize: 8, color: c.muted }}>avg</div>
+                          <div style={{ fontFamily: "'Inter',sans-serif", fontSize: 15, fontWeight: 700, color: i === 0 ? c.goldText : c.text }}>{u.avg}</div>
+                          <div style={{ fontSize: 10, color: c.muted }}>avg</div>
                         </div>
                       </div>
                     ))}
@@ -832,12 +833,12 @@ export default function App() {
           {/* ── My Log ── */}
           {tab === "mylog" && !isAdmin && (
             <div className="up" style={{ width: "100%", maxWidth: 600 }}>
-              <h2 style={{ fontFamily: "'Outfit',sans-serif", fontSize: 18, fontWeight: 700, marginBottom: 4, color: c.text }}>My Activity Log</h2>
-              <p style={{ color: c.sub, fontSize: 12, marginBottom: 22, lineHeight: 1.6 }}>Your submitted activities and their approval status.</p>
+              <h2 style={{ fontFamily: "'Inter',sans-serif", fontSize: 18, fontWeight: 700, marginBottom: 4, color: c.text }}>My Activity Log</h2>
+              <p style={{ color: c.sub, fontSize: 14, marginBottom: 22, lineHeight: 1.6 }}>Your submitted activities and their approval status.</p>
               {mySubs.length === 0 ? (
                 <div style={{ ...card, padding: 44, textAlign: "center" }}>
                   <div style={{ fontSize: 30, marginBottom: 10 }}>📭</div>
-                  <div style={{ color: c.sub, fontSize: 13, marginBottom: 16 }}>No activities logged yet.</div>
+                  <div style={{ color: c.sub, fontSize: 15, marginBottom: 16 }}>No activities logged yet.</div>
                   <Btn ch="Log your first activity →" onClick={() => setTab("submit")} v="ghost" sz="sm" />
                 </div>
               ) : (
@@ -846,10 +847,10 @@ export default function App() {
                     <div key={s.id} style={{ padding: "13px 18px", display: "flex", alignItems: "center", gap: 12, borderBottom: i < mySubs.length - 1 ? `1px solid ${c.border}` : "none" }}>
                       <span style={{ fontSize: 18, flexShrink: 0 }}>{s.icon}</span>
                       <div style={{ flex: 1, minWidth: 0 }}>
-                        <div style={{ fontSize: 12, fontWeight: 600, color: c.text, marginBottom: 2 }}>{s.activity}</div>
-                        <div style={{ fontSize: 10, color: c.muted, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{s.date} · {s.description}</div>
+                        <div style={{ fontSize: 14, fontWeight: 600, color: c.text, marginBottom: 2 }}>{s.activity}</div>
+                        <div style={{ fontSize: 12, color: c.muted, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{s.date} · {s.description}</div>
                       </div>
-                      <span style={{ fontFamily: "'Outfit',sans-serif", fontSize: 13, color: c.text, flexShrink: 0, marginRight: 6, fontWeight: 700 }}>+{s.points}</span>
+                      <span style={{ fontFamily: "'Inter',sans-serif", fontSize: 15, color: c.text, flexShrink: 0, marginRight: 6, fontWeight: 700 }}>+{s.points}</span>
                       <Pill status={s.status} />
                     </div>
                   ))}
@@ -863,19 +864,19 @@ export default function App() {
             <div className="up" style={{ width: "100%" }}>
               <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", flexWrap: "wrap", gap: 14, marginBottom: 22 }}>
                 <div>
-                  <h2 style={{ fontFamily: "'Outfit',sans-serif", fontSize: 18, fontWeight: 700, marginBottom: 3, color: c.text }}>Prize Catalogue</h2>
-                  <p style={{ color: c.sub, fontSize: 12 }}>Spend your points — your choice.</p>
+                  <h2 style={{ fontFamily: "'Inter',sans-serif", fontSize: 18, fontWeight: 700, marginBottom: 3, color: c.text }}>Prize Catalogue</h2>
+                  <p style={{ color: c.sub, fontSize: 14 }}>Spend your points — your choice.</p>
                 </div>
                 <div style={{ ...card, padding: "12px 18px", textAlign: "center" }}>
-                  <div style={{ fontSize: 9, color: c.muted, letterSpacing: 1.5, marginBottom: 3, textTransform: "uppercase" }}>Available Points</div>
-                  <div style={{ fontFamily: "'Outfit',sans-serif", fontSize: 24, fontWeight: 800, color: c.text, lineHeight: 1 }}>{myAvail}</div>
-                  <div style={{ fontSize: 9, color: c.muted, marginTop: 3 }}>{myOf?.total_points} earned · {mySpent} spent</div>
+                  <div style={{ fontSize: 11, color: c.muted, letterSpacing: 1.5, marginBottom: 3, textTransform: "uppercase" }}>Available Points</div>
+                  <div style={{ fontFamily: "'Inter',sans-serif", fontSize: 24, fontWeight: 800, color: c.text, lineHeight: 1 }}>{myAvail}</div>
+                  <div style={{ fontSize: 11, color: c.muted, marginTop: 3 }}>{myOf?.total_points} earned · {mySpent} spent</div>
                 </div>
               </div>
               <div style={{ display: "flex", gap: 5, flexWrap: "wrap", marginBottom: 18 }}>
                 {cats.map(ct => (
                   <button key={ct} onClick={() => setCatF(ct)}
-                    style={{ padding: "5px 12px", borderRadius: 5, border: `1px solid ${catF === ct ? c.borderA : c.border}`, background: catF === ct ? c.chipSel : "transparent", color: catF === ct ? c.text : c.sub, fontSize: 12, fontWeight: catF === ct ? 600 : 400, cursor: "pointer", fontFamily: "'DM Sans',sans-serif" }}>
+                    style={{ padding: "5px 12px", borderRadius: 5, border: `1px solid ${catF === ct ? c.borderA : c.border}`, background: catF === ct ? c.chipSel : "transparent", color: catF === ct ? c.text : c.sub, fontSize: 14, fontWeight: catF === ct ? 600 : 400, cursor: "pointer", fontFamily: "'Inter',sans-serif" }}>
                     {ct}
                   </button>
                 ))}
@@ -886,16 +887,16 @@ export default function App() {
                   return (
                     <div key={p.id} onClick={() => can && !p.tba && setConfirm(p)}
                       style={{ ...card, padding: "16px 15px", position: "relative", opacity: can ? 1 : 0.4, cursor: can && !p.tba ? "pointer" : "default" }}>
-                      {p.tba && <div style={{ position: "absolute", top: 10, right: 10, padding: "2px 6px", borderRadius: 4, background: c.chipSel, border: `1px solid ${c.border}`, fontSize: 9, color: c.muted, fontWeight: 600 }}>TBA</div>}
+                      {p.tba && <div style={{ position: "absolute", top: 10, right: 10, padding: "2px 6px", borderRadius: 4, background: c.chipSel, border: `1px solid ${c.border}`, fontSize: 11, color: c.muted, fontWeight: 600 }}>TBA</div>}
                       <div style={{ fontSize: 26, marginBottom: 10 }}>{p.icon}</div>
-                      <div style={{ fontSize: 9, color: p.color, fontWeight: 600, letterSpacing: 1, marginBottom: 4, textTransform: "uppercase" }}>{p.cat}</div>
-                      <div style={{ fontSize: 12, fontWeight: 600, color: c.text, marginBottom: 4 }}>{p.name}</div>
-                      <div style={{ fontSize: 11, color: c.sub, marginBottom: 14, lineHeight: 1.5 }}>{p.desc}</div>
+                      <div style={{ fontSize: 11, color: p.color, fontWeight: 600, letterSpacing: 1, marginBottom: 4, textTransform: "uppercase" }}>{p.cat}</div>
+                      <div style={{ fontSize: 14, fontWeight: 600, color: c.text, marginBottom: 4 }}>{p.name}</div>
+                      <div style={{ fontSize: 13, color: c.sub, marginBottom: 14, lineHeight: 1.5 }}>{p.desc}</div>
                       <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-                        <div style={{ fontFamily: "'Outfit',sans-serif", fontSize: 15, fontWeight: 700, color: can ? c.text : c.muted }}>{p.cost} <span style={{ fontSize: 9, fontWeight: 400, color: c.muted }}>pts</span></div>
-                        {can && !p.tba ? <div style={{ padding: "3px 9px", borderRadius: 4, background: c.chipSel, border: `1px solid ${c.border}`, color: c.text, fontSize: 10, fontWeight: 600 }}>Redeem</div>
-                          : !can ? <div style={{ fontSize: 9, color: c.muted }}>{p.cost - myAvail} more</div>
-                          : <div style={{ fontSize: 9, color: c.muted }}>Soon</div>}
+                        <div style={{ fontFamily: "'Inter',sans-serif", fontSize: 15, fontWeight: 700, color: can ? c.text : c.muted }}>{p.cost} <span style={{ fontSize: 11, fontWeight: 400, color: c.muted }}>pts</span></div>
+                        {can && !p.tba ? <div style={{ padding: "3px 9px", borderRadius: 4, background: c.chipSel, border: `1px solid ${c.border}`, color: c.text, fontSize: 12, fontWeight: 600 }}>Redeem</div>
+                          : !can ? <div style={{ fontSize: 11, color: c.muted }}>{p.cost - myAvail} more</div>
+                          : <div style={{ fontSize: 11, color: c.muted }}>Soon</div>}
                       </div>
                     </div>
                   );
@@ -908,8 +909,8 @@ export default function App() {
           {/* ── Admin: Approvals ── */}
           {tab === "approvals" && isAdmin && (
             <div className="up" style={{ width: "100%", maxWidth: 700 }}>
-              <h2 style={{ fontFamily: "'Outfit',sans-serif", fontSize: 18, fontWeight: 700, marginBottom: 4, color: c.text }}>Activity Approvals</h2>
-              <p style={{ color: c.sub, fontSize: 12, marginBottom: 22, lineHeight: 1.6 }}>Approve or reject officer activity submissions.</p>
+              <h2 style={{ fontFamily: "'Inter',sans-serif", fontSize: 18, fontWeight: 700, marginBottom: 4, color: c.text }}>Activity Approvals</h2>
+              <p style={{ color: c.sub, fontSize: 14, marginBottom: 22, lineHeight: 1.6 }}>Approve or reject officer activity submissions.</p>
               {pending.length === 0
                 ? <EmptyBox icon="✨" msg="All caught up — no pending submissions." c={c} card={card} />
                 : (
@@ -919,14 +920,14 @@ export default function App() {
                         <span style={{ fontSize: 20, flexShrink: 0 }}>{s.icon}</span>
                         <div style={{ flex: 1, minWidth: 0 }}>
                           <div style={{ display: "flex", gap: 6, alignItems: "center", marginBottom: 3, flexWrap: "wrap" }}>
-                            <span style={{ fontFamily: "'Outfit',sans-serif", fontSize: 12, color: c.text, fontWeight: 700 }}>{s.officer_name}</span>
-                            <span style={{ fontSize: 9, color: c.muted }}>·</span>
-                            <span style={{ fontSize: 11, color: c.sub }}>{s.unit}</span>
+                            <span style={{ fontFamily: "'Inter',sans-serif", fontSize: 14, color: c.text, fontWeight: 700 }}>{s.officer_name}</span>
+                            <span style={{ fontSize: 11, color: c.muted }}>·</span>
+                            <span style={{ fontSize: 13, color: c.sub }}>{s.unit}</span>
                           </div>
-                          <div style={{ fontSize: 12, color: c.text, marginBottom: 2 }}>{s.activity}</div>
-                          <div style={{ fontSize: 10, color: c.muted, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{s.date} · {s.description}</div>
+                          <div style={{ fontSize: 14, color: c.text, marginBottom: 2 }}>{s.activity}</div>
+                          <div style={{ fontSize: 12, color: c.muted, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{s.date} · {s.description}</div>
                         </div>
-                        <span style={{ fontFamily: "'Outfit',sans-serif", fontSize: 13, color: c.goldText, flexShrink: 0, fontWeight: 700 }}>+{s.points}</span>
+                        <span style={{ fontFamily: "'Inter',sans-serif", fontSize: 15, color: c.goldText, flexShrink: 0, fontWeight: 700 }}>+{s.points}</span>
                         <div style={{ display: "flex", gap: 5, flexShrink: 0 }}>
                           <Btn ch="Approve" v="success" sz="sm" onClick={() => approve(s.id)} />
                           <Btn ch="Reject" v="danger" sz="sm" onClick={() => reject(s.id)} />
@@ -938,15 +939,15 @@ export default function App() {
               }
               {subs.filter(s => s.status !== "pending").length > 0 && (
                 <div>
-                  <p style={{ fontSize: 10, color: c.muted, letterSpacing: 2, marginBottom: 12, textTransform: "uppercase" }}>History</p>
+                  <p style={{ fontSize: 12, color: c.muted, letterSpacing: 2, marginBottom: 12, textTransform: "uppercase" }}>History</p>
                   <div style={{ ...card, overflow: "hidden" }}>
                     {subs.filter(s => s.status !== "pending").map((s, i, arr) => (
                       <div key={s.id} style={{ padding: "11px 18px", display: "flex", alignItems: "center", gap: 10, opacity: 0.55, borderBottom: i < arr.length - 1 ? `1px solid ${c.border}` : "none" }}>
                         <span style={{ fontSize: 15 }}>{s.icon}</span>
                         <div style={{ flex: 1, minWidth: 0 }}>
-                          <div style={{ fontSize: 11, fontWeight: 600, color: c.text }}>{s.officer_name} <span style={{ color: c.muted, fontWeight: 400 }}>· {s.activity}</span></div>
+                          <div style={{ fontSize: 13, fontWeight: 600, color: c.text }}>{s.officer_name} <span style={{ color: c.muted, fontWeight: 400 }}>· {s.activity}</span></div>
                         </div>
-                        <span style={{ fontFamily: "'Outfit',sans-serif", fontSize: 11, color: c.text, flexShrink: 0 }}>+{s.points}</span>
+                        <span style={{ fontFamily: "'Inter',sans-serif", fontSize: 13, color: c.text, flexShrink: 0 }}>+{s.points}</span>
                         <Pill status={s.status} />
                       </div>
                     ))}
@@ -959,8 +960,8 @@ export default function App() {
           {/* ── Admin: Redemptions ── */}
           {tab === "redemptions" && isAdmin && (
             <div className="up" style={{ width: "100%", maxWidth: 700 }}>
-              <h2 style={{ fontFamily: "'Outfit',sans-serif", fontSize: 18, fontWeight: 700, marginBottom: 4, color: c.text }}>Prize Redemptions</h2>
-              <p style={{ color: c.sub, fontSize: 12, marginBottom: 22, lineHeight: 1.6 }}>Fulfil or reject officer prize redemption requests.</p>
+              <h2 style={{ fontFamily: "'Inter',sans-serif", fontSize: 18, fontWeight: 700, marginBottom: 4, color: c.text }}>Prize Redemptions</h2>
+              <p style={{ color: c.sub, fontSize: 14, marginBottom: 22, lineHeight: 1.6 }}>Fulfil or reject officer prize redemption requests.</p>
               {pendingR.length === 0
                 ? <EmptyBox icon="🎁" msg="No pending redemptions." c={c} card={card} />
                 : (
@@ -970,13 +971,13 @@ export default function App() {
                         <span style={{ fontSize: 22, flexShrink: 0 }}>{r.prize_icon}</span>
                         <div style={{ flex: 1, minWidth: 0 }}>
                           <div style={{ display: "flex", gap: 6, alignItems: "center", marginBottom: 3 }}>
-                            <span style={{ fontFamily: "'Outfit',sans-serif", fontSize: 12, color: c.text, fontWeight: 700 }}>{r.officer_name}</span>
-                            <span style={{ fontSize: 9, color: c.muted }}>·</span>
-                            <span style={{ fontSize: 11, color: c.sub }}>{r.unit}</span>
+                            <span style={{ fontFamily: "'Inter',sans-serif", fontSize: 14, color: c.text, fontWeight: 700 }}>{r.officer_name}</span>
+                            <span style={{ fontSize: 11, color: c.muted }}>·</span>
+                            <span style={{ fontSize: 13, color: c.sub }}>{r.unit}</span>
                           </div>
-                          <div style={{ fontSize: 12, color: c.text }}>{r.prize_name}</div>
+                          <div style={{ fontSize: 14, color: c.text }}>{r.prize_name}</div>
                         </div>
-                        <span style={{ fontFamily: "'Outfit',sans-serif", fontSize: 12, color: c.goldText, flexShrink: 0, fontWeight: 700 }}>{r.cost} pts</span>
+                        <span style={{ fontFamily: "'Inter',sans-serif", fontSize: 14, color: c.goldText, flexShrink: 0, fontWeight: 700 }}>{r.cost} pts</span>
                         <div style={{ display: "flex", gap: 5, flexShrink: 0 }}>
                           <Btn ch="Fulfil" v="success" sz="sm" onClick={() => fulfilR(r.id, r.officer_name)} />
                           <Btn ch="Reject" v="danger" sz="sm" onClick={() => rejectR(r.id)} />
@@ -988,15 +989,15 @@ export default function App() {
               }
               {redems.filter(r => r.status !== "pending").length > 0 && (
                 <div>
-                  <p style={{ fontSize: 10, color: c.muted, letterSpacing: 2, marginBottom: 12, textTransform: "uppercase" }}>History</p>
+                  <p style={{ fontSize: 12, color: c.muted, letterSpacing: 2, marginBottom: 12, textTransform: "uppercase" }}>History</p>
                   <div style={{ ...card, overflow: "hidden" }}>
                     {redems.filter(r => r.status !== "pending").map((r, i, arr) => (
                       <div key={r.id} style={{ padding: "11px 18px", display: "flex", alignItems: "center", gap: 10, opacity: 0.55, borderBottom: i < arr.length - 1 ? `1px solid ${c.border}` : "none" }}>
                         <span style={{ fontSize: 15 }}>{r.prize_icon}</span>
                         <div style={{ flex: 1 }}>
-                          <div style={{ fontSize: 11, fontWeight: 600, color: c.text }}>{r.officer_name} <span style={{ color: c.muted, fontWeight: 400 }}>· {r.prize_name}</span></div>
+                          <div style={{ fontSize: 13, fontWeight: 600, color: c.text }}>{r.officer_name} <span style={{ color: c.muted, fontWeight: 400 }}>· {r.prize_name}</span></div>
                         </div>
-                        <span style={{ fontFamily: "'Outfit',sans-serif", fontSize: 11, color: c.goldText, flexShrink: 0 }}>{r.cost} pts</span>
+                        <span style={{ fontFamily: "'Inter',sans-serif", fontSize: 13, color: c.goldText, flexShrink: 0 }}>{r.cost} pts</span>
                         <Pill status={r.status === "fulfilled" ? "approved" : "rejected"} label={r.status} />
                       </div>
                     ))}
@@ -1009,17 +1010,17 @@ export default function App() {
           {/* ── Admin: Settings ── */}
           {tab === "settings" && isAdmin && (
             <div className="up" style={{ width: "100%", maxWidth: 580 }}>
-              <h2 style={{ fontFamily: "'Outfit',sans-serif", fontSize: 18, fontWeight: 700, marginBottom: 4, color: c.text }}>Settings</h2>
-              <p style={{ color: c.sub, fontSize: 12, marginBottom: 28, lineHeight: 1.6 }}>Manage officers, branches, and admin password.</p>
+              <h2 style={{ fontFamily: "'Inter',sans-serif", fontSize: 18, fontWeight: 700, marginBottom: 4, color: c.text }}>Settings</h2>
+              <p style={{ color: c.sub, fontSize: 14, marginBottom: 28, lineHeight: 1.6 }}>Manage officers, branches, and admin password.</p>
               <Sec label="Add New Officer" c={c}>
                 <div style={{ ...card, padding: 18 }}>
                   <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10, marginBottom: 12 }}>
                     <div>
-                      <label style={{ fontSize: 10, color: c.muted, display: "block", marginBottom: 6, textTransform: "uppercase", letterSpacing: 1 }}>Full Name</label>
+                      <label style={{ fontSize: 12, color: c.muted, display: "block", marginBottom: 6, textTransform: "uppercase", letterSpacing: 1 }}>Full Name</label>
                       <input value={newName} onChange={e => setNewName(e.target.value)} placeholder="e.g. John Tan" style={{ ...inp }} />
                     </div>
                     <div>
-                      <label style={{ fontSize: 10, color: c.muted, display: "block", marginBottom: 6, textTransform: "uppercase", letterSpacing: 1 }}>Branch</label>
+                      <label style={{ fontSize: 12, color: c.muted, display: "block", marginBottom: 6, textTransform: "uppercase", letterSpacing: 1 }}>Branch</label>
                       <select value={newBr} onChange={e => setNewBr(e.target.value)} style={{ ...inp }}>
                         <option value="">Select branch…</option>
                         {branches.map(b => <option key={b.id} value={b.name}>{b.name}</option>)}
@@ -1037,21 +1038,21 @@ export default function App() {
                     return (
                       <div key={br.id}>
                         <div style={{ padding: "7px 16px", background: c.chip, borderBottom: `1px solid ${c.border}` }}>
-                          <span style={{ fontFamily: "'Outfit',sans-serif", fontSize: 9, color: c.muted, letterSpacing: 2, textTransform: "uppercase" }}>{br.name}</span>
+                          <span style={{ fontFamily: "'Inter',sans-serif", fontSize: 11, color: c.muted, letterSpacing: 2, textTransform: "uppercase" }}>{br.name}</span>
                         </div>
                         {bOfs.map(o => (
                           <div key={o.id} style={{ borderBottom: `1px solid ${c.border}` }}>
                             {editOf?.id === o.id ? (
                               <div style={{ padding: "15px 16px", background: c.infoBg }}>
-                                <p style={{ fontSize: 10, color: c.sub, fontWeight: 600, marginBottom: 10 }}>Editing: {editOf.name}</p>
+                                <p style={{ fontSize: 12, color: c.sub, fontWeight: 600, marginBottom: 10 }}>Editing: {editOf.name}</p>
                                 <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8, marginBottom: 10 }}>
                                   <div>
-                                    <label style={{ fontSize: 9, color: c.muted, display: "block", marginBottom: 5, textTransform: "uppercase", letterSpacing: 1 }}>Full Name</label>
-                                    <input value={editN} onChange={e => setEditN(e.target.value)} style={{ ...inp, padding: "8px 10px", fontSize: 12 }} />
+                                    <label style={{ fontSize: 11, color: c.muted, display: "block", marginBottom: 5, textTransform: "uppercase", letterSpacing: 1 }}>Full Name</label>
+                                    <input value={editN} onChange={e => setEditN(e.target.value)} style={{ ...inp, padding: "8px 10px", fontSize: 14 }} />
                                   </div>
                                   <div>
-                                    <label style={{ fontSize: 9, color: c.muted, display: "block", marginBottom: 5, textTransform: "uppercase", letterSpacing: 1 }}>Branch</label>
-                                    <select value={editB} onChange={e => setEditB(e.target.value)} style={{ ...inp, padding: "8px 10px", fontSize: 12 }}>
+                                    <label style={{ fontSize: 11, color: c.muted, display: "block", marginBottom: 5, textTransform: "uppercase", letterSpacing: 1 }}>Branch</label>
+                                    <select value={editB} onChange={e => setEditB(e.target.value)} style={{ ...inp, padding: "8px 10px", fontSize: 14 }}>
                                       {branches.map(b => <option key={b.id} value={b.name}>{b.name}</option>)}
                                     </select>
                                   </div>
@@ -1063,10 +1064,10 @@ export default function App() {
                               </div>
                             ) : (
                               <div className="row-hover" style={{ display: "flex", alignItems: "center", gap: 10, padding: "11px 16px" }}>
-                                <div style={{ width: 28, height: 28, borderRadius: "50%", background: c.chip, border: `1px solid ${c.border}`, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 9, fontWeight: 700, color: c.sub, flexShrink: 0 }}>{initials(o.name)}</div>
+                                <div style={{ width: 28, height: 28, borderRadius: "50%", background: c.chip, border: `1px solid ${c.border}`, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 11, fontWeight: 700, color: c.sub, flexShrink: 0 }}>{initials(o.name)}</div>
                                 <div style={{ flex: 1 }}>
-                                  <div style={{ fontSize: 13, fontWeight: 600, color: c.text }}>{o.name}</div>
-                                  <div style={{ fontSize: 9, color: c.muted }}>{o.total_points} pts</div>
+                                  <div style={{ fontSize: 15, fontWeight: 600, color: c.text }}>{o.name}</div>
+                                  <div style={{ fontSize: 11, color: c.muted }}>{o.total_points} pts</div>
                                 </div>
                                 <Btn ch="Edit" v="ghost" sz="sm" onClick={() => startEdit(o)} disabled={sLoading} />
                                 <Btn ch="Remove" v="danger" sz="sm" onClick={() => removeOfficer(o.id, o.name)} disabled={sLoading} />
@@ -1083,7 +1084,7 @@ export default function App() {
                 <div style={{ ...card, padding: 18, marginBottom: 10 }}>
                   <div style={{ display: "flex", gap: 8, alignItems: "flex-end" }}>
                     <div style={{ flex: 1 }}>
-                      <label style={{ fontSize: 10, color: c.muted, display: "block", marginBottom: 6, textTransform: "uppercase", letterSpacing: 1 }}>New Branch Name</label>
+                      <label style={{ fontSize: 12, color: c.muted, display: "block", marginBottom: 6, textTransform: "uppercase", letterSpacing: 1 }}>New Branch Name</label>
                       <input value={newBrName} onChange={e => setNewBrName(e.target.value)} placeholder="e.g. Operations" style={{ ...inp }} />
                     </div>
                     <Btn ch="Add" v="primary" onClick={addBranch} disabled={!newBrName.trim() || sLoading} />
@@ -1093,8 +1094,8 @@ export default function App() {
                   {branches.map((br, i) => (
                     <div key={br.id} className="row-hover" style={{ display: "flex", alignItems: "center", gap: 10, padding: "11px 16px", borderBottom: i < branches.length - 1 ? `1px solid ${c.border}` : "none" }}>
                       <div style={{ flex: 1 }}>
-                        <div style={{ fontSize: 13, fontWeight: 600, color: c.text }}>{br.name}</div>
-                        <div style={{ fontSize: 9, color: c.muted }}>{(byBranch[br.name] || []).length} officers</div>
+                        <div style={{ fontSize: 15, fontWeight: 600, color: c.text }}>{br.name}</div>
+                        <div style={{ fontSize: 11, color: c.muted }}>{(byBranch[br.name] || []).length} officers</div>
                       </div>
                       <Btn ch="Remove" v="danger" sz="sm" onClick={() => removeBranch(br.id, br.name)} disabled={sLoading} />
                     </div>
@@ -1105,7 +1106,7 @@ export default function App() {
                 <div style={{ ...card, padding: 18 }}>
                   <div style={{ display: "flex", gap: 8, alignItems: "flex-end" }}>
                     <div style={{ flex: 1 }}>
-                      <label style={{ fontSize: 10, color: c.muted, display: "block", marginBottom: 6, textTransform: "uppercase", letterSpacing: 1 }}>New Password (min 6 characters)</label>
+                      <label style={{ fontSize: 12, color: c.muted, display: "block", marginBottom: 6, textTransform: "uppercase", letterSpacing: 1 }}>New Password (min 6 characters)</label>
                       <input type="password" value={newPw} onChange={e => setNewPw(e.target.value)} placeholder="Enter new password" style={{ ...inp }} />
                     </div>
                     <Btn ch="Update" v="primary" onClick={changePw} disabled={newPw.length < 6 || sLoading} />
@@ -1128,10 +1129,10 @@ function MiniNav({ c, Toggle, onBack }) {
     <div style={{ borderBottom: `1px solid ${c.div}`, background: c.nav, backdropFilter: "blur(20px)", position: "sticky", top: 0, zIndex: 100 }}>
       <div style={{ maxWidth: 820, margin: "0 auto", padding: "0 20px", display: "flex", alignItems: "center", height: 52, justifyContent: "space-between", gap: 12 }}>
         <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
-          <button onClick={onBack} style={{ background: "none", border: "none", color: c.sub, cursor: "pointer", fontSize: 12, fontFamily: "'DM Sans',sans-serif", padding: 0 }}>← Back</button>
+          <button onClick={onBack} style={{ background: "none", border: "none", color: c.sub, cursor: "pointer", fontSize: 14, fontFamily: "'Inter',sans-serif", padding: 0 }}>← Back</button>
           <div style={{ display: "flex", alignItems: "center", gap: 7 }}>
             <span style={{ fontSize: 14 }}>🏆</span>
-            <span style={{ fontFamily: "'Outfit',sans-serif", fontWeight: 700, fontSize: 13, color: c.text }}>GEAR Up</span>
+            <span style={{ fontFamily: "'Inter',sans-serif", fontWeight: 700, fontSize: 15, color: c.text }}>GEAR Up</span>
           </div>
         </div>
         <Toggle />
@@ -1143,7 +1144,7 @@ function MiniNav({ c, Toggle, onBack }) {
 function Sec({ label, children, c }) {
   return (
     <div style={{ marginBottom: 28 }}>
-      <p style={{ fontSize: 10, color: c.muted, letterSpacing: 1.5, marginBottom: 10, textTransform: "uppercase" }}>{label}</p>
+      <p style={{ fontSize: 12, color: c.muted, letterSpacing: 1.5, marginBottom: 10, textTransform: "uppercase" }}>{label}</p>
       {children}
     </div>
   );
@@ -1152,12 +1153,12 @@ function Sec({ label, children, c }) {
 function StaticPrizeCard({ p, c, card }) {
   return (
     <div style={{ ...card, padding: "16px 15px", position: "relative" }}>
-      {p.tba && <div style={{ position: "absolute", top: 10, right: 10, padding: "2px 6px", borderRadius: 4, background: c.chipSel, border: `1px solid ${c.border}`, fontSize: 9, color: c.muted, fontWeight: 600 }}>TBA</div>}
+      {p.tba && <div style={{ position: "absolute", top: 10, right: 10, padding: "2px 6px", borderRadius: 4, background: c.chipSel, border: `1px solid ${c.border}`, fontSize: 11, color: c.muted, fontWeight: 600 }}>TBA</div>}
       <div style={{ fontSize: 26, marginBottom: 10 }}>{p.icon}</div>
-      <div style={{ fontSize: 9, color: p.color, fontWeight: 600, letterSpacing: 1, marginBottom: 4, textTransform: "uppercase" }}>{p.cat}</div>
-      <div style={{ fontSize: 12, fontWeight: 600, color: c.text, marginBottom: 4 }}>{p.name}</div>
-      <div style={{ fontSize: 11, color: c.sub, marginBottom: 12, lineHeight: 1.5 }}>{p.desc}</div>
-      <div style={{ fontFamily: "'Outfit',sans-serif", fontSize: 15, fontWeight: 700, color: p.color }}>{p.cost} <span style={{ fontSize: 9, fontFamily: "'DM Sans',sans-serif", fontWeight: 400, color: c.sub }}>pts</span></div>
+      <div style={{ fontSize: 11, color: p.color, fontWeight: 600, letterSpacing: 1, marginBottom: 4, textTransform: "uppercase" }}>{p.cat}</div>
+      <div style={{ fontSize: 14, fontWeight: 600, color: c.text, marginBottom: 4 }}>{p.name}</div>
+      <div style={{ fontSize: 13, color: c.sub, marginBottom: 12, lineHeight: 1.5 }}>{p.desc}</div>
+      <div style={{ fontFamily: "'Inter',sans-serif", fontSize: 15, fontWeight: 700, color: p.color }}>{p.cost} <span style={{ fontSize: 11, fontFamily: "'Inter',sans-serif", fontWeight: 400, color: c.sub }}>pts</span></div>
     </div>
   );
 }
@@ -1165,7 +1166,7 @@ function StaticPrizeCard({ p, c, card }) {
 function SpecialSection({ c, dark, card }) {
   return (
     <div style={{ ...card, padding: 20, border: `1px solid ${dark ? "rgba(201,162,39,0.15)" : "rgba(160,120,0,0.15)"}` }}>
-      <p style={{ fontFamily: "'Outfit',sans-serif", fontSize: 9, color: "#c9a227", letterSpacing: 2, marginBottom: 14, textTransform: "uppercase" }}>★ Special Prizes — Mini-Retreat Event</p>
+      <p style={{ fontFamily: "'Inter',sans-serif", fontSize: 11, color: "#c9a227", letterSpacing: 2, marginBottom: 14, textTransform: "uppercase" }}>★ Special Prizes — Mini-Retreat Event</p>
       <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
         {[
           { icon: "🥇🥈🥉", title: "Top 3 Officers", desc: "Exclusive prize + public recognition at Mini-Retreat" },
@@ -1173,8 +1174,8 @@ function SpecialSection({ c, dark, card }) {
         ].map(item => (
           <div key={item.title} style={{ padding: "14px 15px", background: dark ? "rgba(201,162,39,0.03)" : "rgba(255,248,200,0.3)", border: `1px solid ${dark ? "rgba(201,162,39,0.08)" : "rgba(160,120,0,0.1)"}`, borderRadius: 8 }}>
             <div style={{ fontSize: 20, marginBottom: 7 }}>{item.icon}</div>
-            <div style={{ fontSize: 12, fontWeight: 600, color: c.text, marginBottom: 4 }}>{item.title}</div>
-            <div style={{ fontSize: 11, color: c.sub, lineHeight: 1.55 }}>{item.desc}</div>
+            <div style={{ fontSize: 14, fontWeight: 600, color: c.text, marginBottom: 4 }}>{item.title}</div>
+            <div style={{ fontSize: 13, color: c.sub, lineHeight: 1.55 }}>{item.desc}</div>
           </div>
         ))}
       </div>
@@ -1186,7 +1187,7 @@ function EmptyBox({ icon, msg, c, card }) {
   return (
     <div style={{ ...card, padding: 44, textAlign: "center", marginBottom: 22 }}>
       <div style={{ fontSize: 30, marginBottom: 10 }}>{icon}</div>
-      <div style={{ color: c.sub, fontSize: 13 }}>{msg}</div>
+      <div style={{ color: c.sub, fontSize: 15 }}>{msg}</div>
     </div>
   );
 }
