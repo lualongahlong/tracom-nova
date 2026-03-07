@@ -497,6 +497,105 @@ export default function App() {
     </div>
   );
 
+  if (screen === "rewards") return (
+    <div style={{ minHeight: "100vh", background: c.bg, color: c.text, fontFamily: "'Inter',sans-serif" }}>
+      <CSS />
+      <MiniNav c={c} Toggle={Toggle} onBack={() => setScreen("landing")} />
+      
+      <div className="up" style={{ maxWidth: 820, margin: "0 auto", padding: "40px 20px" }}>
+        
+        {/* ── Tiers & Prizes Screen ── */}
+{tab === "rewards" && (
+  <div className="up" style={{ width: "100%", maxWidth: 820 }}>
+    
+    {/* Tiers Progression Section */}
+    <div style={{ marginBottom: 48 }}>
+      <p style={{ fontSize: 12, color: c.muted, letterSpacing: 2, marginBottom: 8, textTransform: "uppercase", textAlign: "center" }}>The Learning Journey</p>
+      <h2 style={{ fontSize: 24, fontWeight: 800, marginBottom: 24, textAlign: "center" }}>Achievement Tiers</h2>
+      
+      
+      
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))", gap: 12 }}>
+        {TIERS.map(t => (
+          <div key={t.name} style={{ 
+            ...card, padding: "24px 16px", textAlign: "center", 
+            borderTop: `4px solid ${t.color}`, 
+            background: dark ? "rgba(255,255,255,0.02)" : "#fff" 
+          }}>
+            <div style={{ fontSize: 36, marginBottom: 12 }}>{t.icon}</div>
+            <div style={{ fontWeight: 800, fontSize: 16, color: c.text, marginBottom: 4 }}>{t.name}</div>
+            <div style={{ fontSize: 12, color: c.sub, fontWeight: 500 }}>
+              {t.max === Infinity ? `${t.min}+ pts` : `${t.min} - ${t.max} pts`}
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+
+    {/* Prize Catalogue Section */}
+    <div style={{ borderTop: `1px solid ${c.border}`, paddingTop: 48 }}>
+      <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", flexWrap: "wrap", gap: 14, marginBottom: 22 }}>
+        <div>
+          <h2 style={{ fontSize: 22, fontWeight: 800, color: c.text }}>Prize Catalogue</h2>
+          <p style={{ color: c.sub, fontSize: 14 }}>Redeem your hard-earned points.</p>
+        </div>
+        {!isAdmin && (
+          <div style={{ ...card, padding: "10px 18px", textAlign: "center", background: c.infoBg }}>
+            <div style={{ fontSize: 10, color: c.muted, letterSpacing: 1.5, marginBottom: 2, textTransform: "uppercase" }}>Your Balance</div>
+            <div style={{ fontWeight: 800, fontSize: 20, color: c.text }}>{myAvail} <span style={{ fontSize: 12, fontWeight: 400 }}>pts</span></div>
+          </div>
+        )}
+      </div>
+
+      {/* Category Pills */}
+      <div style={{ display: "flex", gap: 6, flexWrap: "wrap", marginBottom: 20 }}>
+        {cats.map(ct => (
+          <button key={ct} onClick={() => setCatF(ct)}
+            style={{ 
+              padding: "6px 14px", borderRadius: 20, 
+              border: `1px solid ${catF === ct ? c.borderA : c.border}`, 
+              background: catF === ct ? c.text : "transparent", 
+              color: catF === ct ? (dark ? "#000" : "#fff") : c.sub, 
+              fontSize: 13, fontWeight: 600, cursor: "pointer" 
+            }}>
+            {ct}
+          </button>
+        ))}
+      </div>
+
+      <div className="portal-cards-3" style={{ marginBottom: 32 }}>
+        {catItems.map(p => {
+          const can = myAvail >= p.cost;
+          return (
+            <div key={p.id} onClick={() => !isAdmin && can && !p.tba && setConfirm(p)}
+              style={{ ...card, padding: "16px 15px", position: "relative", opacity: (isAdmin || can) ? 1 : 0.4, cursor: (!isAdmin && can && !p.tba) ? "pointer" : "default" }}>
+              <div style={{ fontSize: 26, marginBottom: 10 }}>{p.icon}</div>
+              <div style={{ fontSize: 11, color: p.color, fontWeight: 700, letterSpacing: 1, marginBottom: 4, textTransform: "uppercase" }}>{p.cat}</div>
+              <div style={{ fontSize: 15, fontWeight: 700, color: c.text, marginBottom: 4 }}>{p.name}</div>
+              <div style={{ fontSize: 13, color: c.sub, marginBottom: 14, lineHeight: 1.5 }}>{p.desc}</div>
+              <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+                <div style={{ fontWeight: 800, color: c.text }}>{p.cost} pts</div>
+                {!isAdmin && can && !p.tba && <div style={{ fontSize: 12, color: c.goldText, fontWeight: 700 }}>Redeem →</div>}
+              </div>
+            </div>
+          );
+        })}
+      </div>
+      
+      <SpecialSection c={c} dark={dark} card={card} />
+    </div>
+
+    {/* The Footer */}
+    <div style={{ marginTop: 60, textAlign: "center", borderTop: `1px solid ${c.border}`, paddingTop: 32 }}>
+      <div style={{ fontSize: 14, fontWeight: 700, color: c.text, marginBottom: 8 }}>Developed by TRACOM officers for TRACOM officers</div>
+      <a href="https://go.gov.sg/gearup" target="_blank" rel="noreferrer" style={{ color: c.goldText, fontSize: 13, textDecoration: "none", fontWeight: 700 }}>go.gov.sg/gearup</a>
+    </div>
+  </div>
+)}
+      </div>
+    </div>
+  );
+
   if (screen === "catalogue") return (
     <div style={{ minHeight: "100vh", background: c.bg, color: c.text, fontFamily: "'Inter',sans-serif" }}>
       <CSS />
@@ -605,12 +704,13 @@ export default function App() {
   }
 
   // ── Portal ────────────────────────────────────────────────────────────────
-  const OTABS = [
-    { id: "submit",      label: "Log Activity" },
-    { id: "leaderboard", label: "Leaderboard" },
-    { id: "mylog",       label: `My Log${mySubs.length ? ` (${mySubs.length})` : ""}` },
-    { id: "prizes",      label: "Prizes" },
-  ];
+  
+    const OTABS = [
+      { id: "submit",      label: "Log Activity" },
+      { id: "leaderboard", label: "Leaderboard" },
+      { id: "mylog",       label: `My Log${mySubs.length ? ` (${mySubs.length})` : ""}` },
+      { id: "rewards",     label: "Tiers & Prizes" }, // Consolidated Tab
+    ];
   const ATABS = [
     { id: "leaderboard", label: "Leaderboard" },
     { id: "approvals",   label: `Approvals${pending.length ? ` (${pending.length})` : ""}` },
@@ -682,16 +782,13 @@ export default function App() {
         🚀 GEAR Up
       </div>
       <div style={{ fontSize: 9, color: c.sub, fontWeight: 500, marginTop: 3, textTransform: "uppercase", letterSpacing: 0.5 }}>
-        TRACOM
+        
       </div>
     </div>
 
     {/* RIGHT: Exit & Toggle */}
     <div style={{ display: "flex", alignItems: "center", justifyContent: "flex-end", gap: 12 }}>
-      <button onClick={() => { setScreen("landing"); setUser(null); setIsAdmin(false); }}
-        style={{ padding: "5px 12px", background: "transparent", border: `1px solid ${c.border}`, borderRadius: 6, color: c.sub, cursor: "pointer", fontSize: 12, fontWeight: 600, fontFamily: "'Inter',sans-serif" }}>
-        Exit
-      </button>
+      
       <Toggle />
     </div>
   </div>
@@ -929,53 +1026,52 @@ export default function App() {
             </div>
           )}
 
-          {/* ── Prizes ── */}
-          {tab === "prizes" && !isAdmin && (
-            <div className="up" style={{ width: "100%" }}>
-              <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", flexWrap: "wrap", gap: 14, marginBottom: 22 }}>
-                <div>
-                  <h2 style={{ fontFamily: "'Inter',sans-serif", fontSize: 18, fontWeight: 700, marginBottom: 3, color: c.text }}>Prize Catalogue</h2>
-                  <p style={{ color: c.sub, fontSize: 14 }}>Spend your points — your choice.</p>
-                </div>
-                <div style={{ ...card, padding: "12px 18px", textAlign: "center" }}>
-                  <div style={{ fontSize: 11, color: c.muted, letterSpacing: 1.5, marginBottom: 3, textTransform: "uppercase" }}>Available Points</div>
-                  <div style={{ fontFamily: "'Inter',sans-serif", fontSize: 24, fontWeight: 800, color: c.text, lineHeight: 1 }}>{myAvail}</div>
-                  <div style={{ fontSize: 11, color: c.muted, marginTop: 3 }}>{myOf?.total_points} earned · {mySpent} spent</div>
-                </div>
-              </div>
-              <div style={{ display: "flex", gap: 5, flexWrap: "wrap", marginBottom: 18 }}>
-                {cats.map(ct => (
-                  <button key={ct} onClick={() => setCatF(ct)}
-                    style={{ padding: "5px 12px", borderRadius: 5, border: `1px solid ${catF === ct ? c.borderA : c.border}`, background: catF === ct ? c.chipSel : "transparent", color: catF === ct ? c.text : c.sub, fontSize: 14, fontWeight: catF === ct ? 600 : 400, cursor: "pointer", fontFamily: "'Inter',sans-serif" }}>
-                    {ct}
-                  </button>
-                ))}
-              </div>
-              <div className="portal-cards-3" style={{ marginBottom: 24 }}>
-                {catItems.map(p => {
-                  const can = myAvail >= p.cost;
-                  return (
-                    <div key={p.id} onClick={() => can && !p.tba && setConfirm(p)}
-                      style={{ ...card, padding: "16px 15px", position: "relative", opacity: can ? 1 : 0.4, cursor: can && !p.tba ? "pointer" : "default" }}>
-                      {p.tba && <div style={{ position: "absolute", top: 10, right: 10, padding: "2px 6px", borderRadius: 4, background: c.chipSel, border: `1px solid ${c.border}`, fontSize: 11, color: c.muted, fontWeight: 600 }}>TBA</div>}
-                      <div style={{ fontSize: 26, marginBottom: 10 }}>{p.icon}</div>
-                      <div style={{ fontSize: 11, color: p.color, fontWeight: 600, letterSpacing: 1, marginBottom: 4, textTransform: "uppercase" }}>{p.cat}</div>
-                      <div style={{ fontSize: 14, fontWeight: 600, color: c.text, marginBottom: 4 }}>{p.name}</div>
-                      <div style={{ fontSize: 13, color: c.sub, marginBottom: 14, lineHeight: 1.5 }}>{p.desc}</div>
-                      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-                        <div style={{ fontFamily: "'Inter',sans-serif", fontSize: 15, fontWeight: 700, color: can ? c.text : c.muted }}>{p.cost} <span style={{ fontSize: 11, fontWeight: 400, color: c.muted }}>pts</span></div>
-                        {can && !p.tba ? <div style={{ padding: "3px 9px", borderRadius: 4, background: c.chipSel, border: `1px solid ${c.border}`, color: c.text, fontSize: 12, fontWeight: 600 }}>Redeem</div>
-                          : !can ? <div style={{ fontSize: 11, color: c.muted }}>{p.cost - myAvail} more</div>
-                          : <div style={{ fontSize: 11, color: c.muted }}>Soon</div>}
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-              <SpecialSection c={c} dark={dark} card={card} />
+          {/* ── NEW: Tiers & Prizes Tab ── */}
+  {tab === "rewards" && (
+    <div className="up" style={{ width: "100%", maxWidth: 820 }}>
+      {/* Tiers Progression */}
+      <div style={{ marginBottom: 48 }}>
+        <p style={{ fontSize: 12, color: c.muted, letterSpacing: 2, marginBottom: 8, textTransform: "uppercase", textAlign: "center" }}>The Learning Journey</p>
+        <h2 style={{ fontSize: 24, fontWeight: 800, marginBottom: 24, textAlign: "center" }}>Achievement Tiers</h2>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))", gap: 12 }}>
+          {TIERS.map(t => (
+            <div key={t.name} style={{ ...card, padding: "24px 16px", textAlign: "center", borderTop: `4px solid ${t.color}`, background: dark ? "rgba(255,255,255,0.02)" : "#fff" }}>
+              <div style={{ fontSize: 36, marginBottom: 12 }}>{t.icon}</div>
+              <div style={{ fontWeight: 800, fontSize: 16, color: c.text }}>{t.name}</div>
+              <div style={{ fontSize: 12, color: c.sub, marginTop: 4 }}>{t.max === Infinity ? `${t.min}+ pts` : `${t.min} - ${t.max} pts`}</div>
             </div>
-          )}
+          ))}
+        </div>
+      </div>
 
+      {/* Prize Catalogue */}
+      <div style={{ borderTop: `1px solid ${c.border}`, paddingTop: 48 }}>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", marginBottom: 22 }}>
+          <h2 style={{ fontSize: 22, fontWeight: 800 }}>Prize Catalogue</h2>
+          <div style={{ ...card, padding: "8px 16px", background: c.infoBg, textAlign: "right" }}>
+            <div style={{ fontSize: 10, color: c.muted, textTransform: "uppercase" }}>Your Balance</div>
+            <div style={{ fontWeight: 800, fontSize: 18 }}>{myAvail} pts</div>
+          </div>
+        </div>
+
+        <div className="portal-cards-3">
+          {catItems.map(p => {
+            const can = myAvail >= p.cost;
+            return (
+              <div key={p.id} onClick={() => can && !p.tba && setConfirm(p)}
+                style={{ ...card, padding: 16, opacity: can ? 1 : 0.5, cursor: can ? "pointer" : "default" }}>
+                <div style={{ fontSize: 24, marginBottom: 8 }}>{p.icon}</div>
+                <div style={{ fontSize: 11, color: p.color, fontWeight: 700, textTransform: "uppercase" }}>{p.cat}</div>
+                <div style={{ fontSize: 15, fontWeight: 700, marginTop: 4 }}>{p.name}</div>
+                <div style={{ fontSize: 13, color: c.sub, margin: "8px 0 16px" }}>{p.desc}</div>
+                <div style={{ fontWeight: 800 }}>{p.cost} pts</div>
+              </div>
+            );
+          })}
+        </div>
+        </div>
+    </div>
+  )}
           {/* ── Admin: Approvals ── */}
           {tab === "approvals" && isAdmin && (
             <div className="up" style={{ width: "100%", maxWidth: 700 }}>
