@@ -45,6 +45,14 @@ const CATALOGUE = [
   { id: "p3", cat: "Coming Soon", name: "Mystery Prize C",      desc: "To be announced",          cost: 200, icon: "🎁", color: "#ec4899", tba: true },
 ];
 
+const TIERS = [
+  { name: "Player 1",  min: 0,   max: 99,      icon: "🎮", color: "#9ca3af" },
+  { name: "High Scorer",    min: 100,  max: 199,       icon: "📈", color: "#60a5fa" },
+  { name: "Top Ranker",  min: 200, max: 299,      icon: "💎", color: "#4ade80" },
+  { name: "All-Star",   min: 300, max: Infinity,      icon: "🌟", color: "#a78bfa" },
+
+];
+
 const CAMPAIGN_END = new Date("2026-12-31");
 const getCountdown = () => {
   const d = CAMPAIGN_END - new Date();
@@ -59,54 +67,23 @@ const getCountdown = () => {
 
 const initials = name => name.split(" ").map(n => n[0]).join("").slice(0, 2).toUpperCase();
 
-// ── Themes ────────────────────────────────────────────────────────────────
 const DARK = {
-  bg: "#0a0a0a",
-  surface: "rgba(255,255,255,0.04)",
-  surfaceHover: "rgba(255,255,255,0.06)",
-  border: "rgba(255,255,255,0.08)",
-  borderA: "rgba(255,255,255,0.18)",
-  text: "#f0f0f0",
-  sub: "rgba(255,255,255,0.42)",
-  muted: "rgba(255,255,255,0.2)",
-  nav: "rgba(10,10,10,0.93)",
-  accent: "#e8e8e8",
-  accentL: "#ffffff",
-  chip: "rgba(255,255,255,0.04)",
-  chipSel: "rgba(255,255,255,0.09)",
-  inputBg: "rgba(255,255,255,0.05)",
-  inputBdr: "rgba(255,255,255,0.09)",
-  div: "rgba(255,255,255,0.06)",
-  blank: "rgba(255,255,255,0.05)",
-  infoBg: "rgba(255,255,255,0.03)",
-  infoBdr: "rgba(255,255,255,0.09)",
-  shadow: "rgba(0,0,0,0.5)",
-  gold: "rgba(255,200,60,0.18)",
-  goldText: "#d4a017",
+  bg: "#0a0a0a", surface: "rgba(255,255,255,0.04)", surfaceHover: "rgba(255,255,255,0.06)",
+  border: "rgba(255,255,255,0.08)", borderA: "rgba(255,255,255,0.18)", text: "#f0f0f0",
+  sub: "rgba(255,255,255,0.42)", muted: "rgba(255,255,255,0.2)", nav: "rgba(10,10,10,0.93)",
+  accent: "#e8e8e8", accentL: "#ffffff", chip: "rgba(255,255,255,0.04)", chipSel: "rgba(255,255,255,0.09)",
+  inputBg: "rgba(255,255,255,0.05)", inputBdr: "rgba(255,255,255,0.09)", div: "rgba(255,255,255,0.06)",
+  blank: "rgba(255,255,255,0.05)", infoBg: "rgba(255,255,255,0.03)", infoBdr: "rgba(255,255,255,0.09)",
+  shadow: "rgba(0,0,0,0.5)", gold: "rgba(255,200,60,0.18)", goldText: "#d4a017",
 };
 const LITE = {
-  bg: "#f5f5f5",
-  surface: "#ffffff",
-  surfaceHover: "#fafafa",
-  border: "rgba(0,0,0,0.07)",
-  borderA: "rgba(0,0,0,0.16)",
-  text: "#111111",
-  sub: "rgba(0,0,0,0.42)",
-  muted: "rgba(0,0,0,0.26)",
-  nav: "rgba(245,245,245,0.96)",
-  accent: "#1a1a1a",
-  accentL: "#111111",
-  chip: "rgba(0,0,0,0.04)",
-  chipSel: "rgba(0,0,0,0.07)",
-  inputBg: "#ffffff",
-  inputBdr: "rgba(0,0,0,0.09)",
-  div: "rgba(0,0,0,0.06)",
-  blank: "rgba(0,0,0,0.04)",
-  infoBg: "rgba(0,0,0,0.02)",
-  infoBdr: "rgba(0,0,0,0.07)",
-  shadow: "rgba(0,0,0,0.07)",
-  gold: "rgba(160,120,0,0.12)",
-  goldText: "#a07000",
+  bg: "#f5f5f5", surface: "#ffffff", surfaceHover: "#fafafa",
+  border: "rgba(0,0,0,0.07)", borderA: "rgba(0,0,0,0.16)", text: "#111111",
+  sub: "rgba(0,0,0,0.42)", muted: "rgba(0,0,0,0.26)", nav: "rgba(245,245,245,0.96)",
+  accent: "#1a1a1a", accentL: "#111111", chip: "rgba(0,0,0,0.04)", chipSel: "rgba(0,0,0,0.07)",
+  inputBg: "#ffffff", inputBdr: "rgba(0,0,0,0.09)", div: "rgba(0,0,0,0.06)",
+  blank: "rgba(0,0,0,0.04)", infoBg: "rgba(0,0,0,0.02)", infoBdr: "rgba(0,0,0,0.07)",
+  shadow: "rgba(0,0,0,0.07)", gold: "rgba(160,120,0,0.12)", goldText: "#a07000",
 };
 
 export default function App() {
@@ -129,6 +106,7 @@ export default function App() {
   const [cd, setCd]           = useState(getCountdown());
   const [toast, setToast]     = useState(null);
   const [confirm, setConfirm] = useState(null);
+  const [menuOpen, setMenuOpen] = useState(false);
 
   const [selBranch, setSelBranch] = useState("");
   const [selName, setSelName]     = useState("");
@@ -136,9 +114,8 @@ export default function App() {
   const [adminIn, setAdminIn]     = useState("");
   const [pwErr, setPwErr]         = useState(false);
 
-  const [form, setForm]         = useState({ rubricId: "", date: "", desc: "" });
-  const [catF, setCatF]         = useState("All");
-  const [top3Mode, setTop3Mode] = useState("individual");
+  const [form, setForm]   = useState({ rubricId: "", date: "", desc: "" });
+  const [catF, setCatF]   = useState("All");
 
   const [newName, setNewName]     = useState("");
   const [newBr, setNewBr]         = useState("");
@@ -209,6 +186,15 @@ export default function App() {
   const cats      = ["All", ...Array.from(new Set(CATALOGUE.map(p => p.cat)))];
   const catItems  = catF === "All" ? CATALOGUE : CATALOGUE.filter(p => p.cat === catF);
 
+  // ── Tier calculations ─────────────────────────────────────────────────────
+  const tierPts     = myOf?.total_points || 0;
+  const tierIdx     = Math.max(0, TIERS.findIndex(t => tierPts >= t.min && tierPts <= t.max));
+  const tier        = TIERS[tierIdx];
+  const nextTier    = TIERS[tierIdx + 1] || null;
+  const tierBarPct  = nextTier ? Math.min(100, Math.round(((tierPts - tier.min) / (nextTier.min - tier.min)) * 100)) : 100;
+  const tierPtsLeft = nextTier ? nextTier.min - tierPts : 0;
+  const isChamp     = !nextTier;
+
   const getMovement = (officerId, currentRank) => {
     const weeks = [...new Set(snaps.map(s => s.week_start))].sort().reverse();
     if (!weeks.length) return null;
@@ -266,18 +252,8 @@ export default function App() {
   const removeBranch  = async (id, name) => { if (!window.confirm(`Remove "${name}"?`)) return; setSLoading(true); try { for (const o of (byBranch[name] || [])) { await db.del("submissions", `officer_id=eq.${o.id}`); await db.del("redemptions", `officer_id=eq.${o.id}`); await db.del("officers", `id=eq.${o.id}`); } await db.del("branches", `id=eq.${id}`); msg(`Branch "${name}" removed.`); await load(); } catch (e) { msg(e.message, "err"); } setSLoading(false); };
   const changePw      = async () => { if (newPw.length < 6) { msg("Min 6 characters.", "err"); return; } setSLoading(true); try { await db.patch("config", "key=eq.admin_password", { value: newPw.trim() }); setAdminPwd(newPw.trim()); setNewPw(""); msg("✅ Password updated."); } catch (e) { msg(e.message, "err"); } setSLoading(false); };
 
-  // ── Shared atoms ──────────────────────────────────────────────────────────
-  const card = {
-    background: c.surface,
-    border: `1px solid ${c.border}`,
-    borderRadius: 10,
-  };
-  const inp = {
-    width: "100%", padding: "10px 12px",
-    background: c.inputBg, border: `1px solid ${c.inputBdr}`,
-    borderRadius: 7, color: c.text, fontSize: 13,
-    fontFamily: "'DM Sans',sans-serif", outline: "none", boxSizing: "border-box",
-  };
+  const card = { background: c.surface, border: `1px solid ${c.border}`, borderRadius: 10 };
+  const inp  = { width: "100%", padding: "10px 12px", background: c.inputBg, border: `1px solid ${c.inputBdr}`, borderRadius: 7, color: c.text, fontSize: 13, fontFamily: "'DM Sans',sans-serif", outline: "none", boxSizing: "border-box" };
 
   const Btn = ({ ch, onClick, v = "primary", sz = "md", disabled = false }) => {
     const p = { sm: "5px 10px", md: "9px 16px", lg: "12px 22px" };
@@ -305,24 +281,16 @@ export default function App() {
   );
 
   const Pill = ({ status, label }) => {
-    const map = {
-      approved: ["rgba(74,222,128,0.08)",  "#4ade80"],
-      pending:  ["rgba(250,204,21,0.08)",  "#fbbf24"],
-      rejected: ["rgba(248,113,113,0.08)", "#f87171"],
-    };
+    const map = { approved: ["rgba(74,222,128,0.08)", "#4ade80"], pending: ["rgba(250,204,21,0.08)", "#fbbf24"], rejected: ["rgba(248,113,113,0.08)", "#f87171"] };
     const [bg, col] = map[status] || map.pending;
-    return (
-      <span style={{ padding: "3px 8px", borderRadius: 4, fontSize: 10, fontWeight: 600, background: bg, color: col, whiteSpace: "nowrap", letterSpacing: 0.3 }}>
-        {(label || status).toUpperCase()}
-      </span>
-    );
+    return <span style={{ padding: "3px 8px", borderRadius: 4, fontSize: 10, fontWeight: 600, background: bg, color: col, whiteSpace: "nowrap", letterSpacing: 0.3 }}>{(label || status).toUpperCase()}</span>;
   };
 
   const CSS = () => (
     <style>{`
       @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=DM+Sans:wght@400;500;600&display=swap');
       *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-      html, body { background: ${c.bg}; min-height: 100vh; font-size: 16px; }
+      html, body { background: ${c.bg}; min-height: 100vh; font-size: 16px; overflow-x: hidden; max-width: 100vw; }
       ::-webkit-scrollbar { width: 4px; height: 4px; }
       ::-webkit-scrollbar-thumb { background: ${dark ? "rgba(255,255,255,0.08)" : "rgba(0,0,0,0.1)"}; border-radius: 4px; }
       input:focus, select:focus, textarea:focus { outline: none !important; border-color: ${c.borderA} !important; box-shadow: none !important; }
@@ -332,11 +300,9 @@ export default function App() {
       @keyframes pop { 0%{transform:scale(0.93);opacity:0} 65%{transform:scale(1.01)} 100%{transform:scale(1);opacity:1} }
       @keyframes spin { to{transform:rotate(360deg)} }
       @keyframes up { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:translateY(0)} }
+      @keyframes slideDown { from{opacity:0;transform:translateY(-8px)} to{opacity:1;transform:translateY(0)} }
       .up { animation: up 0.2s ease both; }
-      .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 52px; align-items: start; padding: 52px 0 40px; }
-      @media (max-width: 780px) { .two-col { grid-template-columns: 1fr !important; gap: 28px; padding: 28px 0 32px; } }
       .row-hover:hover { background: ${c.surfaceHover} !important; }
-      html, body { overflow-x: hidden; max-width: 100vw; }
       .portal-layout { display: flex; flex-direction: column; min-height: 100vh; width: 100%; max-width: 100vw; }
       .portal-main { width: 100%; min-width: 0; }
       .portal-cards-3 { display: grid; grid-template-columns: 1fr; gap: 1.25rem; }
@@ -344,29 +310,25 @@ export default function App() {
       @media (min-width: 901px) {
         .portal-layout { flex-direction: row; }
         .portal-sidebar { display: flex; flex-direction: column; width: 200px; flex-shrink: 0; }
-        .portal-nav-mobile { display: none !important; }
-        .portal-topbar-logo { display: none !important; }
         .portal-main { flex: 1; min-width: 0; }
         .portal-cards-3 { grid-template-columns: repeat(3, 1fr); }
         .portal-leaderboard-grid { display: grid; grid-template-columns: 1fr min(260px, 28%); gap: 1.25rem; }
-      }
-      .settings-grid-2 { display: grid; grid-template-columns: 1fr; gap: 0.5rem; }
-      @media (min-width: 601px) {
-        .settings-grid-2 { grid-template-columns: 1fr 1fr; }
+        .hamburger-btn { display: none !important; }
+        .mobile-menu { display: none !important; }
+        .desktop-tabs { display: flex !important; }
       }
       @media (max-width: 900px) {
         .portal-nav-desktop { display: none !important; }
         .portal-leaderboard-grid { display: flex; flex-direction: column; gap: 1.25rem; }
         .portal-top3 { grid-template-columns: 1fr !important; max-width: 100%; }
+        .desktop-tabs { display: none !important; }
       }
       .landing-grid { display: grid; grid-template-columns: 1fr; gap: 2.5rem; }
-      @media (min-width: 901px) {
-        .landing-grid { grid-template-columns: repeat(2, 1fr); gap: 2.5rem; }
-      }
+      @media (min-width: 901px) { .landing-grid { grid-template-columns: repeat(2, 1fr); gap: 2.5rem; } }
+      .mobile-menu { animation: slideDown 0.18s ease both; }
     `}</style>
   );
 
-  // ── Loading ───────────────────────────────────────────────────────────────
   if (loading) return (
     <div style={{ minHeight: "100vh", background: c.bg, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 12, fontFamily: "'DM Sans',sans-serif" }}>
       <CSS />
@@ -385,7 +347,6 @@ export default function App() {
     </div>
   );
 
-  // ── Top Nav (Landing) ─────────────────────────────────────────────────────
   const LandingNav = () => (
     <div style={{ borderBottom: `1px solid ${c.div}`, background: c.nav, backdropFilter: "blur(20px)", position: "sticky", top: 0, zIndex: 100 }}>
       <div style={{ maxWidth: 1160, margin: "0 auto", padding: "0 24px", display: "flex", alignItems: "center", height: 52, justifyContent: "space-between", gap: 16 }}>
@@ -396,7 +357,7 @@ export default function App() {
         <div style={{ display: "flex", gap: 5 }}>
           {[["📌 How to Earn", "rubrics"], ["🎁 Prizes", "catalogue"]].map(([lbl, sc]) => (
             <button key={sc} onClick={() => setScreen(sc)}
-              style={{ padding: "5px 12px", borderRadius: 6, border: `1px solid ${c.border}`, background: "transparent", color: c.sub, fontSize: 12, fontWeight: 500, cursor: "pointer", fontFamily: "'DM Sans',sans-serif", whiteSpace: "nowrap", transition: "all 0.12s" }}>
+              style={{ padding: "5px 12px", borderRadius: 6, border: `1px solid ${c.border}`, background: "transparent", color: c.sub, fontSize: 12, fontWeight: 500, cursor: "pointer", fontFamily: "'DM Sans',sans-serif", whiteSpace: "nowrap" }}>
               {lbl}
             </button>
           ))}
@@ -406,7 +367,6 @@ export default function App() {
     </div>
   );
 
-  // ── Rubrics screen ────────────────────────────────────────────────────────
   if (screen === "rubrics") return (
     <div style={{ minHeight: "100vh", background: c.bg, color: c.text, fontFamily: "'DM Sans',sans-serif" }}>
       <CSS />
@@ -431,7 +391,6 @@ export default function App() {
     </div>
   );
 
-  // ── Catalogue screen ──────────────────────────────────────────────────────
   if (screen === "catalogue") return (
     <div style={{ minHeight: "100vh", background: c.bg, color: c.text, fontFamily: "'DM Sans',sans-serif" }}>
       <CSS />
@@ -443,7 +402,7 @@ export default function App() {
         <div style={{ display: "flex", gap: 5, flexWrap: "wrap", marginBottom: 22 }}>
           {cats.map(ct => (
             <button key={ct} onClick={() => setCatF(ct)}
-              style={{ padding: "5px 12px", borderRadius: 5, border: `1px solid ${catF === ct ? c.borderA : c.border}`, background: catF === ct ? c.chipSel : "transparent", color: catF === ct ? c.text : c.sub, fontSize: 12, fontWeight: catF === ct ? 600 : 400, cursor: "pointer", fontFamily: "'DM Sans',sans-serif", transition: "all 0.12s" }}>
+              style={{ padding: "5px 12px", borderRadius: 5, border: `1px solid ${catF === ct ? c.borderA : c.border}`, background: catF === ct ? c.chipSel : "transparent", color: catF === ct ? c.text : c.sub, fontSize: 12, fontWeight: catF === ct ? 600 : 400, cursor: "pointer", fontFamily: "'DM Sans',sans-serif" }}>
               {ct}
             </button>
           ))}
@@ -456,50 +415,26 @@ export default function App() {
     </div>
   );
 
-  // ── Landing ───────────────────────────────────────────────────────────────
-  // ... inside your App component, replace the Landing section return with this:
-
   if (screen === "landing") {
-    const podOrder = [sorted[1], sorted[0], sorted[2]];
-    const podPos   = [2, 1, 3];
-    const podMedal = ["🥈", "🥇", "🥉"];
-    const podColor = ["#9ca3af", "#c9a227", "#b87333"];
-
     return (
       <div style={{ minHeight: "100vh", background: c.bg, color: c.text, fontFamily: "'DM Sans',sans-serif" }}>
         <CSS />
-        
-        {/* ── 1. NEW TOP COUNTDOWN TICKER ── */}
         <div style={{ background: dark ? "#1a1a1a" : "#eee", borderBottom: `1px solid ${c.border}`, padding: "6px 0", textAlign: "center" }}>
           <div style={{ display: "flex", justifyContent: "center", alignItems: "center", gap: 12, fontSize: 11, fontWeight: 700, color: c.sub, letterSpacing: 1 }}>
             <span style={{ color: "#f87171" }}>⏱️ CAMPAIGN ENDS IN:</span>
             <div style={{ display: "flex", gap: 8, color: c.text, fontFamily: "'Outfit',sans-serif" }}>
-              <span>{cd.days}D</span>
-              <span>{cd.hours}H</span>
-              <span>{cd.mins}M</span>
-              <span>{cd.secs}S</span>
+              <span>{cd.days}D</span><span>{cd.hours}H</span><span>{cd.mins}M</span><span>{cd.secs}S</span>
             </div>
           </div>
         </div>
-
         <LandingNav />
-
-        <div style={{ maxWidth: 1160, width: "100%", margin: "0 auto", padding: "0 24px 80px", boxSizing: "border-box", overflow: "hidden" }}>
-          <div className="landing-grid" style={{ paddingTop: "40px", minWidth: 0 }}>
-
-            {/* ── LEFT COLUMN: WELCOME & LOGIN ── */}
+        <div style={{ maxWidth: 1160, width: "100%", margin: "0 auto", padding: "0 24px 80px", boxSizing: "border-box" }}>
+          <div className="landing-grid" style={{ paddingTop: "40px" }}>
             <div className="up">
               <div style={{ marginBottom: 32 }}>
-                <h1 style={{ fontFamily: "'Outfit',sans-serif", fontSize: "40px", fontWeight: 800, color: c.text, marginBottom: 10 }}>
-                ⚙️ GEAR Up
-                </h1>
-                <p style={{ fontSize: 14, color: c.sub, lineHeight: 1.6 }}>
-                  Growth - Expertise - Autonomy - Readiness
-                  Log your learning activities, earn points, and climb the ranks. Growth starts here.
-                </p>
+                <h1 style={{ fontFamily: "'Outfit',sans-serif", fontSize: "40px", fontWeight: 800, color: c.text, marginBottom: 10 }}>⚙️ GEAR Up</h1>
+                <p style={{ fontSize: 14, color: c.sub, lineHeight: 1.6 }}>Growth - Expertise - Autonomy - Readiness. Log your learning activities, earn points, and climb the ranks.</p>
               </div>
-
-              {/* Login card */}
               <div style={{ ...card, padding: "28px", boxShadow: `0 10px 30px ${c.shadow}` }}>
                 {!adminBox ? (
                   <>
@@ -509,7 +444,6 @@ export default function App() {
                       <option value="">Select branch...</option>
                       {branches.map(b => <option key={b.id} value={b.name}>{b.name}</option>)}
                     </select>
-
                     {selBranch && (
                       <>
                         <label style={{ fontSize: 10, color: c.muted, display: "block", marginBottom: 7 }}>YOUR NAME</label>
@@ -519,18 +453,13 @@ export default function App() {
                         </select>
                       </>
                     )}
-
                     <button onClick={enterOfficer} disabled={!selBranch || !selName}
                       style={{ width: "100%", padding: "12px", borderRadius: 8, background: selBranch && selName ? c.text : c.blank, color: selBranch && selName ? (dark ? "#000" : "#fff") : c.muted, border: "none", fontWeight: 700, cursor: "pointer" }}>
                       Enter Portal →
                     </button>
-                    
-                    <button onClick={() => setAdminBox(true)} style={{ width: "100%", marginTop: 16, background: "none", border: "none", color: c.muted, fontSize: 11, cursor: "pointer" }}>
-                      Admin Login
-                    </button>
+                    <button onClick={() => setAdminBox(true)} style={{ width: "100%", marginTop: 16, background: "none", border: "none", color: c.muted, fontSize: 11, cursor: "pointer" }}>Admin Login</button>
                   </>
                 ) : (
-                  /* Admin logic stays same */
                   <div style={{ textAlign: "center" }}>
                     <button onClick={() => setAdminBox(false)} style={{ background: "none", border: "none", color: c.sub, cursor: "pointer", fontSize: 12, marginBottom: 15 }}>← Back</button>
                     <input type="password" placeholder="Admin Password" value={adminIn} onChange={e => setAdminIn(e.target.value)} style={{ ...inp, marginBottom: 10 }} />
@@ -539,24 +468,14 @@ export default function App() {
                 )}
               </div>
             </div>
-
-            {/* ── RIGHT COLUMN: LEADERBOARD ── */}
             <div className="up" style={{ animationDelay: "0.1s" }}>
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", marginBottom: 16 }}>
                 <p style={{ fontSize: 11, color: c.muted, letterSpacing: 1.5, textTransform: "uppercase", fontWeight: 700 }}>Live Leaderboard</p>
                 <div style={{ fontSize: 10, color: c.goldText }}>Top 3 win Mystery Prizes!</div>
               </div>
-
               <div style={{ ...card, overflow: "hidden" }}>
                 {sorted.slice(0, 5).map((o, i) => (
-                  <div key={o.id} style={{ 
-                    display: "flex", 
-                    alignItems: "center", 
-                    gap: 12, 
-                    padding: "14px 18px", 
-                    borderBottom: i < 4 ? `1px solid ${c.border}` : "none",
-                    background: i < 3 ? (dark ? "rgba(255,255,255,0.02)" : "rgba(0,0,0,0.01)") : "transparent"
-                  }}>
+                  <div key={o.id} style={{ display: "flex", alignItems: "center", gap: 12, padding: "14px 18px", borderBottom: i < 4 ? `1px solid ${c.border}` : "none", background: i < 3 ? (dark ? "rgba(255,255,255,0.02)" : "rgba(0,0,0,0.01)") : "transparent" }}>
                     <span style={{ fontSize: i < 3 ? 18 : 12, width: 24, fontWeight: 800, color: i === 0 ? "#c9a227" : c.muted }}>
                       {i === 0 ? "🥇" : i === 1 ? "🥈" : i === 2 ? "🥉" : `#${i + 1}`}
                     </span>
@@ -571,11 +490,8 @@ export default function App() {
                   </div>
                 ))}
               </div>
-              <p style={{ textAlign: "center", marginTop: 12, fontSize: 11, color: c.muted }}>
-                Only showing top 5. Sign in to see your full rank!
-              </p>
+              <p style={{ textAlign: "center", marginTop: 12, fontSize: 11, color: c.muted }}>Only showing top 5. Sign in to see your full rank!</p>
             </div>
-
           </div>
         </div>
       </div>
@@ -596,9 +512,10 @@ export default function App() {
     { id: "settings",    label: "Settings" },
   ];
   const TABS = isAdmin ? ATABS : OTABS;
+  const activeLabel = TABS.find(t => t.id === tab)?.label || "";
 
   return (
-    <div style={{ minHeight: "100vh", background: c.bg, color: c.text, fontFamily: "'DM Sans',sans-serif", overflowX: "hidden", maxWidth: "100vw" }}>
+    <div style={{ minHeight: "100vh", background: c.bg, color: c.text, fontFamily: "'DM Sans',sans-serif", overflowX: "hidden" }}>
       <CSS />
 
       {/* Toast */}
@@ -626,16 +543,19 @@ export default function App() {
         </div>
       )}
 
-      {/* Top bar: logo + mobile tabs + user */}
+      {/* ── Top bar ── */}
       <div style={{ borderBottom: `1px solid ${c.div}`, background: c.nav, backdropFilter: "blur(20px)", position: "sticky", top: 0, zIndex: 100, flexShrink: 0 }}>
         <div style={{ maxWidth: 1060, margin: "0 auto", padding: "0 18px", display: "flex", alignItems: "center", gap: 8, height: 52, minWidth: 0 }}>
-          <button onClick={() => setScreen("landing")} className="portal-nav-desktop portal-topbar-logo"
+
+          {/* Logo — desktop sidebar shows it; mobile topbar shows it */}
+          <button onClick={() => setScreen("landing")}
             style={{ display: "flex", alignItems: "center", gap: 7, background: c.chip, border: `1px solid ${c.border}`, borderRadius: 7, cursor: "pointer", flexShrink: 0, padding: "4px 11px" }}>
             <span style={{ fontSize: 13 }}>🏆</span>
             <span style={{ fontFamily: "'Outfit',sans-serif", fontWeight: 700, fontSize: 13, color: c.text }}>GEAR Up</span>
           </button>
-          <div style={{ width: 1, height: 16, background: c.border, flexShrink: 0 }} className="portal-nav-desktop portal-topbar-logo" />
-          <div className="portal-nav-mobile" style={{ display: "flex", gap: 1, flex: 1, minWidth: 0, overflowX: "auto", scrollbarWidth: "none", WebkitOverflowScrolling: "touch" }}>
+
+          {/* Desktop: tab row */}
+          <div className="desktop-tabs" style={{ gap: 1, flex: 1, minWidth: 0 }}>
             {TABS.map(tb => (
               <button key={tb.id} onClick={() => setTab(tb.id)}
                 style={{ padding: "5px 12px", borderRadius: 6, border: "none", background: tab === tb.id ? c.chipSel : "transparent", color: tab === tb.id ? c.text : c.sub, fontSize: 12, fontWeight: tab === tb.id ? 600 : 400, cursor: "pointer", whiteSpace: "nowrap", flexShrink: 0, fontFamily: "'DM Sans',sans-serif", transition: "all 0.12s" }}>
@@ -643,6 +563,13 @@ export default function App() {
               </button>
             ))}
           </div>
+
+          {/* Mobile: current tab label + hamburger */}
+          <div className="hamburger-btn" style={{ flex: 1, display: "flex", alignItems: "center", gap: 6, minWidth: 0 }}>
+            <span style={{ fontSize: 12, fontWeight: 600, color: c.text, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{activeLabel}</span>
+          </div>
+
+          {/* Right side */}
           <div style={{ display: "flex", alignItems: "center", gap: 8, flexShrink: 0 }}>
             {!isAdmin && myOf && (
               <div style={{ textAlign: "right" }}>
@@ -653,13 +580,32 @@ export default function App() {
             <div style={{ width: 28, height: 28, borderRadius: "50%", background: c.chipSel, border: `1px solid ${c.border}`, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 9, fontWeight: 700, color: c.text, flexShrink: 0 }}>
               {isAdmin ? "AD" : (user ? initials(user.name) : "?")}
             </div>
-            <button onClick={() => { setScreen("landing"); setSelBranch(""); setSelName(""); setAdminIn(""); setAdminBox(false); }}
+            {/* Hamburger button — mobile only */}
+            <button className="hamburger-btn" onClick={() => setMenuOpen(o => !o)}
+              style={{ display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", gap: 4, width: 32, height: 32, background: menuOpen ? c.chipSel : "transparent", border: `1px solid ${menuOpen ? c.borderA : c.border}`, borderRadius: 6, cursor: "pointer", flexShrink: 0, padding: 0 }}>
+              <span style={{ width: 14, height: 1.5, background: c.text, borderRadius: 2, transition: "all 0.18s", transform: menuOpen ? "rotate(45deg) translate(4px, 4px)" : "none" }} />
+              <span style={{ width: 14, height: 1.5, background: c.text, borderRadius: 2, transition: "all 0.18s", opacity: menuOpen ? 0 : 1 }} />
+              <span style={{ width: 14, height: 1.5, background: c.text, borderRadius: 2, transition: "all 0.18s", transform: menuOpen ? "rotate(-45deg) translate(4px, -4px)" : "none" }} />
+            </button>
+            <button onClick={() => { setScreen("landing"); setSelBranch(""); setSelName(""); setAdminIn(""); setAdminBox(false); setMenuOpen(false); }}
               style={{ padding: "3px 9px", background: "transparent", border: `1px solid ${c.border}`, borderRadius: 5, color: c.sub, cursor: "pointer", fontSize: 10, fontFamily: "'DM Sans',sans-serif" }}>
               Exit
             </button>
             <Toggle />
           </div>
         </div>
+
+        {/* Mobile dropdown menu */}
+        {menuOpen && (
+          <div className="mobile-menu hamburger-btn" style={{ borderTop: `1px solid ${c.border}`, background: c.nav, padding: "8px 18px 12px" }}>
+            {TABS.map(tb => (
+              <button key={tb.id} onClick={() => { setTab(tb.id); setMenuOpen(false); }}
+                style={{ display: "block", width: "100%", textAlign: "left", padding: "11px 14px", borderRadius: 7, border: "none", background: tab === tb.id ? c.chipSel : "transparent", color: tab === tb.id ? c.text : c.sub, fontSize: 14, fontWeight: tab === tb.id ? 600 : 400, cursor: "pointer", fontFamily: "'DM Sans',sans-serif", marginBottom: 2 }}>
+                {tb.label}
+              </button>
+            ))}
+          </div>
+        )}
       </div>
 
       <div className="portal-layout" style={{ flex: 1, minHeight: 0, minWidth: 0 }}>
@@ -675,7 +621,7 @@ export default function App() {
           <nav style={{ display: "flex", flexDirection: "column", gap: 2 }}>
             {TABS.map(tb => (
               <button key={tb.id} onClick={() => setTab(tb.id)}
-                style={{ padding: "8px 14px", borderRadius: 6, border: "none", background: tab === tb.id ? c.chipSel : "transparent", color: tab === tb.id ? c.text : c.sub, fontSize: 12, fontWeight: tab === tb.id ? 600 : 400, cursor: "pointer", textAlign: "left", fontFamily: "'DM Sans',sans-serif", transition: "all 0.12s" }}>
+                style={{ padding: "8px 14px", borderRadius: 6, border: "none", background: tab === tb.id ? c.chipSel : "transparent", color: tab === tb.id ? c.text : c.sub, fontSize: 12, fontWeight: tab === tb.id ? 600 : 400, cursor: "pointer", textAlign: "left", fontFamily: "'DM Sans',sans-serif" }}>
                 {tb.label}
               </button>
             ))}
@@ -684,446 +630,498 @@ export default function App() {
 
         <div className="portal-main" style={{ maxWidth: 1060, margin: "0 auto", padding: "28px 18px 60px", display: "flex", flexDirection: "column", alignItems: "stretch", width: "100%", minWidth: 0, boxSizing: "border-box", overflow: "hidden" }}>
 
-        {/* ── Log Activity ── */}
-        {tab === "submit" && !isAdmin && (
-          <div className="up" style={{ width: "100%", maxWidth: 540 }}>
-            {/* User card */}
-            <div style={{ ...card, padding: "14px 18px", marginBottom: 22, display: "flex", alignItems: "center", gap: 12 }}>
-              <div style={{ width: 36, height: 36, borderRadius: "50%", background: c.chipSel, border: `1px solid ${c.border}`, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 10, fontWeight: 700, color: c.text, flexShrink: 0 }}>{user ? initials(user.name) : "?"}</div>
-              <div style={{ flex: 1 }}>
-                <div style={{ fontFamily: "'Outfit',sans-serif", fontSize: 13, fontWeight: 700, color: c.text }}>{user?.name}</div>
-                <div style={{ fontSize: 11, color: c.sub }}>{user?.unit}</div>
-              </div>
-              <div style={{ textAlign: "right" }}>
-                <div style={{ fontFamily: "'Outfit',sans-serif", fontSize: 18, color: c.text, fontWeight: 800, lineHeight: 1 }}>{myAvail}</div>
-                <div style={{ fontSize: 9, color: c.muted }}>available pts</div>
-              </div>
-            </div>
+          {/* ── Log Activity ── */}
+          {tab === "submit" && !isAdmin && (
+            <div className="up" style={{ width: "100%", maxWidth: 540 }}>
 
-            <h2 style={{ fontFamily: "'Outfit',sans-serif", fontSize: 18, fontWeight: 700, marginBottom: 4, color: c.text }}>Log an Activity</h2>
-            <p style={{ color: c.sub, fontSize: 12, marginBottom: 20, lineHeight: 1.65 }}>Select what you did — points are awarded once your Reporting Officer approves.</p>
-
-            <p style={{ fontSize: 10, color: c.muted, letterSpacing: 1.5, marginBottom: 10, textTransform: "uppercase" }}>Select Activity *</p>
-            <div style={{ display: "flex", flexDirection: "column", gap: 1, ...card, overflow: "hidden", marginBottom: 18 }}>
-              {RUBRICS.map((r, idx) => {
-                const sel = form.rubricId === String(r.id);
-                return (
-                  <div key={r.id} onClick={() => setForm(p => ({ ...p, rubricId: String(r.id) }))}
-                    className="row-hover"
-                    style={{ padding: "11px 16px", cursor: "pointer", display: "flex", alignItems: "center", gap: 10, borderBottom: idx < RUBRICS.length - 1 ? `1px solid ${c.border}` : "none", background: sel ? c.chipSel : "transparent", transition: "background 0.1s" }}>
-                    <span style={{ fontSize: 16, flexShrink: 0, width: 24, textAlign: "center" }}>{r.icon}</span>
-                    <span style={{ flex: 1, fontSize: 12, fontWeight: sel ? 600 : 400, color: c.text, lineHeight: 1.4 }}>{r.activity}</span>
-                    <span style={{ fontFamily: "'Outfit',sans-serif", fontSize: 13, fontWeight: 700, color: sel ? c.text : c.muted, flexShrink: 0 }}>+{r.points}</span>
-                    {sel && <span style={{ fontSize: 11, color: c.text, flexShrink: 0 }}>✓</span>}
+              {/* ── Tier Dashboard Card ── */}
+              <div style={{
+                marginBottom: 26, borderRadius: 14, padding: "22px 22px 20px",
+                background: dark
+                  ? "linear-gradient(135deg, rgba(255,255,255,0.055) 0%, rgba(255,255,255,0.02) 100%)"
+                  : "linear-gradient(135deg, #ffffff 0%, #f0f0f0 100%)",
+                border: `1px solid ${dark ? "rgba(255,255,255,0.13)" : "rgba(0,0,0,0.1)"}`,
+                boxShadow: dark
+                  ? "0 0 0 1px rgba(255,255,255,0.04), 0 8px 32px rgba(0,0,0,0.45)"
+                  : "0 2px 16px rgba(0,0,0,0.08), 0 0 0 1px rgba(0,0,0,0.04)",
+              }}>
+                {/* Top row: avatar + name + pts */}
+                <div style={{ display: "flex", alignItems: "center", gap: 14, marginBottom: 18 }}>
+                  <div style={{
+                    width: 44, height: 44, borderRadius: "50%", flexShrink: 0,
+                    background: dark ? "rgba(255,255,255,0.08)" : "rgba(0,0,0,0.06)",
+                    border: `2px solid ${tier.color}55`,
+                    boxShadow: `0 0 0 4px ${tier.color}18`,
+                    display: "flex", alignItems: "center", justifyContent: "center",
+                    fontSize: 12, fontWeight: 800, color: c.text,
+                  }}>
+                    {user ? initials(user.name) : "?"}
                   </div>
-                );
-              })}
-            </div>
-
-            <div style={{ ...card, padding: 20 }}>
-              <label style={{ fontSize: 10, color: c.muted, letterSpacing: 1.5, display: "block", marginBottom: 7, textTransform: "uppercase" }}>Date *</label>
-              <input type="date" value={form.date} onChange={e => setForm(p => ({ ...p, date: e.target.value }))} style={{ ...inp, marginBottom: 16 }} />
-              <label style={{ fontSize: 10, color: c.muted, letterSpacing: 1.5, display: "block", marginBottom: 7, textTransform: "uppercase" }}>Description / Evidence *</label>
-              <textarea value={form.desc} onChange={e => setForm(p => ({ ...p, desc: e.target.value }))} placeholder='e.g. Attended "Leadership in Action" workshop, full day.' rows={3} style={{ ...inp, resize: "vertical", lineHeight: 1.6, marginBottom: 16 }} />
-              {form.rubricId && (
-                <div style={{ padding: "10px 14px", background: c.infoBg, border: `1px solid ${c.infoBdr}`, borderRadius: 7, marginBottom: 14, display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-                  <span style={{ fontSize: 12, color: c.sub }}>Points upon approval</span>
-                  <span style={{ fontFamily: "'Outfit',sans-serif", fontSize: 20, fontWeight: 800, color: c.text }}>+{RUBRICS.find(r => r.id === parseInt(form.rubricId))?.points}</span>
-                </div>
-              )}
-              <button onClick={submitAct} disabled={!form.rubricId || !form.date || !form.desc.trim()}
-                style={{ width: "100%", padding: "11px 0", fontSize: 13, fontWeight: 600, borderRadius: 7, border: `1px solid ${form.rubricId && form.date && form.desc.trim() ? c.borderA : c.border}`, cursor: form.rubricId && form.date && form.desc.trim() ? "pointer" : "default", fontFamily: "'DM Sans',sans-serif", background: form.rubricId && form.date && form.desc.trim() ? c.text : "transparent", color: form.rubricId && form.date && form.desc.trim() ? (dark ? "#0a0a0a" : "#fff") : c.muted, transition: "all 0.16s" }}>
-                Submit for Approval →
-              </button>
-            </div>
-          </div>
-        )}
-
-        {/* ── Leaderboard ── */}
-        {tab === "leaderboard" && (
-          <div className="up" style={{ width: "100%", minWidth: 0 }}>
-            <p style={{ fontSize: 10, color: c.muted, letterSpacing: 2, marginBottom: 16, textTransform: "uppercase" }}>Top 3 Officers</p>
-            <div className="portal-top3" style={{ display: "grid", gridTemplateColumns: "1fr 1.12fr 1fr", gap: 8, maxWidth: 500, marginBottom: 32 }}>
-              {[sorted[1], sorted[0], sorted[2]].map((o, i) => {
-                if (!o) return <div key={i} />;
-                const pos   = [2, 1, 3][i];
-                const col   = ["#9ca3af", "#c9a227", "#b87333"][i];
-                const isMe  = user && o.id === user.id;
-                const mv    = getMovement(o.id, pos);
-                return (
-                  <div key={o.id} style={{ ...card, padding: pos === 1 ? "20px 12px" : "14px 10px", textAlign: "center", border: isMe ? `1px solid ${c.borderA}` : pos === 1 ? `1px solid ${c.gold}` : `1px solid ${c.border}`, background: pos === 1 ? (dark ? "rgba(201,162,39,0.05)" : "rgba(255,248,210,0.5)") : c.surface }}>
-                    <div style={{ fontSize: pos === 1 ? 28 : 22, marginBottom: 9 }}>{["🥈","🥇","🥉"][i]}</div>
-                    <div style={{ fontFamily: "'Outfit',sans-serif", fontSize: 12, fontWeight: 700, color: c.text, lineHeight: 1.3, marginBottom: 2 }}>{o.name}</div>
-                    <div style={{ fontSize: 9, color: c.sub, marginBottom: 10, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{o.unit}</div>
-                    <div style={{ fontFamily: "'Outfit',sans-serif", fontSize: pos === 1 ? 22 : 17, fontWeight: 800, color: col, lineHeight: 1 }}>{o.total_points}</div>
-                    <div style={{ fontSize: 9, color: c.muted, marginBottom: 4 }}>pts</div>
-                    {mv && (
-                      <div style={{ display: "flex", gap: 4, justifyContent: "center", flexWrap: "wrap" }}>
-                        {mv.rankDiff !== 0 && <span style={{ fontSize: 9, fontWeight: 700, color: mv.rankDiff > 0 ? "#4ade80" : "#f87171" }}>{mv.rankDiff > 0 ? `▲${mv.rankDiff}` : `▼${Math.abs(mv.rankDiff)}`}</span>}
-                        {mv.ptsDiff > 0 && <span style={{ fontSize: 9, color: c.muted }}>+{mv.ptsDiff}pts</span>}
-                      </div>
-                    )}
-                    <div style={{ fontSize: 9, color: c.goldText, marginTop: 4 }}>★ Special Prize</div>
+                  <div style={{ flex: 1, minWidth: 0 }}>
+                    <div style={{ fontFamily: "'Outfit',sans-serif", fontSize: 15, fontWeight: 700, color: c.text, lineHeight: 1.2 }}>{user?.name}</div>
+                    <div style={{ fontSize: 11, color: c.sub, marginTop: 2, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{user?.unit}</div>
                   </div>
-                );
-              })}
-            </div>
-
-            <div className="portal-leaderboard-grid">
-              <div style={{ minWidth: 0 }}>
-                <p style={{ fontSize: 10, color: c.muted, letterSpacing: 2, marginBottom: 12, textTransform: "uppercase" }}>All Officers</p>
-                <div style={{ ...card, overflow: "hidden" }}>
-                  {sorted.slice(3).map((o, i) => {
-                    const isMe = user && o.id === user.id;
-                    const mv   = getMovement(o.id, i + 4);
-                    return (
-                      <div key={o.id} className="row-hover"
-                        style={{ display: "flex", alignItems: "center", gap: 10, padding: "11px 16px", borderBottom: `1px solid ${c.border}`, background: isMe ? c.infoBg : "transparent" }}>
-                        <span style={{ fontFamily: "'Outfit',sans-serif", fontSize: 11, color: c.muted, width: 24, flexShrink: 0 }}>#{i + 4}</span>
-                        <div style={{ flex: 1, minWidth: 0 }}>
-                          <div style={{ fontSize: 12, fontWeight: 600, color: c.text, display: "flex", alignItems: "center", gap: 5 }}>
-                            {o.name}
-                            {isMe && <span style={{ fontSize: 9, color: c.sub, background: c.chipSel, padding: "1px 5px", borderRadius: 3, fontWeight: 600, border: `1px solid ${c.border}` }}>YOU</span>}
-                          </div>
-                          <div style={{ fontSize: 9, color: c.muted, marginTop: 1, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{o.unit}</div>
-                        </div>
-                        <div style={{ textAlign: "right", flexShrink: 0 }}>
-                          <div style={{ fontFamily: "'Outfit',sans-serif", fontSize: 14, fontWeight: 700, color: c.text }}>{o.total_points}</div>
-                          {mv && (
-                            <div style={{ display: "flex", gap: 3, justifyContent: "flex-end", marginTop: 1 }}>
-                              {mv.rankDiff !== 0 && <span style={{ fontSize: 9, fontWeight: 700, color: mv.rankDiff > 0 ? "#4ade80" : "#f87171" }}>{mv.rankDiff > 0 ? `▲${mv.rankDiff}` : `▼${Math.abs(mv.rankDiff)}`}</span>}
-                              {mv.ptsDiff > 0 && <span style={{ fontSize: 9, color: c.muted }}>+{mv.ptsDiff}pts</span>}
-                            </div>
-                          )}
-                        </div>
-                      </div>
-                    );
-                  })}
-                </div>
-              </div>
-              <div>
-                <p style={{ fontSize: 10, color: c.muted, letterSpacing: 2, marginBottom: 4, textTransform: "uppercase" }}>Branch Standings</p>
-                <p style={{ fontSize: 9, color: c.muted, marginBottom: 12, lineHeight: 1.5 }}>Avg pts per officer</p>
-                <div style={{ ...card, overflow: "hidden" }}>
-                  {unitScores.map((u, i) => (
-                    <div key={u.unit} style={{ padding: "11px 13px", display: "flex", alignItems: "center", gap: 8, borderBottom: i < unitScores.length - 1 ? `1px solid ${c.border}` : "none", background: i === 0 ? (dark ? "rgba(201,162,39,0.04)" : "rgba(255,248,210,0.4)") : "transparent" }}>
-                      <span style={{ fontSize: 12 }}>{["🥇","🥈","🥉","4️⃣","5️⃣","6️⃣","7️⃣"][i]}</span>
-                      <div style={{ flex: 1, minWidth: 0 }}>
-                        <div style={{ fontSize: 11, fontWeight: 600, color: i === 0 ? c.goldText : c.text, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{u.unit}</div>
-                        <div style={{ fontSize: 9, color: c.muted }}>{u.count} officers</div>
-                      </div>
-                      <div style={{ textAlign: "right", flexShrink: 0 }}>
-                        <div style={{ fontFamily: "'Outfit',sans-serif", fontSize: 15, fontWeight: 700, color: i === 0 ? c.goldText : c.text }}>{u.avg}</div>
-                        <div style={{ fontSize: 8, color: c.muted }}>avg</div>
-                      </div>
+                  <div style={{ textAlign: "right", flexShrink: 0 }}>
+                    <div style={{ display: "flex", alignItems: "baseline", gap: 3, justifyContent: "flex-end" }}>
+                      <span style={{ fontFamily: "'Outfit',sans-serif", fontSize: 28, fontWeight: 800, color: c.text, lineHeight: 1 }}>{tierPts}</span>
+                      <span style={{ fontSize: 10, color: c.muted }}>pts</span>
                     </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* ── My Log ── */}
-        {tab === "mylog" && !isAdmin && (
-          <div className="up" style={{ width: "100%", maxWidth: 600 }}>
-            <h2 style={{ fontFamily: "'Outfit',sans-serif", fontSize: 18, fontWeight: 700, marginBottom: 4, color: c.text }}>My Activity Log</h2>
-            <p style={{ color: c.sub, fontSize: 12, marginBottom: 22, lineHeight: 1.6 }}>Your submitted activities and their approval status.</p>
-            {mySubs.length === 0 ? (
-              <div style={{ ...card, padding: 44, textAlign: "center" }}>
-                <div style={{ fontSize: 30, marginBottom: 10 }}>📭</div>
-                <div style={{ color: c.sub, fontSize: 13, marginBottom: 16 }}>No activities logged yet.</div>
-                <Btn ch="Log your first activity →" onClick={() => setTab("submit")} v="ghost" sz="sm" />
-              </div>
-            ) : (
-              <div style={{ ...card, overflow: "hidden" }}>
-                {mySubs.map((s, i) => (
-                  <div key={s.id} style={{ padding: "13px 18px", display: "flex", alignItems: "center", gap: 12, borderBottom: i < mySubs.length - 1 ? `1px solid ${c.border}` : "none" }}>
-                    <span style={{ fontSize: 18, flexShrink: 0 }}>{s.icon}</span>
-                    <div style={{ flex: 1, minWidth: 0 }}>
-                      <div style={{ fontSize: 12, fontWeight: 600, color: c.text, marginBottom: 2 }}>{s.activity}</div>
-                      <div style={{ fontSize: 10, color: c.muted, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{s.date} · {s.description}</div>
-                    </div>
-                    <span style={{ fontFamily: "'Outfit',sans-serif", fontSize: 13, color: c.text, flexShrink: 0, marginRight: 6, fontWeight: 700 }}>+{s.points}</span>
-                    <Pill status={s.status} />
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
-        )}
-
-        {/* ── Prizes ── */}
-        {tab === "prizes" && !isAdmin && (
-          <div className="up" style={{ width: "100%" }}>
-            <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", flexWrap: "wrap", gap: 14, marginBottom: 22 }}>
-              <div>
-                <h2 style={{ fontFamily: "'Outfit',sans-serif", fontSize: 18, fontWeight: 700, marginBottom: 3, color: c.text }}>Prize Catalogue</h2>
-                <p style={{ color: c.sub, fontSize: 12 }}>Spend your points — your choice.</p>
-              </div>
-              <div style={{ ...card, padding: "12px 18px", textAlign: "center" }}>
-                <div style={{ fontSize: 9, color: c.muted, letterSpacing: 1.5, marginBottom: 3, textTransform: "uppercase" }}>Available Points</div>
-                <div style={{ fontFamily: "'Outfit',sans-serif", fontSize: 24, fontWeight: 800, color: c.text, lineHeight: 1 }}>{myAvail}</div>
-                <div style={{ fontSize: 9, color: c.muted, marginTop: 3 }}>{myOf?.total_points} earned · {mySpent} spent</div>
-              </div>
-            </div>
-            <div style={{ display: "flex", gap: 5, flexWrap: "wrap", marginBottom: 18 }}>
-              {cats.map(ct => (
-                <button key={ct} onClick={() => setCatF(ct)}
-                  style={{ padding: "5px 12px", borderRadius: 5, border: `1px solid ${catF === ct ? c.borderA : c.border}`, background: catF === ct ? c.chipSel : "transparent", color: catF === ct ? c.text : c.sub, fontSize: 12, fontWeight: catF === ct ? 600 : 400, cursor: "pointer", fontFamily: "'DM Sans',sans-serif", transition: "all 0.12s" }}>
-                  {ct}
-                </button>
-              ))}
-            </div>
-            <div className="portal-cards-3" style={{ marginBottom: 24 }}>
-              {catItems.map(p => {
-                const can = myAvail >= p.cost;
-                return (
-                  <div key={p.id} onClick={() => can && !p.tba && setConfirm(p)}
-                    style={{ ...card, padding: "16px 15px", position: "relative", opacity: can ? 1 : 0.4, cursor: can && !p.tba ? "pointer" : "default", transition: "opacity 0.15s" }}>
-                    {p.tba && <div style={{ position: "absolute", top: 10, right: 10, padding: "2px 6px", borderRadius: 4, background: c.chipSel, border: `1px solid ${c.border}`, fontSize: 9, color: c.muted, fontWeight: 600 }}>TBA</div>}
-                    <div style={{ fontSize: 26, marginBottom: 10 }}>{p.icon}</div>
-                    <div style={{ fontSize: 9, color: p.color, fontWeight: 600, letterSpacing: 1, marginBottom: 4, textTransform: "uppercase" }}>{p.cat}</div>
-                    <div style={{ fontSize: 12, fontWeight: 600, color: c.text, marginBottom: 4 }}>{p.name}</div>
-                    <div style={{ fontSize: 11, color: c.sub, marginBottom: 14, lineHeight: 1.5 }}>{p.desc}</div>
-                    <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-                      <div style={{ fontFamily: "'Outfit',sans-serif", fontSize: 15, fontWeight: 700, color: can ? c.text : c.muted }}>{p.cost} <span style={{ fontSize: 9, fontWeight: 400, color: c.muted }}>pts</span></div>
-                      {can && !p.tba
-                        ? <div style={{ padding: "3px 9px", borderRadius: 4, background: c.chipSel, border: `1px solid ${c.border}`, color: c.text, fontSize: 10, fontWeight: 600 }}>Redeem</div>
-                        : !can
-                          ? <div style={{ fontSize: 9, color: c.muted }}>{p.cost - myAvail} more</div>
-                          : <div style={{ fontSize: 9, color: c.muted }}>Soon</div>
-                      }
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-            <SpecialSection c={c} dark={dark} card={card} />
-          </div>
-        )}
-
-        {/* ── Admin: Approvals ── */}
-        {tab === "approvals" && isAdmin && (
-          <div className="up" style={{ width: "100%", maxWidth: 700 }}>
-            <h2 style={{ fontFamily: "'Outfit',sans-serif", fontSize: 18, fontWeight: 700, marginBottom: 4, color: c.text }}>Activity Approvals</h2>
-            <p style={{ color: c.sub, fontSize: 12, marginBottom: 22, lineHeight: 1.6 }}>Approve or reject officer activity submissions.</p>
-            {pending.length === 0
-              ? <EmptyBox icon="✨" msg="All caught up — no pending submissions." c={c} card={card} />
-              : (
-                <div style={{ ...card, overflow: "hidden", marginBottom: 24 }}>
-                  {pending.map((s, i) => (
-                    <div key={s.id} style={{ padding: "14px 18px", display: "flex", alignItems: "center", gap: 12, borderBottom: i < pending.length - 1 ? `1px solid ${c.border}` : "none" }}>
-                      <span style={{ fontSize: 20, flexShrink: 0 }}>{s.icon}</span>
-                      <div style={{ flex: 1, minWidth: 0 }}>
-                        <div style={{ display: "flex", gap: 6, alignItems: "center", marginBottom: 3, flexWrap: "wrap" }}>
-                          <span style={{ fontFamily: "'Outfit',sans-serif", fontSize: 12, color: c.text, fontWeight: 700 }}>{s.officer_name}</span>
-                          <span style={{ fontSize: 9, color: c.muted }}>·</span>
-                          <span style={{ fontSize: 11, color: c.sub }}>{s.unit}</span>
-                        </div>
-                        <div style={{ fontSize: 12, color: c.text, marginBottom: 2 }}>{s.activity}</div>
-                        <div style={{ fontSize: 10, color: c.muted, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{s.date} · {s.description}</div>
-                      </div>
-                      <span style={{ fontFamily: "'Outfit',sans-serif", fontSize: 13, color: c.goldText, flexShrink: 0, fontWeight: 700 }}>+{s.points}</span>
-                      <div style={{ display: "flex", gap: 5, flexShrink: 0 }}>
-                        <Btn ch="Approve" v="success" sz="sm" onClick={() => approve(s.id)} />
-                        <Btn ch="Reject" v="danger" sz="sm" onClick={() => reject(s.id)} />
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              )
-            }
-            {subs.filter(s => s.status !== "pending").length > 0 && (
-              <div>
-                <p style={{ fontSize: 10, color: c.muted, letterSpacing: 2, marginBottom: 12, textTransform: "uppercase" }}>History</p>
-                <div style={{ ...card, overflow: "hidden" }}>
-                  {subs.filter(s => s.status !== "pending").map((s, i, arr) => (
-                    <div key={s.id} style={{ padding: "11px 18px", display: "flex", alignItems: "center", gap: 10, opacity: 0.55, borderBottom: i < arr.length - 1 ? `1px solid ${c.border}` : "none" }}>
-                      <span style={{ fontSize: 15 }}>{s.icon}</span>
-                      <div style={{ flex: 1, minWidth: 0 }}>
-                        <div style={{ fontSize: 11, fontWeight: 600, color: c.text }}>{s.officer_name} <span style={{ color: c.muted, fontWeight: 400 }}>· {s.activity}</span></div>
-                      </div>
-                      <span style={{ fontFamily: "'Outfit',sans-serif", fontSize: 11, color: c.text, flexShrink: 0 }}>+{s.points}</span>
-                      <Pill status={s.status} />
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
-          </div>
-        )}
-
-        {/* ── Admin: Redemptions ── */}
-        {tab === "redemptions" && isAdmin && (
-          <div className="up" style={{ width: "100%", maxWidth: 700 }}>
-            <h2 style={{ fontFamily: "'Outfit',sans-serif", fontSize: 18, fontWeight: 700, marginBottom: 4, color: c.text }}>Prize Redemptions</h2>
-            <p style={{ color: c.sub, fontSize: 12, marginBottom: 22, lineHeight: 1.6 }}>Fulfil or reject officer prize redemption requests.</p>
-            {pendingR.length === 0
-              ? <EmptyBox icon="🎁" msg="No pending redemptions." c={c} card={card} />
-              : (
-                <div style={{ ...card, overflow: "hidden", marginBottom: 24 }}>
-                  {pendingR.map((r, i) => (
-                    <div key={r.id} style={{ padding: "14px 18px", display: "flex", alignItems: "center", gap: 12, borderBottom: i < pendingR.length - 1 ? `1px solid ${c.border}` : "none" }}>
-                      <span style={{ fontSize: 22, flexShrink: 0 }}>{r.prize_icon}</span>
-                      <div style={{ flex: 1, minWidth: 0 }}>
-                        <div style={{ display: "flex", gap: 6, alignItems: "center", marginBottom: 3 }}>
-                          <span style={{ fontFamily: "'Outfit',sans-serif", fontSize: 12, color: c.text, fontWeight: 700 }}>{r.officer_name}</span>
-                          <span style={{ fontSize: 9, color: c.muted }}>·</span>
-                          <span style={{ fontSize: 11, color: c.sub }}>{r.unit}</span>
-                        </div>
-                        <div style={{ fontSize: 12, color: c.text }}>{r.prize_name}</div>
-                      </div>
-                      <span style={{ fontFamily: "'Outfit',sans-serif", fontSize: 12, color: c.goldText, flexShrink: 0, fontWeight: 700 }}>{r.cost} pts</span>
-                      <div style={{ display: "flex", gap: 5, flexShrink: 0 }}>
-                        <Btn ch="Fulfil" v="success" sz="sm" onClick={() => fulfilR(r.id, r.officer_name)} />
-                        <Btn ch="Reject" v="danger" sz="sm" onClick={() => rejectR(r.id)} />
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              )
-            }
-            {redems.filter(r => r.status !== "pending").length > 0 && (
-              <div>
-                <p style={{ fontSize: 10, color: c.muted, letterSpacing: 2, marginBottom: 12, textTransform: "uppercase" }}>History</p>
-                <div style={{ ...card, overflow: "hidden" }}>
-                  {redems.filter(r => r.status !== "pending").map((r, i, arr) => (
-                    <div key={r.id} style={{ padding: "11px 18px", display: "flex", alignItems: "center", gap: 10, opacity: 0.55, borderBottom: i < arr.length - 1 ? `1px solid ${c.border}` : "none" }}>
-                      <span style={{ fontSize: 15 }}>{r.prize_icon}</span>
-                      <div style={{ flex: 1 }}>
-                        <div style={{ fontSize: 11, fontWeight: 600, color: c.text }}>{r.officer_name} <span style={{ color: c.muted, fontWeight: 400 }}>· {r.prize_name}</span></div>
-                      </div>
-                      <span style={{ fontFamily: "'Outfit',sans-serif", fontSize: 11, color: c.goldText, flexShrink: 0 }}>{r.cost} pts</span>
-                      <Pill status={r.status === "fulfilled" ? "approved" : "rejected"} label={r.status} />
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
-          </div>
-        )}
-
-        {/* ── Admin: Settings ── */}
-        {tab === "settings" && isAdmin && (
-          <div className="up" style={{ width: "100%", maxWidth: 580 }}>
-            <h2 style={{ fontFamily: "'Outfit',sans-serif", fontSize: 18, fontWeight: 700, marginBottom: 4, color: c.text }}>Settings</h2>
-            <p style={{ color: c.sub, fontSize: 12, marginBottom: 28, lineHeight: 1.6 }}>Manage officers, branches, and admin password.</p>
-
-            <Sec label="Add New Officer" c={c}>
-              <div style={{ ...card, padding: 18 }}>
-                <div className="settings-grid-2" style={{ gap: 10, marginBottom: 12 }}>
-                  <div>
-                    <label style={{ fontSize: 10, color: c.muted, display: "block", marginBottom: 6, textTransform: "uppercase", letterSpacing: 1 }}>Full Name</label>
-                    <input value={newName} onChange={e => setNewName(e.target.value)} placeholder="e.g. John Tan" style={{ ...inp }} />
-                  </div>
-                  <div>
-                    <label style={{ fontSize: 10, color: c.muted, display: "block", marginBottom: 6, textTransform: "uppercase", letterSpacing: 1 }}>Branch</label>
-                    <select value={newBr} onChange={e => setNewBr(e.target.value)} style={{ ...inp }}>
-                      <option value="">Select branch…</option>
-                      {branches.map(b => <option key={b.id} value={b.name}>{b.name}</option>)}
-                    </select>
+                    <div style={{ fontSize: 9, color: c.muted, marginTop: 2 }}>Rank #{myRank} · {myAvail} avail.</div>
                   </div>
                 </div>
-                <Btn ch={sLoading ? "Adding…" : "Add Officer"} v="primary" onClick={addOfficer} disabled={!newName.trim() || !newBr || sLoading} />
-              </div>
-            </Sec>
 
-            <Sec label={`All Officers (${officers.length})`} c={c}>
-              <div style={{ ...card, overflow: "hidden" }}>
-                {branches.map(br => {
-                  const bOfs = byBranch[br.name] || [];
-                  if (!bOfs.length) return null;
+                {/* Divider */}
+                <div style={{ height: 1, background: dark ? "rgba(255,255,255,0.07)" : "rgba(0,0,0,0.06)", marginBottom: 14 }} />
+
+                {/* Tier label row */}
+                <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 10 }}>
+                  <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+                    <span style={{ fontSize: 15 }}>{tier.icon}</span>
+                    <span style={{ fontFamily: "'Outfit',sans-serif", fontSize: 13, fontWeight: 700, color: tier.color, letterSpacing: 0.3 }}>{tier.name}</span>
+                  </div>
+                  {isChamp
+                    ? <span style={{ fontSize: 10, color: c.goldText, fontWeight: 600 }}>★ Max Tier Reached</span>
+                    : <div style={{ display: "flex", alignItems: "center", gap: 4 }}>
+                        <span style={{ fontSize: 10, color: c.muted }}>{tierPtsLeft} pts to</span>
+                        <span style={{ fontSize: 10, color: c.text, fontWeight: 600 }}>{nextTier.icon} {nextTier.name}</span>
+                      </div>
+                  }
+                </div>
+
+                {/* Progress bar */}
+                <div style={{ height: 8, borderRadius: 99, background: dark ? "rgba(255,255,255,0.07)" : "rgba(0,0,0,0.08)", overflow: "hidden" }}>
+                  <div style={{
+                    height: "100%", width: `${tierBarPct}%`, borderRadius: 99,
+                    background: isChamp
+                      ? "linear-gradient(90deg, #c9a227, #f0c040)"
+                      : `linear-gradient(90deg, ${tier.color}bb, ${tier.color})`,
+                    boxShadow: `0 0 10px ${tier.color}55`,
+                    transition: "width 0.7s ease",
+                  }} />
+                </div>
+                <div style={{ display: "flex", justifyContent: "space-between", marginTop: 5 }}>
+                  <span style={{ fontSize: 9, color: c.muted }}>{tier.min} pts</span>
+                  {!isChamp && <span style={{ fontSize: 9, color: c.muted }}>{nextTier.min} pts</span>}
+                </div>
+              </div>
+              {/* ── End Tier Dashboard Card ── */}
+
+              <h2 style={{ fontFamily: "'Outfit',sans-serif", fontSize: 18, fontWeight: 700, marginBottom: 4, color: c.text }}>Log an Activity</h2>
+              <p style={{ color: c.sub, fontSize: 12, marginBottom: 20, lineHeight: 1.65 }}>Select what you did — points are awarded once your Reporting Officer approves.</p>
+
+              <p style={{ fontSize: 10, color: c.muted, letterSpacing: 1.5, marginBottom: 10, textTransform: "uppercase" }}>Select Activity *</p>
+              <div style={{ display: "flex", flexDirection: "column", gap: 1, ...card, overflow: "hidden", marginBottom: 18 }}>
+                {RUBRICS.map((r, idx) => {
+                  const sel = form.rubricId === String(r.id);
                   return (
-                    <div key={br.id}>
-                      <div style={{ padding: "7px 16px", background: c.chip, borderBottom: `1px solid ${c.border}` }}>
-                        <span style={{ fontFamily: "'Outfit',sans-serif", fontSize: 9, color: c.muted, letterSpacing: 2, textTransform: "uppercase" }}>{br.name}</span>
-                      </div>
-                      {bOfs.map(o => (
-                        <div key={o.id} style={{ borderBottom: `1px solid ${c.border}` }}>
-                          {editOf?.id === o.id ? (
-                            <div style={{ padding: "15px 16px", background: c.infoBg }}>
-                              <p style={{ fontSize: 10, color: c.sub, fontWeight: 600, marginBottom: 10 }}>Editing: {editOf.name}</p>
-                              <div className="settings-grid-2" style={{ gap: 8, marginBottom: 10 }}>
-                                <div>
-                                  <label style={{ fontSize: 9, color: c.muted, display: "block", marginBottom: 5, textTransform: "uppercase", letterSpacing: 1 }}>Full Name</label>
-                                  <input value={editN} onChange={e => setEditN(e.target.value)} style={{ ...inp, padding: "8px 10px", fontSize: 12 }} />
-                                </div>
-                                <div>
-                                  <label style={{ fontSize: 9, color: c.muted, display: "block", marginBottom: 5, textTransform: "uppercase", letterSpacing: 1 }}>Branch</label>
-                                  <select value={editB} onChange={e => setEditB(e.target.value)} style={{ ...inp, padding: "8px 10px", fontSize: 12 }}>
-                                    {branches.map(b => <option key={b.id} value={b.name}>{b.name}</option>)}
-                                  </select>
-                                </div>
-                              </div>
-                              <div style={{ display: "flex", gap: 6 }}>
-                                <Btn ch={sLoading ? "Saving…" : "Save Changes"} v="primary" sz="sm" onClick={saveEdit} disabled={!editN.trim() || sLoading} />
-                                <Btn ch="Cancel" v="ghost" sz="sm" onClick={cancelEdit} />
-                              </div>
-                            </div>
-                          ) : (
-                            <div className="row-hover" style={{ display: "flex", alignItems: "center", gap: 10, padding: "11px 16px" }}>
-                              <div style={{ width: 28, height: 28, borderRadius: "50%", background: c.chip, border: `1px solid ${c.border}`, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 9, fontWeight: 700, color: c.sub, flexShrink: 0 }}>{initials(o.name)}</div>
-                              <div style={{ flex: 1 }}>
-                                <div style={{ fontSize: 13, fontWeight: 600, color: c.text }}>{o.name}</div>
-                                <div style={{ fontSize: 9, color: c.muted }}>{o.total_points} pts</div>
-                              </div>
-                              <Btn ch="Edit" v="ghost" sz="sm" onClick={() => startEdit(o)} disabled={sLoading} />
-                              <Btn ch="Remove" v="danger" sz="sm" onClick={() => removeOfficer(o.id, o.name)} disabled={sLoading} />
-                            </div>
-                          )}
-                        </div>
-                      ))}
+                    <div key={r.id} onClick={() => setForm(p => ({ ...p, rubricId: String(r.id) }))}
+                      className="row-hover"
+                      style={{ padding: "11px 16px", cursor: "pointer", display: "flex", alignItems: "center", gap: 10, borderBottom: idx < RUBRICS.length - 1 ? `1px solid ${c.border}` : "none", background: sel ? c.chipSel : "transparent", transition: "background 0.1s" }}>
+                      <span style={{ fontSize: 16, flexShrink: 0, width: 24, textAlign: "center" }}>{r.icon}</span>
+                      <span style={{ flex: 1, fontSize: 12, fontWeight: sel ? 600 : 400, color: c.text, lineHeight: 1.4 }}>{r.activity}</span>
+                      <span style={{ fontFamily: "'Outfit',sans-serif", fontSize: 13, fontWeight: 700, color: sel ? c.text : c.muted, flexShrink: 0 }}>+{r.points}</span>
+                      {sel && <span style={{ fontSize: 11, color: c.text, flexShrink: 0 }}>✓</span>}
                     </div>
                   );
                 })}
               </div>
-            </Sec>
 
-            <Sec label="Manage Branches" c={c}>
-              <div style={{ ...card, padding: 18, marginBottom: 10 }}>
-                <div style={{ display: "flex", gap: 8, alignItems: "flex-end" }}>
-                  <div style={{ flex: 1 }}>
-                    <label style={{ fontSize: 10, color: c.muted, display: "block", marginBottom: 6, textTransform: "uppercase", letterSpacing: 1 }}>New Branch Name</label>
-                    <input value={newBrName} onChange={e => setNewBrName(e.target.value)} placeholder="e.g. Operations" style={{ ...inp }} />
+              <div style={{ ...card, padding: 20 }}>
+                <label style={{ fontSize: 10, color: c.muted, letterSpacing: 1.5, display: "block", marginBottom: 7, textTransform: "uppercase" }}>Date *</label>
+                <input type="date" value={form.date} onChange={e => setForm(p => ({ ...p, date: e.target.value }))} style={{ ...inp, marginBottom: 16 }} />
+                <label style={{ fontSize: 10, color: c.muted, letterSpacing: 1.5, display: "block", marginBottom: 7, textTransform: "uppercase" }}>Description / Evidence *</label>
+                <textarea value={form.desc} onChange={e => setForm(p => ({ ...p, desc: e.target.value }))} placeholder='e.g. Attended "Leadership in Action" workshop, full day.' rows={3} style={{ ...inp, resize: "vertical", lineHeight: 1.6, marginBottom: 16 }} />
+                {form.rubricId && (
+                  <div style={{ padding: "10px 14px", background: c.infoBg, border: `1px solid ${c.infoBdr}`, borderRadius: 7, marginBottom: 14, display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+                    <span style={{ fontSize: 12, color: c.sub }}>Points upon approval</span>
+                    <span style={{ fontFamily: "'Outfit',sans-serif", fontSize: 20, fontWeight: 800, color: c.text }}>+{RUBRICS.find(r => r.id === parseInt(form.rubricId))?.points}</span>
                   </div>
-                  <Btn ch="Add" v="primary" onClick={addBranch} disabled={!newBrName.trim() || sLoading} />
+                )}
+                <button onClick={submitAct} disabled={!form.rubricId || !form.date || !form.desc.trim()}
+                  style={{ width: "100%", padding: "11px 0", fontSize: 13, fontWeight: 600, borderRadius: 7, border: `1px solid ${form.rubricId && form.date && form.desc.trim() ? c.borderA : c.border}`, cursor: form.rubricId && form.date && form.desc.trim() ? "pointer" : "default", fontFamily: "'DM Sans',sans-serif", background: form.rubricId && form.date && form.desc.trim() ? c.text : "transparent", color: form.rubricId && form.date && form.desc.trim() ? (dark ? "#0a0a0a" : "#fff") : c.muted, transition: "all 0.16s" }}>
+                  Submit for Approval →
+                </button>
+              </div>
+            </div>
+          )}
+
+          {/* ── Leaderboard ── */}
+          {tab === "leaderboard" && (
+            <div className="up" style={{ width: "100%", minWidth: 0 }}>
+              <p style={{ fontSize: 10, color: c.muted, letterSpacing: 2, marginBottom: 16, textTransform: "uppercase" }}>Top 3 Officers</p>
+              <div className="portal-top3" style={{ display: "grid", gridTemplateColumns: "1fr 1.12fr 1fr", gap: 8, maxWidth: 500, marginBottom: 32 }}>
+                {[sorted[1], sorted[0], sorted[2]].map((o, i) => {
+                  if (!o) return <div key={i} />;
+                  const pos  = [2, 1, 3][i];
+                  const col  = ["#9ca3af", "#c9a227", "#b87333"][i];
+                  const isMe = user && o.id === user.id;
+                  const mv   = getMovement(o.id, pos);
+                  return (
+                    <div key={o.id} style={{ ...card, padding: pos === 1 ? "20px 12px" : "14px 10px", textAlign: "center", border: isMe ? `1px solid ${c.borderA}` : pos === 1 ? `1px solid ${c.gold}` : `1px solid ${c.border}`, background: pos === 1 ? (dark ? "rgba(201,162,39,0.05)" : "rgba(255,248,210,0.5)") : c.surface }}>
+                      <div style={{ fontSize: pos === 1 ? 28 : 22, marginBottom: 9 }}>{["🥈","🥇","🥉"][i]}</div>
+                      <div style={{ fontFamily: "'Outfit',sans-serif", fontSize: 12, fontWeight: 700, color: c.text, lineHeight: 1.3, marginBottom: 2 }}>{o.name}</div>
+                      <div style={{ fontSize: 9, color: c.sub, marginBottom: 10, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{o.unit}</div>
+                      <div style={{ fontFamily: "'Outfit',sans-serif", fontSize: pos === 1 ? 22 : 17, fontWeight: 800, color: col, lineHeight: 1 }}>{o.total_points}</div>
+                      <div style={{ fontSize: 9, color: c.muted, marginBottom: 4 }}>pts</div>
+                      {mv && (
+                        <div style={{ display: "flex", gap: 4, justifyContent: "center", flexWrap: "wrap" }}>
+                          {mv.rankDiff !== 0 && <span style={{ fontSize: 9, fontWeight: 700, color: mv.rankDiff > 0 ? "#4ade80" : "#f87171" }}>{mv.rankDiff > 0 ? `▲${mv.rankDiff}` : `▼${Math.abs(mv.rankDiff)}`}</span>}
+                          {mv.ptsDiff > 0 && <span style={{ fontSize: 9, color: c.muted }}>+{mv.ptsDiff}pts</span>}
+                        </div>
+                      )}
+                      <div style={{ fontSize: 9, color: c.goldText, marginTop: 4 }}>★ Special Prize</div>
+                    </div>
+                  );
+                })}
+              </div>
+              <div className="portal-leaderboard-grid">
+                <div style={{ minWidth: 0 }}>
+                  <p style={{ fontSize: 10, color: c.muted, letterSpacing: 2, marginBottom: 12, textTransform: "uppercase" }}>All Officers</p>
+                  <div style={{ ...card, overflow: "hidden" }}>
+                    {sorted.slice(3).map((o, i) => {
+                      const isMe = user && o.id === user.id;
+                      const mv   = getMovement(o.id, i + 4);
+                      return (
+                        <div key={o.id} className="row-hover"
+                          style={{ display: "flex", alignItems: "center", gap: 10, padding: "11px 16px", borderBottom: `1px solid ${c.border}`, background: isMe ? c.infoBg : "transparent" }}>
+                          <span style={{ fontFamily: "'Outfit',sans-serif", fontSize: 11, color: c.muted, width: 24, flexShrink: 0 }}>#{i + 4}</span>
+                          <div style={{ flex: 1, minWidth: 0 }}>
+                            <div style={{ fontSize: 12, fontWeight: 600, color: c.text, display: "flex", alignItems: "center", gap: 5 }}>
+                              {o.name}
+                              {isMe && <span style={{ fontSize: 9, color: c.sub, background: c.chipSel, padding: "1px 5px", borderRadius: 3, fontWeight: 600, border: `1px solid ${c.border}` }}>YOU</span>}
+                            </div>
+                            <div style={{ fontSize: 9, color: c.muted, marginTop: 1, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{o.unit}</div>
+                          </div>
+                          <div style={{ textAlign: "right", flexShrink: 0 }}>
+                            <div style={{ fontFamily: "'Outfit',sans-serif", fontSize: 14, fontWeight: 700, color: c.text }}>{o.total_points}</div>
+                            {mv && (
+                              <div style={{ display: "flex", gap: 3, justifyContent: "flex-end", marginTop: 1 }}>
+                                {mv.rankDiff !== 0 && <span style={{ fontSize: 9, fontWeight: 700, color: mv.rankDiff > 0 ? "#4ade80" : "#f87171" }}>{mv.rankDiff > 0 ? `▲${mv.rankDiff}` : `▼${Math.abs(mv.rankDiff)}`}</span>}
+                                {mv.ptsDiff > 0 && <span style={{ fontSize: 9, color: c.muted }}>+{mv.ptsDiff}pts</span>}
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+                <div>
+                  <p style={{ fontSize: 10, color: c.muted, letterSpacing: 2, marginBottom: 4, textTransform: "uppercase" }}>Branch Standings</p>
+                  <p style={{ fontSize: 9, color: c.muted, marginBottom: 12, lineHeight: 1.5 }}>Avg pts per officer</p>
+                  <div style={{ ...card, overflow: "hidden" }}>
+                    {unitScores.map((u, i) => (
+                      <div key={u.unit} style={{ padding: "11px 13px", display: "flex", alignItems: "center", gap: 8, borderBottom: i < unitScores.length - 1 ? `1px solid ${c.border}` : "none", background: i === 0 ? (dark ? "rgba(201,162,39,0.04)" : "rgba(255,248,210,0.4)") : "transparent" }}>
+                        <span style={{ fontSize: 12 }}>{["🥇","🥈","🥉","4️⃣","5️⃣","6️⃣","7️⃣"][i]}</span>
+                        <div style={{ flex: 1, minWidth: 0 }}>
+                          <div style={{ fontSize: 11, fontWeight: 600, color: i === 0 ? c.goldText : c.text, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{u.unit}</div>
+                          <div style={{ fontSize: 9, color: c.muted }}>{u.count} officers</div>
+                        </div>
+                        <div style={{ textAlign: "right", flexShrink: 0 }}>
+                          <div style={{ fontFamily: "'Outfit',sans-serif", fontSize: 15, fontWeight: 700, color: i === 0 ? c.goldText : c.text }}>{u.avg}</div>
+                          <div style={{ fontSize: 8, color: c.muted }}>avg</div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
                 </div>
               </div>
-              <div style={{ ...card, overflow: "hidden" }}>
-                {branches.map((br, i) => (
-                  <div key={br.id} className="row-hover" style={{ display: "flex", alignItems: "center", gap: 10, padding: "11px 16px", borderBottom: i < branches.length - 1 ? `1px solid ${c.border}` : "none" }}>
-                    <div style={{ flex: 1 }}>
-                      <div style={{ fontSize: 13, fontWeight: 600, color: c.text }}>{br.name}</div>
-                      <div style={{ fontSize: 9, color: c.muted }}>{(byBranch[br.name] || []).length} officers</div>
+            </div>
+          )}
+
+          {/* ── My Log ── */}
+          {tab === "mylog" && !isAdmin && (
+            <div className="up" style={{ width: "100%", maxWidth: 600 }}>
+              <h2 style={{ fontFamily: "'Outfit',sans-serif", fontSize: 18, fontWeight: 700, marginBottom: 4, color: c.text }}>My Activity Log</h2>
+              <p style={{ color: c.sub, fontSize: 12, marginBottom: 22, lineHeight: 1.6 }}>Your submitted activities and their approval status.</p>
+              {mySubs.length === 0 ? (
+                <div style={{ ...card, padding: 44, textAlign: "center" }}>
+                  <div style={{ fontSize: 30, marginBottom: 10 }}>📭</div>
+                  <div style={{ color: c.sub, fontSize: 13, marginBottom: 16 }}>No activities logged yet.</div>
+                  <Btn ch="Log your first activity →" onClick={() => setTab("submit")} v="ghost" sz="sm" />
+                </div>
+              ) : (
+                <div style={{ ...card, overflow: "hidden" }}>
+                  {mySubs.map((s, i) => (
+                    <div key={s.id} style={{ padding: "13px 18px", display: "flex", alignItems: "center", gap: 12, borderBottom: i < mySubs.length - 1 ? `1px solid ${c.border}` : "none" }}>
+                      <span style={{ fontSize: 18, flexShrink: 0 }}>{s.icon}</span>
+                      <div style={{ flex: 1, minWidth: 0 }}>
+                        <div style={{ fontSize: 12, fontWeight: 600, color: c.text, marginBottom: 2 }}>{s.activity}</div>
+                        <div style={{ fontSize: 10, color: c.muted, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{s.date} · {s.description}</div>
+                      </div>
+                      <span style={{ fontFamily: "'Outfit',sans-serif", fontSize: 13, color: c.text, flexShrink: 0, marginRight: 6, fontWeight: 700 }}>+{s.points}</span>
+                      <Pill status={s.status} />
                     </div>
-                    <Btn ch="Remove" v="danger" sz="sm" onClick={() => removeBranch(br.id, br.name)} disabled={sLoading} />
-                  </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* ── Prizes ── */}
+          {tab === "prizes" && !isAdmin && (
+            <div className="up" style={{ width: "100%" }}>
+              <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", flexWrap: "wrap", gap: 14, marginBottom: 22 }}>
+                <div>
+                  <h2 style={{ fontFamily: "'Outfit',sans-serif", fontSize: 18, fontWeight: 700, marginBottom: 3, color: c.text }}>Prize Catalogue</h2>
+                  <p style={{ color: c.sub, fontSize: 12 }}>Spend your points — your choice.</p>
+                </div>
+                <div style={{ ...card, padding: "12px 18px", textAlign: "center" }}>
+                  <div style={{ fontSize: 9, color: c.muted, letterSpacing: 1.5, marginBottom: 3, textTransform: "uppercase" }}>Available Points</div>
+                  <div style={{ fontFamily: "'Outfit',sans-serif", fontSize: 24, fontWeight: 800, color: c.text, lineHeight: 1 }}>{myAvail}</div>
+                  <div style={{ fontSize: 9, color: c.muted, marginTop: 3 }}>{myOf?.total_points} earned · {mySpent} spent</div>
+                </div>
+              </div>
+              <div style={{ display: "flex", gap: 5, flexWrap: "wrap", marginBottom: 18 }}>
+                {cats.map(ct => (
+                  <button key={ct} onClick={() => setCatF(ct)}
+                    style={{ padding: "5px 12px", borderRadius: 5, border: `1px solid ${catF === ct ? c.borderA : c.border}`, background: catF === ct ? c.chipSel : "transparent", color: catF === ct ? c.text : c.sub, fontSize: 12, fontWeight: catF === ct ? 600 : 400, cursor: "pointer", fontFamily: "'DM Sans',sans-serif" }}>
+                    {ct}
+                  </button>
                 ))}
               </div>
-            </Sec>
-
-            <Sec label="Change Admin Password" c={c}>
-              <div style={{ ...card, padding: 18 }}>
-                <div style={{ display: "flex", gap: 8, alignItems: "flex-end" }}>
-                  <div style={{ flex: 1 }}>
-                    <label style={{ fontSize: 10, color: c.muted, display: "block", marginBottom: 6, textTransform: "uppercase", letterSpacing: 1 }}>New Password (min 6 characters)</label>
-                    <input type="password" value={newPw} onChange={e => setNewPw(e.target.value)} placeholder="Enter new password" style={{ ...inp }} />
-                  </div>
-                  <Btn ch="Update" v="primary" onClick={changePw} disabled={newPw.length < 6 || sLoading} />
-                </div>
+              <div className="portal-cards-3" style={{ marginBottom: 24 }}>
+                {catItems.map(p => {
+                  const can = myAvail >= p.cost;
+                  return (
+                    <div key={p.id} onClick={() => can && !p.tba && setConfirm(p)}
+                      style={{ ...card, padding: "16px 15px", position: "relative", opacity: can ? 1 : 0.4, cursor: can && !p.tba ? "pointer" : "default" }}>
+                      {p.tba && <div style={{ position: "absolute", top: 10, right: 10, padding: "2px 6px", borderRadius: 4, background: c.chipSel, border: `1px solid ${c.border}`, fontSize: 9, color: c.muted, fontWeight: 600 }}>TBA</div>}
+                      <div style={{ fontSize: 26, marginBottom: 10 }}>{p.icon}</div>
+                      <div style={{ fontSize: 9, color: p.color, fontWeight: 600, letterSpacing: 1, marginBottom: 4, textTransform: "uppercase" }}>{p.cat}</div>
+                      <div style={{ fontSize: 12, fontWeight: 600, color: c.text, marginBottom: 4 }}>{p.name}</div>
+                      <div style={{ fontSize: 11, color: c.sub, marginBottom: 14, lineHeight: 1.5 }}>{p.desc}</div>
+                      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+                        <div style={{ fontFamily: "'Outfit',sans-serif", fontSize: 15, fontWeight: 700, color: can ? c.text : c.muted }}>{p.cost} <span style={{ fontSize: 9, fontWeight: 400, color: c.muted }}>pts</span></div>
+                        {can && !p.tba ? <div style={{ padding: "3px 9px", borderRadius: 4, background: c.chipSel, border: `1px solid ${c.border}`, color: c.text, fontSize: 10, fontWeight: 600 }}>Redeem</div>
+                          : !can ? <div style={{ fontSize: 9, color: c.muted }}>{p.cost - myAvail} more</div>
+                          : <div style={{ fontSize: 9, color: c.muted }}>Soon</div>}
+                      </div>
+                    </div>
+                  );
+                })}
               </div>
-            </Sec>
-          </div>
-        )}
+              <SpecialSection c={c} dark={dark} card={card} />
+            </div>
+          )}
 
-      </div>
+          {/* ── Admin: Approvals ── */}
+          {tab === "approvals" && isAdmin && (
+            <div className="up" style={{ width: "100%", maxWidth: 700 }}>
+              <h2 style={{ fontFamily: "'Outfit',sans-serif", fontSize: 18, fontWeight: 700, marginBottom: 4, color: c.text }}>Activity Approvals</h2>
+              <p style={{ color: c.sub, fontSize: 12, marginBottom: 22, lineHeight: 1.6 }}>Approve or reject officer activity submissions.</p>
+              {pending.length === 0
+                ? <EmptyBox icon="✨" msg="All caught up — no pending submissions." c={c} card={card} />
+                : (
+                  <div style={{ ...card, overflow: "hidden", marginBottom: 24 }}>
+                    {pending.map((s, i) => (
+                      <div key={s.id} style={{ padding: "14px 18px", display: "flex", alignItems: "center", gap: 12, borderBottom: i < pending.length - 1 ? `1px solid ${c.border}` : "none" }}>
+                        <span style={{ fontSize: 20, flexShrink: 0 }}>{s.icon}</span>
+                        <div style={{ flex: 1, minWidth: 0 }}>
+                          <div style={{ display: "flex", gap: 6, alignItems: "center", marginBottom: 3, flexWrap: "wrap" }}>
+                            <span style={{ fontFamily: "'Outfit',sans-serif", fontSize: 12, color: c.text, fontWeight: 700 }}>{s.officer_name}</span>
+                            <span style={{ fontSize: 9, color: c.muted }}>·</span>
+                            <span style={{ fontSize: 11, color: c.sub }}>{s.unit}</span>
+                          </div>
+                          <div style={{ fontSize: 12, color: c.text, marginBottom: 2 }}>{s.activity}</div>
+                          <div style={{ fontSize: 10, color: c.muted, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{s.date} · {s.description}</div>
+                        </div>
+                        <span style={{ fontFamily: "'Outfit',sans-serif", fontSize: 13, color: c.goldText, flexShrink: 0, fontWeight: 700 }}>+{s.points}</span>
+                        <div style={{ display: "flex", gap: 5, flexShrink: 0 }}>
+                          <Btn ch="Approve" v="success" sz="sm" onClick={() => approve(s.id)} />
+                          <Btn ch="Reject" v="danger" sz="sm" onClick={() => reject(s.id)} />
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )
+              }
+              {subs.filter(s => s.status !== "pending").length > 0 && (
+                <div>
+                  <p style={{ fontSize: 10, color: c.muted, letterSpacing: 2, marginBottom: 12, textTransform: "uppercase" }}>History</p>
+                  <div style={{ ...card, overflow: "hidden" }}>
+                    {subs.filter(s => s.status !== "pending").map((s, i, arr) => (
+                      <div key={s.id} style={{ padding: "11px 18px", display: "flex", alignItems: "center", gap: 10, opacity: 0.55, borderBottom: i < arr.length - 1 ? `1px solid ${c.border}` : "none" }}>
+                        <span style={{ fontSize: 15 }}>{s.icon}</span>
+                        <div style={{ flex: 1, minWidth: 0 }}>
+                          <div style={{ fontSize: 11, fontWeight: 600, color: c.text }}>{s.officer_name} <span style={{ color: c.muted, fontWeight: 400 }}>· {s.activity}</span></div>
+                        </div>
+                        <span style={{ fontFamily: "'Outfit',sans-serif", fontSize: 11, color: c.text, flexShrink: 0 }}>+{s.points}</span>
+                        <Pill status={s.status} />
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* ── Admin: Redemptions ── */}
+          {tab === "redemptions" && isAdmin && (
+            <div className="up" style={{ width: "100%", maxWidth: 700 }}>
+              <h2 style={{ fontFamily: "'Outfit',sans-serif", fontSize: 18, fontWeight: 700, marginBottom: 4, color: c.text }}>Prize Redemptions</h2>
+              <p style={{ color: c.sub, fontSize: 12, marginBottom: 22, lineHeight: 1.6 }}>Fulfil or reject officer prize redemption requests.</p>
+              {pendingR.length === 0
+                ? <EmptyBox icon="🎁" msg="No pending redemptions." c={c} card={card} />
+                : (
+                  <div style={{ ...card, overflow: "hidden", marginBottom: 24 }}>
+                    {pendingR.map((r, i) => (
+                      <div key={r.id} style={{ padding: "14px 18px", display: "flex", alignItems: "center", gap: 12, borderBottom: i < pendingR.length - 1 ? `1px solid ${c.border}` : "none" }}>
+                        <span style={{ fontSize: 22, flexShrink: 0 }}>{r.prize_icon}</span>
+                        <div style={{ flex: 1, minWidth: 0 }}>
+                          <div style={{ display: "flex", gap: 6, alignItems: "center", marginBottom: 3 }}>
+                            <span style={{ fontFamily: "'Outfit',sans-serif", fontSize: 12, color: c.text, fontWeight: 700 }}>{r.officer_name}</span>
+                            <span style={{ fontSize: 9, color: c.muted }}>·</span>
+                            <span style={{ fontSize: 11, color: c.sub }}>{r.unit}</span>
+                          </div>
+                          <div style={{ fontSize: 12, color: c.text }}>{r.prize_name}</div>
+                        </div>
+                        <span style={{ fontFamily: "'Outfit',sans-serif", fontSize: 12, color: c.goldText, flexShrink: 0, fontWeight: 700 }}>{r.cost} pts</span>
+                        <div style={{ display: "flex", gap: 5, flexShrink: 0 }}>
+                          <Btn ch="Fulfil" v="success" sz="sm" onClick={() => fulfilR(r.id, r.officer_name)} />
+                          <Btn ch="Reject" v="danger" sz="sm" onClick={() => rejectR(r.id)} />
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )
+              }
+              {redems.filter(r => r.status !== "pending").length > 0 && (
+                <div>
+                  <p style={{ fontSize: 10, color: c.muted, letterSpacing: 2, marginBottom: 12, textTransform: "uppercase" }}>History</p>
+                  <div style={{ ...card, overflow: "hidden" }}>
+                    {redems.filter(r => r.status !== "pending").map((r, i, arr) => (
+                      <div key={r.id} style={{ padding: "11px 18px", display: "flex", alignItems: "center", gap: 10, opacity: 0.55, borderBottom: i < arr.length - 1 ? `1px solid ${c.border}` : "none" }}>
+                        <span style={{ fontSize: 15 }}>{r.prize_icon}</span>
+                        <div style={{ flex: 1 }}>
+                          <div style={{ fontSize: 11, fontWeight: 600, color: c.text }}>{r.officer_name} <span style={{ color: c.muted, fontWeight: 400 }}>· {r.prize_name}</span></div>
+                        </div>
+                        <span style={{ fontFamily: "'Outfit',sans-serif", fontSize: 11, color: c.goldText, flexShrink: 0 }}>{r.cost} pts</span>
+                        <Pill status={r.status === "fulfilled" ? "approved" : "rejected"} label={r.status} />
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* ── Admin: Settings ── */}
+          {tab === "settings" && isAdmin && (
+            <div className="up" style={{ width: "100%", maxWidth: 580 }}>
+              <h2 style={{ fontFamily: "'Outfit',sans-serif", fontSize: 18, fontWeight: 700, marginBottom: 4, color: c.text }}>Settings</h2>
+              <p style={{ color: c.sub, fontSize: 12, marginBottom: 28, lineHeight: 1.6 }}>Manage officers, branches, and admin password.</p>
+              <Sec label="Add New Officer" c={c}>
+                <div style={{ ...card, padding: 18 }}>
+                  <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10, marginBottom: 12 }}>
+                    <div>
+                      <label style={{ fontSize: 10, color: c.muted, display: "block", marginBottom: 6, textTransform: "uppercase", letterSpacing: 1 }}>Full Name</label>
+                      <input value={newName} onChange={e => setNewName(e.target.value)} placeholder="e.g. John Tan" style={{ ...inp }} />
+                    </div>
+                    <div>
+                      <label style={{ fontSize: 10, color: c.muted, display: "block", marginBottom: 6, textTransform: "uppercase", letterSpacing: 1 }}>Branch</label>
+                      <select value={newBr} onChange={e => setNewBr(e.target.value)} style={{ ...inp }}>
+                        <option value="">Select branch…</option>
+                        {branches.map(b => <option key={b.id} value={b.name}>{b.name}</option>)}
+                      </select>
+                    </div>
+                  </div>
+                  <Btn ch={sLoading ? "Adding…" : "Add Officer"} v="primary" onClick={addOfficer} disabled={!newName.trim() || !newBr || sLoading} />
+                </div>
+              </Sec>
+              <Sec label={`All Officers (${officers.length})`} c={c}>
+                <div style={{ ...card, overflow: "hidden" }}>
+                  {branches.map(br => {
+                    const bOfs = byBranch[br.name] || [];
+                    if (!bOfs.length) return null;
+                    return (
+                      <div key={br.id}>
+                        <div style={{ padding: "7px 16px", background: c.chip, borderBottom: `1px solid ${c.border}` }}>
+                          <span style={{ fontFamily: "'Outfit',sans-serif", fontSize: 9, color: c.muted, letterSpacing: 2, textTransform: "uppercase" }}>{br.name}</span>
+                        </div>
+                        {bOfs.map(o => (
+                          <div key={o.id} style={{ borderBottom: `1px solid ${c.border}` }}>
+                            {editOf?.id === o.id ? (
+                              <div style={{ padding: "15px 16px", background: c.infoBg }}>
+                                <p style={{ fontSize: 10, color: c.sub, fontWeight: 600, marginBottom: 10 }}>Editing: {editOf.name}</p>
+                                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8, marginBottom: 10 }}>
+                                  <div>
+                                    <label style={{ fontSize: 9, color: c.muted, display: "block", marginBottom: 5, textTransform: "uppercase", letterSpacing: 1 }}>Full Name</label>
+                                    <input value={editN} onChange={e => setEditN(e.target.value)} style={{ ...inp, padding: "8px 10px", fontSize: 12 }} />
+                                  </div>
+                                  <div>
+                                    <label style={{ fontSize: 9, color: c.muted, display: "block", marginBottom: 5, textTransform: "uppercase", letterSpacing: 1 }}>Branch</label>
+                                    <select value={editB} onChange={e => setEditB(e.target.value)} style={{ ...inp, padding: "8px 10px", fontSize: 12 }}>
+                                      {branches.map(b => <option key={b.id} value={b.name}>{b.name}</option>)}
+                                    </select>
+                                  </div>
+                                </div>
+                                <div style={{ display: "flex", gap: 6 }}>
+                                  <Btn ch={sLoading ? "Saving…" : "Save Changes"} v="primary" sz="sm" onClick={saveEdit} disabled={!editN.trim() || sLoading} />
+                                  <Btn ch="Cancel" v="ghost" sz="sm" onClick={cancelEdit} />
+                                </div>
+                              </div>
+                            ) : (
+                              <div className="row-hover" style={{ display: "flex", alignItems: "center", gap: 10, padding: "11px 16px" }}>
+                                <div style={{ width: 28, height: 28, borderRadius: "50%", background: c.chip, border: `1px solid ${c.border}`, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 9, fontWeight: 700, color: c.sub, flexShrink: 0 }}>{initials(o.name)}</div>
+                                <div style={{ flex: 1 }}>
+                                  <div style={{ fontSize: 13, fontWeight: 600, color: c.text }}>{o.name}</div>
+                                  <div style={{ fontSize: 9, color: c.muted }}>{o.total_points} pts</div>
+                                </div>
+                                <Btn ch="Edit" v="ghost" sz="sm" onClick={() => startEdit(o)} disabled={sLoading} />
+                                <Btn ch="Remove" v="danger" sz="sm" onClick={() => removeOfficer(o.id, o.name)} disabled={sLoading} />
+                              </div>
+                            )}
+                          </div>
+                        ))}
+                      </div>
+                    );
+                  })}
+                </div>
+              </Sec>
+              <Sec label="Manage Branches" c={c}>
+                <div style={{ ...card, padding: 18, marginBottom: 10 }}>
+                  <div style={{ display: "flex", gap: 8, alignItems: "flex-end" }}>
+                    <div style={{ flex: 1 }}>
+                      <label style={{ fontSize: 10, color: c.muted, display: "block", marginBottom: 6, textTransform: "uppercase", letterSpacing: 1 }}>New Branch Name</label>
+                      <input value={newBrName} onChange={e => setNewBrName(e.target.value)} placeholder="e.g. Operations" style={{ ...inp }} />
+                    </div>
+                    <Btn ch="Add" v="primary" onClick={addBranch} disabled={!newBrName.trim() || sLoading} />
+                  </div>
+                </div>
+                <div style={{ ...card, overflow: "hidden" }}>
+                  {branches.map((br, i) => (
+                    <div key={br.id} className="row-hover" style={{ display: "flex", alignItems: "center", gap: 10, padding: "11px 16px", borderBottom: i < branches.length - 1 ? `1px solid ${c.border}` : "none" }}>
+                      <div style={{ flex: 1 }}>
+                        <div style={{ fontSize: 13, fontWeight: 600, color: c.text }}>{br.name}</div>
+                        <div style={{ fontSize: 9, color: c.muted }}>{(byBranch[br.name] || []).length} officers</div>
+                      </div>
+                      <Btn ch="Remove" v="danger" sz="sm" onClick={() => removeBranch(br.id, br.name)} disabled={sLoading} />
+                    </div>
+                  ))}
+                </div>
+              </Sec>
+              <Sec label="Change Admin Password" c={c}>
+                <div style={{ ...card, padding: 18 }}>
+                  <div style={{ display: "flex", gap: 8, alignItems: "flex-end" }}>
+                    <div style={{ flex: 1 }}>
+                      <label style={{ fontSize: 10, color: c.muted, display: "block", marginBottom: 6, textTransform: "uppercase", letterSpacing: 1 }}>New Password (min 6 characters)</label>
+                      <input type="password" value={newPw} onChange={e => setNewPw(e.target.value)} placeholder="Enter new password" style={{ ...inp }} />
+                    </div>
+                    <Btn ch="Update" v="primary" onClick={changePw} disabled={newPw.length < 6 || sLoading} />
+                  </div>
+                </div>
+              </Sec>
+            </div>
+          )}
+
+        </div>
       </div>
     </div>
   );
 }
 
-// ── Sub-components ────────────────────────────────────────────────────────
+// ── Sub-components (must be outside App) ──────────────────────────────────
 
 function MiniNav({ c, Toggle, onBack }) {
   return (
@@ -1171,7 +1169,7 @@ function SpecialSection({ c, dark, card }) {
       <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
         {[
           { icon: "🥇🥈🥉", title: "Top 3 Officers", desc: "Exclusive prize + public recognition at Mini-Retreat" },
-          { icon: "🏢", title: "Top Branch",   desc: "Branch trophy + special mention at Mini-Retreat" },
+          { icon: "🏢",      title: "Top Branch",    desc: "Branch trophy + special mention at Mini-Retreat" },
         ].map(item => (
           <div key={item.title} style={{ padding: "14px 15px", background: dark ? "rgba(201,162,39,0.03)" : "rgba(255,248,200,0.3)", border: `1px solid ${dark ? "rgba(201,162,39,0.08)" : "rgba(160,120,0,0.1)"}`, borderRadius: 8 }}>
             <div style={{ fontSize: 20, marginBottom: 7 }}>{item.icon}</div>
