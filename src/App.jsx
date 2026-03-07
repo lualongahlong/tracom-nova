@@ -336,6 +336,33 @@ export default function App() {
       .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 52px; align-items: start; padding: 52px 0 40px; }
       @media (max-width: 780px) { .two-col { grid-template-columns: 1fr !important; gap: 28px; padding: 28px 0 32px; } }
       .row-hover:hover { background: ${c.surfaceHover} !important; }
+      html, body { overflow-x: hidden; max-width: 100vw; }
+      .portal-layout { display: flex; flex-direction: column; min-height: 100vh; width: 100%; max-width: 100vw; }
+      .portal-main { width: 100%; min-width: 0; }
+      .portal-cards-3 { display: grid; grid-template-columns: 1fr; gap: 1.25rem; }
+      .portal-sidebar { display: none; }
+      @media (min-width: 901px) {
+        .portal-layout { flex-direction: row; }
+        .portal-sidebar { display: flex; flex-direction: column; width: 200px; flex-shrink: 0; }
+        .portal-nav-mobile { display: none !important; }
+        .portal-topbar-logo { display: none !important; }
+        .portal-main { flex: 1; min-width: 0; }
+        .portal-cards-3 { grid-template-columns: repeat(3, 1fr); }
+        .portal-leaderboard-grid { display: grid; grid-template-columns: 1fr min(260px, 28%); gap: 1.25rem; }
+      }
+      .settings-grid-2 { display: grid; grid-template-columns: 1fr; gap: 0.5rem; }
+      @media (min-width: 601px) {
+        .settings-grid-2 { grid-template-columns: 1fr 1fr; }
+      }
+      @media (max-width: 900px) {
+        .portal-nav-desktop { display: none !important; }
+        .portal-leaderboard-grid { display: flex; flex-direction: column; gap: 1.25rem; }
+        .portal-top3 { grid-template-columns: 1fr !important; max-width: 100%; }
+      }
+      .landing-grid { display: grid; grid-template-columns: 1fr; gap: 2.5rem; }
+      @media (min-width: 901px) {
+        .landing-grid { grid-template-columns: repeat(2, 1fr); gap: 2.5rem; }
+      }
     `}</style>
   );
 
@@ -457,15 +484,8 @@ export default function App() {
 
         <LandingNav />
 
-        <div style={{ maxWidth: 1160, width: "100%", margin: "0 auto", padding: "0 24px 80px" }}>
-          
-          {/* ── 2. MODIFIED RESPONSIVE GRID ── */}
-          <div style={{ 
-            display: "grid", 
-            gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))", 
-            gap: "40px", 
-            paddingTop: "40px" 
-          }}>
+        <div style={{ maxWidth: 1160, width: "100%", margin: "0 auto", padding: "0 24px 80px", boxSizing: "border-box", overflow: "hidden" }}>
+          <div className="landing-grid" style={{ paddingTop: "40px", minWidth: 0 }}>
 
             {/* ── LEFT COLUMN: WELCOME & LOGIN ── */}
             <div className="up">
@@ -578,7 +598,7 @@ export default function App() {
   const TABS = isAdmin ? ATABS : OTABS;
 
   return (
-    <div style={{ minHeight: "100vh", background: c.bg, color: c.text, fontFamily: "'DM Sans',sans-serif" }}>
+    <div style={{ minHeight: "100vh", background: c.bg, color: c.text, fontFamily: "'DM Sans',sans-serif", overflowX: "hidden", maxWidth: "100vw" }}>
       <CSS />
 
       {/* Toast */}
@@ -606,19 +626,19 @@ export default function App() {
         </div>
       )}
 
-      {/* Portal nav */}
-      <div style={{ borderBottom: `1px solid ${c.div}`, background: c.nav, backdropFilter: "blur(20px)", position: "sticky", top: 0, zIndex: 100 }}>
-        <div style={{ maxWidth: 1060, margin: "0 auto", padding: "0 18px", display: "flex", alignItems: "center", gap: 8, height: 52 }}>
-          <button onClick={() => setScreen("landing")}
+      {/* Top bar: logo + mobile tabs + user */}
+      <div style={{ borderBottom: `1px solid ${c.div}`, background: c.nav, backdropFilter: "blur(20px)", position: "sticky", top: 0, zIndex: 100, flexShrink: 0 }}>
+        <div style={{ maxWidth: 1060, margin: "0 auto", padding: "0 18px", display: "flex", alignItems: "center", gap: 8, height: 52, minWidth: 0 }}>
+          <button onClick={() => setScreen("landing")} className="portal-nav-desktop portal-topbar-logo"
             style={{ display: "flex", alignItems: "center", gap: 7, background: c.chip, border: `1px solid ${c.border}`, borderRadius: 7, cursor: "pointer", flexShrink: 0, padding: "4px 11px" }}>
             <span style={{ fontSize: 13 }}>🏆</span>
             <span style={{ fontFamily: "'Outfit',sans-serif", fontWeight: 700, fontSize: 13, color: c.text }}>GEAR Up</span>
           </button>
-          <div style={{ width: 1, height: 16, background: c.border, flexShrink: 0 }} />
-          <div style={{ display: "flex", gap: 1, flex: 1, overflowX: "auto", scrollbarWidth: "none" }}>
+          <div style={{ width: 1, height: 16, background: c.border, flexShrink: 0 }} className="portal-nav-desktop portal-topbar-logo" />
+          <div className="portal-nav-mobile" style={{ display: "flex", gap: 1, flex: 1, minWidth: 0, overflowX: "auto", scrollbarWidth: "none", WebkitOverflowScrolling: "touch" }}>
             {TABS.map(tb => (
               <button key={tb.id} onClick={() => setTab(tb.id)}
-                style={{ padding: "5px 12px", borderRadius: 6, border: "none", background: tab === tb.id ? c.chipSel : "transparent", color: tab === tb.id ? c.text : c.sub, fontSize: 12, fontWeight: tab === tb.id ? 600 : 400, cursor: "pointer", whiteSpace: "nowrap", fontFamily: "'DM Sans',sans-serif", transition: "all 0.12s" }}>
+                style={{ padding: "5px 12px", borderRadius: 6, border: "none", background: tab === tb.id ? c.chipSel : "transparent", color: tab === tb.id ? c.text : c.sub, fontSize: 12, fontWeight: tab === tb.id ? 600 : 400, cursor: "pointer", whiteSpace: "nowrap", flexShrink: 0, fontFamily: "'DM Sans',sans-serif", transition: "all 0.12s" }}>
                 {tb.label}
               </button>
             ))}
@@ -642,7 +662,27 @@ export default function App() {
         </div>
       </div>
 
-      <div style={{ maxWidth: 1060, margin: "0 auto", padding: "28px 18px 60px", display: "flex", flexDirection: "column", alignItems: "center" }}>
+      <div className="portal-layout" style={{ flex: 1, minHeight: 0, minWidth: 0 }}>
+        {/* Sidebar: desktop only */}
+        <aside className="portal-sidebar" style={{ borderRight: `1px solid ${c.border}`, background: c.nav, padding: "16px 0" }}>
+          <div style={{ padding: "0 14px 14px", borderBottom: `1px solid ${c.border}`, marginBottom: 12 }}>
+            <button onClick={() => setScreen("landing")}
+              style={{ display: "flex", alignItems: "center", gap: 7, background: c.chip, border: `1px solid ${c.border}`, borderRadius: 7, cursor: "pointer", padding: "6px 10px", width: "100%", justifyContent: "flex-start" }}>
+              <span style={{ fontSize: 13 }}>🏆</span>
+              <span style={{ fontFamily: "'Outfit',sans-serif", fontWeight: 700, fontSize: 12, color: c.text }}>GEAR Up</span>
+            </button>
+          </div>
+          <nav style={{ display: "flex", flexDirection: "column", gap: 2 }}>
+            {TABS.map(tb => (
+              <button key={tb.id} onClick={() => setTab(tb.id)}
+                style={{ padding: "8px 14px", borderRadius: 6, border: "none", background: tab === tb.id ? c.chipSel : "transparent", color: tab === tb.id ? c.text : c.sub, fontSize: 12, fontWeight: tab === tb.id ? 600 : 400, cursor: "pointer", textAlign: "left", fontFamily: "'DM Sans',sans-serif", transition: "all 0.12s" }}>
+                {tb.label}
+              </button>
+            ))}
+          </nav>
+        </aside>
+
+        <div className="portal-main" style={{ maxWidth: 1060, margin: "0 auto", padding: "28px 18px 60px", display: "flex", flexDirection: "column", alignItems: "stretch", width: "100%", minWidth: 0, boxSizing: "border-box", overflow: "hidden" }}>
 
         {/* ── Log Activity ── */}
         {tab === "submit" && !isAdmin && (
@@ -701,9 +741,9 @@ export default function App() {
 
         {/* ── Leaderboard ── */}
         {tab === "leaderboard" && (
-          <div className="up" style={{ width: "100%" }}>
+          <div className="up" style={{ width: "100%", minWidth: 0 }}>
             <p style={{ fontSize: 10, color: c.muted, letterSpacing: 2, marginBottom: 16, textTransform: "uppercase" }}>Top 3 Officers</p>
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1.12fr 1fr", gap: 8, maxWidth: 500, marginBottom: 32 }}>
+            <div className="portal-top3" style={{ display: "grid", gridTemplateColumns: "1fr 1.12fr 1fr", gap: 8, maxWidth: 500, marginBottom: 32 }}>
               {[sorted[1], sorted[0], sorted[2]].map((o, i) => {
                 if (!o) return <div key={i} />;
                 const pos   = [2, 1, 3][i];
@@ -729,8 +769,8 @@ export default function App() {
               })}
             </div>
 
-            <div style={{ display: "grid", gridTemplateColumns: "1fr min(260px,38%)", gap: 20 }}>
-              <div>
+            <div className="portal-leaderboard-grid">
+              <div style={{ minWidth: 0 }}>
                 <p style={{ fontSize: 10, color: c.muted, letterSpacing: 2, marginBottom: 12, textTransform: "uppercase" }}>All Officers</p>
                 <div style={{ ...card, overflow: "hidden" }}>
                   {sorted.slice(3).map((o, i) => {
@@ -835,7 +875,7 @@ export default function App() {
                 </button>
               ))}
             </div>
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill,minmax(175px,1fr))", gap: 10, marginBottom: 24 }}>
+            <div className="portal-cards-3" style={{ marginBottom: 24 }}>
               {catItems.map(p => {
                 const can = myAvail >= p.cost;
                 return (
@@ -972,7 +1012,7 @@ export default function App() {
 
             <Sec label="Add New Officer" c={c}>
               <div style={{ ...card, padding: 18 }}>
-                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10, marginBottom: 12 }}>
+                <div className="settings-grid-2" style={{ gap: 10, marginBottom: 12 }}>
                   <div>
                     <label style={{ fontSize: 10, color: c.muted, display: "block", marginBottom: 6, textTransform: "uppercase", letterSpacing: 1 }}>Full Name</label>
                     <input value={newName} onChange={e => setNewName(e.target.value)} placeholder="e.g. John Tan" style={{ ...inp }} />
@@ -1004,7 +1044,7 @@ export default function App() {
                           {editOf?.id === o.id ? (
                             <div style={{ padding: "15px 16px", background: c.infoBg }}>
                               <p style={{ fontSize: 10, color: c.sub, fontWeight: 600, marginBottom: 10 }}>Editing: {editOf.name}</p>
-                              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8, marginBottom: 10 }}>
+                              <div className="settings-grid-2" style={{ gap: 8, marginBottom: 10 }}>
                                 <div>
                                   <label style={{ fontSize: 9, color: c.muted, display: "block", marginBottom: 5, textTransform: "uppercase", letterSpacing: 1 }}>Full Name</label>
                                   <input value={editN} onChange={e => setEditN(e.target.value)} style={{ ...inp, padding: "8px 10px", fontSize: 12 }} />
@@ -1077,6 +1117,7 @@ export default function App() {
           </div>
         )}
 
+      </div>
       </div>
     </div>
   );
