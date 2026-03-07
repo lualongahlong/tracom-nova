@@ -68,7 +68,7 @@ const getCountdown = () => {
 const initials = name => name.split(" ").map(n => n[0]).join("").slice(0, 2).toUpperCase();
 
 const DARK = {
-  bg: "#0a0a0a", surface: "rgba(139, 0, 170, 0.5)", surfaceHover: "rgba(255,255,255,0.06)",
+  bg: "#000000", surface: "rgba(85, 0, 170, 0.5)", surfaceHover: "rgba(255, 255, 255, 0.3)",
   border: "rgba(172, 3, 181, 0.1)", borderA: "rgba(255,255,255,0.18)", text: "#f0f0f0",
   sub: "rgba(255, 255, 255, 0.75)", muted: "rgba(255, 255, 255, 0.5)", nav: "rgb(95, 0, 173)",
   accent: "#e8e8e8", accentL: "#ffffff", chip: "rgba(255,255,255,0.04)", chipSel: "rgba(255,255,255,0.09)",
@@ -336,15 +336,12 @@ export default function App() {
       .portal-cards-3 { display: grid; grid-template-columns: 1fr; gap: 1.25rem; }
       .portal-sidebar { display: none; }
       @media (min-width: 901px) {
-        .portal-layout { flex-direction: row; }
-        .portal-sidebar { display: flex; flex-direction: column; width: 200px; flex-shrink: 0; }
-        .portal-main { flex: 1; min-width: 0; }
-        .portal-cards-3 { grid-template-columns: repeat(3, 1fr); }
-        .portal-leaderboard-grid { display: grid; grid-template-columns: 1fr min(260px, 28%); gap: 1.25rem; }
-        .hamburger-btn { display: none !important; }
-        .mobile-menu { display: none !important; }
-        .desktop-tabs { display: flex !important; }
-      }
+        .portal-layout { flex-direction: column; } /* Change from row to column */
+  .portal-sidebar { display: none !important; } /* Kill the sidebar */
+  .portal-main { width: 100%; max-width: 1060px; margin: 0 auto; }
+  .desktop-tabs { display: none !important; } /* Hide the tab row */
+  .hamburger-btn { display: flex !important; } /* Force hamburger to show */
+}
       @media (max-width: 900px) {
         .portal-nav-desktop { display: none !important; }
         .portal-leaderboard-grid { display: flex; flex-direction: column; gap: 1.25rem; }
@@ -383,36 +380,26 @@ export default function App() {
       <div style={{ borderBottom: `1px solid ${c.div}`, background: c.nav, backdropFilter: "blur(20px)", position: "sticky", top: 0, zIndex: 100 }}>
         <div style={{ maxWidth: 1160, margin: "0 auto", padding: "0 24px", display: "flex", alignItems: "center", height: 56, justifyContent: "space-between" }}>
           
-          {/* LEFT: The Hamburger Menu */}
-          <div style={{ position: "relative" }}>
-            <button onClick={() => setNavOpen(!navOpen)}
-              style={{ display: "flex", flexDirection: "column", gap: 4, background: "none", border: `1px solid ${c.border}`, padding: "8px", borderRadius: 8, cursor: "pointer" }}>
-              <span style={{ width: 18, height: 2, background: c.text, borderRadius: 1 }} />
-              <span style={{ width: 18, height: 2, background: c.text, borderRadius: 1 }} />
-              <span style={{ width: 18, height: 2, background: c.text, borderRadius: 1 }} />
-            </button>
-  
-            {/* DROPDOWN MENU */}
-            {navOpen && (
-              <div className="up" style={{ 
-                position: "absolute", top: 48, left: 0, width: 220, 
-                background: c.surface, border: `1px solid ${c.border}`, 
-                borderRadius: 12, boxShadow: `0 10px 30px ${c.shadow}`, overflow: "hidden", zIndex: 110 
-              }}>
-                {[
-                  { lbl: "📌 How to Earn", sc: "rubrics" },
-                  { lbl: "🎁 Prizes", sc: "catalogue" },
-                  { lbl: "⚡ Admin Login", action: () => { setAdminBox(true); setNavOpen(false); } }
-                ].map((item, i) => (
-                  <button key={i} onClick={() => { item.sc ? setScreen(item.sc) : item.action(); setNavOpen(false); }}
-                    className="row-hover"
-                    style={{ width: "100%", textAlign: "left", padding: "14px 18px", background: "none", border: "none", borderBottom: i < 2 ? `1px solid ${c.div}` : "none", color: c.text, fontSize: 14, fontWeight: 500, cursor: "pointer" }}>
-                    {item.lbl}
-                  </button>
-                ))}
-              </div>
-            )}
-          </div>
+          {/* LEFT: Simple About Button */}
+        <div style={{ display: "flex", justifyContent: "flex-start" }}>
+          <button onClick={() => setScreen("about")}
+            style={{ 
+              padding: "8px 16px", 
+              background: "transparent", 
+              border: `1px solid ${c.border}`, 
+              borderRadius: 8, 
+              color: c.text, 
+              fontSize: 14, 
+              fontWeight: 600, 
+              cursor: "pointer",
+              fontFamily: "'Inter', sans-serif",
+              transition: "background 0.2s"
+            }}
+            className="row-hover"
+          >
+            ℹ️ About
+          </button>
+        </div>
   
           {/* RIGHT: Dark Mode Toggle */}
           <Toggle />
@@ -421,6 +408,71 @@ export default function App() {
     );
   };
 
+  if (screen === "about") return (
+    <div style={{ minHeight: "100vh", background: c.bg, color: c.text, fontFamily: "'Inter',sans-serif" }}>
+      <CSS />
+      
+      {/* --- Navigation --- */}
+      <div style={{ borderBottom: `1px solid ${c.div}`, background: c.nav, backdropFilter: "blur(20px)", position: "sticky", top: 0, zIndex: 100 }}>
+        <div style={{ maxWidth: 820, margin: "0 auto", padding: "0 20px", display: "grid", gridTemplateColumns: "1fr auto 1fr", alignItems: "center", height: 52 }}>
+          <button onClick={() => setScreen("landing")} style={{ background: "none", border: "none", color: c.sub, cursor: "pointer", fontSize: 14, textAlign: "left" }}>← Back</button>
+          <div style={{ display: "flex", alignItems: "center", gap: 7 }}>
+            <span style={{ fontSize: 18 }}>🚀</span>
+            <span style={{ fontWeight: 800, fontSize: 16, color: c.text }}>GEAR Up</span>
+          </div>
+          <div style={{ display: "flex", justifyContent: "flex-end" }}><Toggle /></div>
+        </div>
+      </div>
+  
+      {/* --- Main Content --- */}
+      <div className="up" style={{ maxWidth: 640, margin: "0 auto", padding: "40px 20px" }}>
+        <div style={{ textAlign: "center", marginBottom: 32 }}>
+          <h2 style={{ fontSize: 28, fontWeight: 900, color: c.text, marginBottom: 8 }}>The GEAR Up Mindset</h2>
+          <p style={{ color: c.sub, fontSize: 15, fontStyle: "italic" }}>A shift from being taught to being a learner.</p>
+        </div>
+  
+        {/* --- Manifesto Card --- */}
+        <div style={{ ...card, padding: "32px", lineHeight: 1.8, fontSize: 15, color: c.text, boxShadow: `0 10px 30px ${c.shadow}` }}>
+          <p style={{ marginBottom: 20 }}>
+            <strong style={{ color: c.goldText, fontSize: 18 }}>G</strong>rowth is the expansion of your personal knowledge and skillsets. It’s about widening your horizons through every interaction, reading, or experience, recognizing that learning happens in any form, anywhere.
+          </p>
+          
+          <p style={{ marginBottom: 20 }}>
+            <strong style={{ color: c.goldText, fontSize: 18 }}>E</strong>xpertise is not just what you know, but becoming an expert at the process of learning itself. It’s the agility to master new concepts quickly and the curiosity to deconstruct how the world works.
+          </p>
+  
+          <p style={{ marginBottom: 20 }}>
+            <strong style={{ color: c.goldText, fontSize: 18 }}>A</strong>utonomy means taking full charge of your learning journey. You are the architect of your own potential; you move into the driver’s seat to decide your destination and choose the route that gets you there.
+          </p>
+  
+          <p style={{ marginBottom: 0 }}>
+            <strong style={{ color: c.goldText, fontSize: 18 }}>R</strong>eadiness is the state of being perpetually prepared for the future. By embracing learning as a continuous habit rather than a one-time event, you ensure you are ready for challenges that haven't even arrived yet.
+          </p>
+        </div>
+  
+        {/* --- Footer / Attribution --- */}
+        <div style={{ marginTop: 48, textAlign: "center", paddingBottom: 40 }}>
+          <div style={{ fontSize: 14, fontWeight: 700, color: c.text, marginBottom: 8 }}>
+            Developed by TRACOM officers for TRACOM officers
+          </div>
+          <div style={{ maxWidth: 400, margin: "0 auto", fontSize: 13, color: c.sub, lineHeight: 1.6 }}>
+            Have any comments or suggestions, or faced any issues? 
+            <div style={{ marginTop: 8 }}>
+              Please reach out to the team at:
+              <br />
+              <a href="https://go.gov.sg/gearup" target="_blank" rel="noreferrer"
+                style={{ color: c.goldText, fontWeight: 700, textDecoration: "none", display: "inline-block", marginTop: 4, borderBottom: `1px solid ${c.goldText}` }}>
+                go.gov.sg/gearup
+              </a>
+            </div>
+          </div>
+          <div style={{ marginTop: 32, fontSize: 11, color: c.muted, letterSpacing: 3, fontWeight: 800, textTransform: "uppercase" }}>
+            Shift Into Higher Gear
+          </div>
+        </div>
+      </div>
+    </div>
+  );
   if (screen === "rubrics") return (
     <div style={{ minHeight: "100vh", background: c.bg, color: c.text, fontFamily: "'Inter',sans-serif" }}>
       <CSS />
@@ -475,7 +527,7 @@ export default function App() {
         <CSS />
         <div style={{ background: dark ? "#1a1a1a" : "#eee", borderBottom: `1px solid ${c.border}`, padding: "6px 0", textAlign: "center" }}>
           <div style={{ display: "flex", justifyContent: "center", alignItems: "center", gap: 12, fontSize: 13, fontWeight: 700, color: c.sub, letterSpacing: 1 }}>
-            <span style={{ color: "#f87171" }}>⏱️ CAMPAIGN ENDS IN:</span>
+            <span style={{ color: "#f87171" }}>⏱️ GEAR UP 2026 ENDS IN:</span>
             <div style={{ display: "flex", gap: 8, color: c.text, fontFamily: "'Inter',sans-serif" }}>
               <span>{cd.days}D</span><span>{cd.hours}H</span><span>{cd.mins}M</span><span>{cd.secs}S</span>
             </div>
@@ -597,94 +649,70 @@ export default function App() {
         </div>
       )}
 
-      {/* ── Top bar ── */}
+ {/* ── Top bar ── */}
 <div style={{ borderBottom: `1px solid ${c.div}`, background: c.nav, backdropFilter: "blur(20px)", position: "sticky", top: 0, zIndex: 100, flexShrink: 0 }}>
   <div style={{ 
     maxWidth: 1060, 
     margin: "0 auto", 
     padding: "0 18px", 
     display: "grid", 
-    gridTemplateColumns: "1fr auto 1fr", // Creates three equal columns
+    gridTemplateColumns: "1fr auto 1fr", 
     alignItems: "center", 
     height: 52 
   }}>
 
-    {/* LEFT: Hamburger (Mobile) or Placeholder (Desktop) */}
+    {/* LEFT: Hamburger Menu */}
     <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-      <button className="hamburger-btn" onClick={() => setMenuOpen(o => !o)}
+      <button onClick={() => setMenuOpen(o => !o)}
         style={{ display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", gap: 4, width: 36, height: 36, background: menuOpen ? c.chipSel : "transparent", border: `1px solid ${menuOpen ? c.borderA : c.border}`, borderRadius: 8, cursor: "pointer", padding: 0 }}>
         <span style={{ width: 16, height: 2, background: c.text, borderRadius: 2, transition: "0.18s", transform: menuOpen ? "rotate(45deg) translate(4px, 4px)" : "none" }} />
         <span style={{ width: 16, height: 2, background: c.text, borderRadius: 2, transition: "0.18s", opacity: menuOpen ? 0 : 1 }} />
         <span style={{ width: 16, height: 2, background: c.text, borderRadius: 2, transition: "0.18s", transform: menuOpen ? "rotate(-45deg) translate(4px, -4px)" : "none" }} />
       </button>
       
-      {/* Desktop Exit button tucked here to keep the left side populated */}
-      <button className="portal-nav-desktop" onClick={() => { setScreen("landing"); setUser(null); setIsAdmin(false); }}
-        style={{ padding: "4px 10px", background: "transparent", border: `1px solid ${c.border}`, borderRadius: 6, color: c.sub, cursor: "pointer", fontSize: 12 }}>
+      {/* Current Screen Label */}
+      <span style={{ fontSize: 13, fontWeight: 600, color: c.sub, textTransform: "uppercase", letterSpacing: 0.5 }} className="portal-nav-desktop">
+        {activeLabel}
+      </span>
+    </div>
+
+    {/* CENTER: Branding & Tagline */}
+    <div style={{ textAlign: "center", cursor: "pointer" }} onClick={() => setTab("leaderboard")}>
+      <div style={{ fontFamily: "'Inter',sans-serif", fontWeight: 800, fontSize: 20, color: c.text, lineHeight: 1 }}>
+        🚀 GEAR Up
+      </div>
+      <div style={{ fontSize: 9, color: c.sub, fontWeight: 500, marginTop: 3, textTransform: "uppercase", letterSpacing: 0.5 }}>
+        TRACOM
+      </div>
+    </div>
+
+    {/* RIGHT: Exit & Toggle */}
+    <div style={{ display: "flex", alignItems: "center", justifyContent: "flex-end", gap: 12 }}>
+      <button onClick={() => { setScreen("landing"); setUser(null); setIsAdmin(false); }}
+        style={{ padding: "5px 12px", background: "transparent", border: `1px solid ${c.border}`, borderRadius: 6, color: c.sub, cursor: "pointer", fontSize: 12, fontWeight: 600, fontFamily: "'Inter',sans-serif" }}>
         Exit
       </button>
-    </div>
-
-    {/* CENTER: Title */}
-    <div style={{ display: "flex", alignItems: "center", gap: 6, cursor: "pointer" }} onClick={() => setTab("leaderboard")}>
-      <span style={{ fontSize: 18 }}>🚀</span>
-      <span style={{ fontFamily: "'Inter',sans-serif", fontWeight: 800, fontSize: 16, color: c.text, letterSpacing: "-0.02em" }}>GEAR Up</span>
-    </div>
-
-    {/* RIGHT: Points and Rank */}
-    <div style={{ display: "flex", alignItems: "center", justifyContent: "flex-end", gap: 10 }}>
-      {!isAdmin && myOf ? (
-        <div style={{ textAlign: "right", lineHeight: 1.1 }}>
-          <div style={{ fontSize: 15, fontWeight: 800, color: c.text }}>
-            {myAvail} <span style={{ fontSize: 10, color: c.muted, fontWeight: 400 }}>PTS</span>
-          </div>
-          <div style={{ fontSize: 11, color: c.goldText, fontWeight: 600 }}>#{myRank} RANK</div>
-        </div>
-      ) : isAdmin && (
-        <span style={{ fontSize: 12, fontWeight: 700, color: c.sub }}>ADMIN</span>
-      )}
-      
-      <div style={{ width: 30, height: 30, borderRadius: "50%", background: c.chipSel, border: `1px solid ${c.border}`, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 11, fontWeight: 700, color: c.text }}>
-        {isAdmin ? "AD" : (user ? initials(user.name) : "?")}
-      </div>
-      
       <Toggle />
     </div>
   </div>
 
-  {/* Mobile Dropdown remains the same */}
+  {/* Universal Dropdown Menu */}
   {menuOpen && (
-    <div className="mobile-menu" style={{ borderTop: `1px solid ${c.border}`, background: c.nav, padding: "8px 18px 12px" }}>
+    <div className="up" style={{ borderTop: `1px solid ${c.border}`, background: c.nav, padding: "8px 18px 12px" }}>
       {TABS.map(tb => (
         <button key={tb.id} onClick={() => { setTab(tb.id); setMenuOpen(false); }}
           style={{ display: "block", width: "100%", textAlign: "left", padding: "12px", borderRadius: 8, border: "none", background: tab === tb.id ? c.chipSel : "transparent", color: tab === tb.id ? c.text : c.sub, fontSize: 14, fontWeight: tab === tb.id ? 600 : 400, marginBottom: 2 }}>
           {tb.label}
         </button>
       ))}
-      <button onClick={() => setScreen("landing")} style={{ width: "100%", textAlign: "left", padding: "12px", color: "#f87171", background: "none", border: "none", fontSize: 14 }}>Logout</button>
+      <button onClick={() => setScreen("landing")} style={{ width: "100%", textAlign: "left", padding: "12px", color: "#f87171", background: "none", border: "none", fontSize: 14, cursor: "pointer" }}>Logout</button>
     </div>
   )}
 </div>
 
       <div className="portal-layout" style={{ flex: 1, minHeight: 0, minWidth: 0 }}>
         {/* Sidebar: desktop only */}
-        <aside className="portal-sidebar" style={{ borderRight: `1px solid ${c.border}`, background: c.nav, padding: "16px 0" }}>
-          <div style={{ padding: "0 14px 14px", borderBottom: `1px solid ${c.border}`, marginBottom: 12 }}>
-            <button onClick={() => setScreen("landing")}
-              style={{ display: "flex", alignItems: "center", gap: 7, background: c.chip, border: `1px solid ${c.border}`, borderRadius: 7, cursor: "pointer", padding: "6px 10px", width: "100%", justifyContent: "flex-start" }}>
-              <span style={{ fontSize: 15 }}>🚀</span>
-              <span style={{ fontFamily: "'Inter',sans-serif", fontWeight: 700, fontSize: 14, color: c.text }}>GEAR Up</span>
-            </button>
-          </div>
-          <nav style={{ display: "flex", flexDirection: "column", gap: 2 }}>
-            {TABS.map(tb => (
-              <button key={tb.id} onClick={() => setTab(tb.id)}
-                style={{ padding: "8px 14px", borderRadius: 6, border: "none", background: tab === tb.id ? c.chipSel : "transparent", color: tab === tb.id ? c.text : c.sub, fontSize: 14, fontWeight: tab === tb.id ? 600 : 400, cursor: "pointer", textAlign: "left", fontFamily: "'Inter',sans-serif" }}>
-                {tb.label}
-              </button>
-            ))}
-          </nav>
-        </aside>
+        
 
         <div className="portal-main" style={{ maxWidth: 1060, margin: "0 auto", padding: "28px 18px 60px", display: "flex", flexDirection: "column", alignItems: "center", width: "100%", minWidth: 0, boxSizing: "border-box", overflow: "hidden" }}>
 
@@ -1173,8 +1201,7 @@ function MiniNav({ c, Toggle, onBack }) {
         <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
           <button onClick={onBack} style={{ background: "none", border: "none", color: c.sub, cursor: "pointer", fontSize: 14, fontFamily: "'Inter',sans-serif", padding: 0 }}>← Back</button>
           <div style={{ display: "flex", alignItems: "center", gap: 7 }}>
-            <span style={{ fontSize: 14 }}>🏆</span>
-            <span style={{ fontFamily: "'Inter',sans-serif", fontWeight: 700, fontSize: 15, color: c.text }}>GEAR Up</span>
+            
           </div>
         </div>
         <Toggle />
