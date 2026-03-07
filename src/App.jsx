@@ -46,10 +46,10 @@ const CATALOGUE = [
 ];
 
 const TIERS = [
-  { name: "Player 1",  min: 0,   max: 99,      icon: "🎮", color: "#9ca3af" },
-  { name: "High Scorer",    min: 100,  max: 199,       icon: "📈", color: "#60a5fa" },
-  { name: "Top Ranker",  min: 200, max: 299,      icon: "💎", color: "#4ade80" },
-  { name: "All-Star",   min: 300, max: Infinity,      icon: "🌟", color: "#a78bfa" },
+  { name: "Player 1",  min: 0,   max: 99,      icon: "🎮", color: "#8b5cf6" },
+  { name: "High Scorer",    min: 100,  max: 199,       icon: "📈", color: "#f59e0b" },
+  { name: "Top Ranker",  min: 200, max: 299,      icon: "💎", color: "#10b981" },
+  { name: "All-Star",   min: 300, max: Infinity,      icon: "🌟", color: "#000000" },
 
 ];
 
@@ -68,9 +68,9 @@ const getCountdown = () => {
 const initials = name => name.split(" ").map(n => n[0]).join("").slice(0, 2).toUpperCase();
 
 const DARK = {
-  bg: "#0a0a0a", surface: "rgba(255,255,255,0.04)", surfaceHover: "rgba(255,255,255,0.06)",
-  border: "rgba(255,255,255,0.08)", borderA: "rgba(255,255,255,0.18)", text: "#f0f0f0",
-  sub: "rgba(255,255,255,0.42)", muted: "rgba(255,255,255,0.2)", nav: "rgba(10,10,10,0.93)",
+  bg: "#0a0a0a", surface: "rgba(139, 0, 170, 0.5)", surfaceHover: "rgba(255,255,255,0.06)",
+  border: "rgba(172, 3, 181, 0.1)", borderA: "rgba(255,255,255,0.18)", text: "#f0f0f0",
+  sub: "rgba(255, 255, 255, 0.75)", muted: "rgba(255, 255, 255, 0.5)", nav: "rgb(95, 0, 173)",
   accent: "#e8e8e8", accentL: "#ffffff", chip: "rgba(255,255,255,0.04)", chipSel: "rgba(255,255,255,0.09)",
   inputBg: "rgba(255,255,255,0.05)", inputBdr: "rgba(255,255,255,0.09)", div: "rgba(255,255,255,0.06)",
   blank: "rgba(255,255,255,0.05)", infoBg: "rgba(255,255,255,0.03)", infoBdr: "rgba(255,255,255,0.09)",
@@ -79,7 +79,7 @@ const DARK = {
 const LITE = {
   bg: "#f5f5f5", surface: "#ffffff", surfaceHover: "#fafafa",
   border: "rgba(0,0,0,0.07)", borderA: "rgba(0,0,0,0.16)", text: "#111111",
-  sub: "rgba(0,0,0,0.42)", muted: "rgba(0,0,0,0.26)", nav: "rgba(245,245,245,0.96)",
+  sub: "rgba(0,0,0,0.42)", muted: "rgba(0, 0, 0, 0.5)", nav: "rgba(245,245,245,0.96)",
   accent: "#1a1a1a", accentL: "#111111", chip: "rgba(0,0,0,0.04)", chipSel: "rgba(0,0,0,0.07)",
   inputBg: "#ffffff", inputBdr: "rgba(0,0,0,0.09)", div: "rgba(0,0,0,0.06)",
   blank: "rgba(0,0,0,0.04)", infoBg: "rgba(0,0,0,0.02)", infoBdr: "rgba(0,0,0,0.07)",
@@ -98,6 +98,7 @@ export default function App() {
   const [loading, setLoading]   = useState(true);
   const [dbErr, setDbErr]       = useState(null);
   const [adminPwd, setAdminPwd] = useState("admin1234");
+  const [leaderboardTab, setLeaderboardTab] = useState("officers"); // "officers" or "branches"
 
   const [screen, setScreen]   = useState("landing");
   const [user, setUser]       = useState(null);
@@ -272,11 +273,38 @@ export default function App() {
   };
 
   const Toggle = () => (
-    <button onClick={() => setDark(d => !d)}
-      style={{ width: 34, height: 19, borderRadius: 10, border: `1px solid ${c.border}`, cursor: "pointer", background: "transparent", position: "relative", padding: 0, flexShrink: 0 }}>
-      <span style={{ width: 13, height: 13, borderRadius: "50%", background: c.text, position: "absolute", top: 2, left: dark ? 2 : 17, transition: "left 0.18s", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 7 }}>
-        {dark ? "🌙" : "☀️"}
-      </span>
+    <button 
+      onClick={() => setDark(d => !d)}
+      style={{ 
+        width: 64, 
+        height: 32, 
+        borderRadius: 16, 
+        border: `1px solid ${c.borderA}`, 
+        cursor: "pointer", 
+        background: dark ? "rgba(255,255,255,0.05)" : "rgba(0,0,0,0.05)", 
+        position: "relative", 
+        padding: 0, 
+        display: "flex", 
+        alignItems: "center",
+        justifyContent: "space-around",
+        transition: "all 0.2s ease"
+      }}
+    >
+      {/* Sliding Indicator */}
+      <span style={{ 
+        width: 26, 
+        height: 26, 
+        borderRadius: "50%", 
+        background: c.text, 
+        position: "absolute", 
+        top: 2, 
+        left: dark ? 34 : 2, 
+        transition: "all 0.25s cubic-bezier(0.4, 0, 0.2, 1)",
+        boxShadow: "0 2px 5px rgba(0,0,0,0.2)"
+      }} />
+      
+      <span style={{ fontSize: 14, opacity: dark ? 0.3 : 1, zIndex: 1 }}>☀️</span>
+      <span style={{ fontSize: 14, opacity: dark ? 1 : 0.3, zIndex: 1 }}>🌙</span>
     </button>
   );
 
@@ -348,25 +376,50 @@ export default function App() {
     </div>
   );
 
-  const LandingNav = () => (
-    <div style={{ borderBottom: `1px solid ${c.div}`, background: c.nav, backdropFilter: "blur(20px)", position: "sticky", top: 0, zIndex: 100 }}>
-      <div style={{ maxWidth: 1160, margin: "0 auto", padding: "0 24px", display: "flex", alignItems: "center", height: 52, justifyContent: "space-between", gap: 16 }}>
-        <div style={{ display: "flex", alignItems: "center", gap: 8, flexShrink: 0, padding: "4px 12px", border: `1px solid ${c.border}`, borderRadius: 7, background: c.chip }}>
-          <span style={{ fontSize: 14 }}>🏆</span>
-          <span style={{ fontFamily: "'Inter',sans-serif", fontWeight: 700, fontSize: 14, color: c.text, letterSpacing: 0.1 }}>GEAR Up</span>
-        </div>
-        <div style={{ display: "flex", gap: 5 }}>
-          {[["📌 How to Earn", "rubrics"], ["🎁 Prizes", "catalogue"]].map(([lbl, sc]) => (
-            <button key={sc} onClick={() => setScreen(sc)}
-              style={{ padding: "5px 12px", borderRadius: 6, border: `1px solid ${c.border}`, background: "transparent", color: c.sub, fontSize: 14, fontWeight: 500, cursor: "pointer", fontFamily: "'Inter',sans-serif", whiteSpace: "nowrap" }}>
-              {lbl}
+  const LandingNav = () => {
+    const [navOpen, setNavOpen] = useState(false);
+  
+    return (
+      <div style={{ borderBottom: `1px solid ${c.div}`, background: c.nav, backdropFilter: "blur(20px)", position: "sticky", top: 0, zIndex: 100 }}>
+        <div style={{ maxWidth: 1160, margin: "0 auto", padding: "0 24px", display: "flex", alignItems: "center", height: 56, justifyContent: "space-between" }}>
+          
+          {/* LEFT: The Hamburger Menu */}
+          <div style={{ position: "relative" }}>
+            <button onClick={() => setNavOpen(!navOpen)}
+              style={{ display: "flex", flexDirection: "column", gap: 4, background: "none", border: `1px solid ${c.border}`, padding: "8px", borderRadius: 8, cursor: "pointer" }}>
+              <span style={{ width: 18, height: 2, background: c.text, borderRadius: 1 }} />
+              <span style={{ width: 18, height: 2, background: c.text, borderRadius: 1 }} />
+              <span style={{ width: 18, height: 2, background: c.text, borderRadius: 1 }} />
             </button>
-          ))}
+  
+            {/* DROPDOWN MENU */}
+            {navOpen && (
+              <div className="up" style={{ 
+                position: "absolute", top: 48, left: 0, width: 220, 
+                background: c.surface, border: `1px solid ${c.border}`, 
+                borderRadius: 12, boxShadow: `0 10px 30px ${c.shadow}`, overflow: "hidden", zIndex: 110 
+              }}>
+                {[
+                  { lbl: "📌 How to Earn", sc: "rubrics" },
+                  { lbl: "🎁 Prizes", sc: "catalogue" },
+                  { lbl: "⚡ Admin Login", action: () => { setAdminBox(true); setNavOpen(false); } }
+                ].map((item, i) => (
+                  <button key={i} onClick={() => { item.sc ? setScreen(item.sc) : item.action(); setNavOpen(false); }}
+                    className="row-hover"
+                    style={{ width: "100%", textAlign: "left", padding: "14px 18px", background: "none", border: "none", borderBottom: i < 2 ? `1px solid ${c.div}` : "none", color: c.text, fontSize: 14, fontWeight: 500, cursor: "pointer" }}>
+                    {item.lbl}
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+  
+          {/* RIGHT: Dark Mode Toggle */}
+          <Toggle />
         </div>
-        <Toggle />
       </div>
-    </div>
-  );
+    );
+  };
 
   if (screen === "rubrics") return (
     <div style={{ minHeight: "100vh", background: c.bg, color: c.text, fontFamily: "'Inter',sans-serif" }}>
@@ -433,8 +486,8 @@ export default function App() {
           <div className="landing-grid" style={{ paddingTop: "40px" }}>
             <div className="up">
               <div style={{ marginBottom: 32 }}>
-                <h1 style={{ fontFamily: "'Inter',sans-serif", fontSize: "40px", fontWeight: 800, color: c.text, marginBottom: 10 }}>⚙️ GEAR Up</h1>
-                <p style={{ fontSize: 14, color: c.sub, lineHeight: 1.6 }}>Growth - Expertise - Autonomy - Readiness. Log your learning activities, earn points, and climb the ranks.</p>
+                <h1 style={{ fontFamily: "'Inter',sans-serif", fontSize: "40px", fontWeight: 800, color: c.text, marginBottom: 10, textAlign: "center" }}>🚀 GEAR Up</h1>
+                <p style={{ fontSize: 14, textAlign: "center", color: c.sub, lineHeight: 1.6 }}>Get Recognised for Driving Your Own Development</p>
               </div>
               <div style={{ ...card, padding: "28px", boxShadow: `0 10px 30px ${c.shadow}` }}>
                 {!adminBox ? (
@@ -471,8 +524,8 @@ export default function App() {
             </div>
             <div className="up" style={{ animationDelay: "0.1s" }}>
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", marginBottom: 16 }}>
-                <p style={{ fontSize: 13, color: c.muted, letterSpacing: 1.5, textTransform: "uppercase", fontWeight: 700 }}>Live Leaderboard</p>
-                <div style={{ fontSize: 12, color: c.goldText }}>Top 3 win Mystery Prizes!</div>
+                <p style={{ fontSize: 20, color: c.sub, letterSpacing: 1.5, textTransform: "uppercase", fontWeight: 700 }}>🏆 Live Leaderboard</p>
+                
               </div>
               <div style={{ ...card, overflow: "hidden" }}>
                 {sorted.slice(0, 5).map((o, i) => (
@@ -491,7 +544,7 @@ export default function App() {
                   </div>
                 ))}
               </div>
-              <p style={{ textAlign: "center", marginTop: 12, fontSize: 13, color: c.muted }}>Only showing top 5. Sign in to see your full rank!</p>
+              <p style={{ textAlign: "center", marginTop: 12, fontSize: 13, color: c.muted }}>Only showing top 5. Log in to see where you stand!</p>
             </div>
           </div>
         </div>
@@ -545,69 +598,73 @@ export default function App() {
       )}
 
       {/* ── Top bar ── */}
-      <div style={{ borderBottom: `1px solid ${c.div}`, background: c.nav, backdropFilter: "blur(20px)", position: "sticky", top: 0, zIndex: 100, flexShrink: 0 }}>
-        <div style={{ maxWidth: 1060, margin: "0 auto", padding: "0 18px", display: "flex", alignItems: "center", gap: 8, height: 52, minWidth: 0 }}>
+<div style={{ borderBottom: `1px solid ${c.div}`, background: c.nav, backdropFilter: "blur(20px)", position: "sticky", top: 0, zIndex: 100, flexShrink: 0 }}>
+  <div style={{ 
+    maxWidth: 1060, 
+    margin: "0 auto", 
+    padding: "0 18px", 
+    display: "grid", 
+    gridTemplateColumns: "1fr auto 1fr", // Creates three equal columns
+    alignItems: "center", 
+    height: 52 
+  }}>
 
-          {/* Logo — desktop sidebar shows it; mobile topbar shows it */}
-          <button onClick={() => setScreen("landing")}
-            style={{ display: "flex", alignItems: "center", gap: 7, background: c.chip, border: `1px solid ${c.border}`, borderRadius: 7, cursor: "pointer", flexShrink: 0, padding: "4px 11px" }}>
-            <span style={{ fontSize: 15 }}>🏆</span>
-            <span style={{ fontFamily: "'Inter',sans-serif", fontWeight: 700, fontSize: 15, color: c.text }}>GEAR Up</span>
-          </button>
+    {/* LEFT: Hamburger (Mobile) or Placeholder (Desktop) */}
+    <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+      <button className="hamburger-btn" onClick={() => setMenuOpen(o => !o)}
+        style={{ display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", gap: 4, width: 36, height: 36, background: menuOpen ? c.chipSel : "transparent", border: `1px solid ${menuOpen ? c.borderA : c.border}`, borderRadius: 8, cursor: "pointer", padding: 0 }}>
+        <span style={{ width: 16, height: 2, background: c.text, borderRadius: 2, transition: "0.18s", transform: menuOpen ? "rotate(45deg) translate(4px, 4px)" : "none" }} />
+        <span style={{ width: 16, height: 2, background: c.text, borderRadius: 2, transition: "0.18s", opacity: menuOpen ? 0 : 1 }} />
+        <span style={{ width: 16, height: 2, background: c.text, borderRadius: 2, transition: "0.18s", transform: menuOpen ? "rotate(-45deg) translate(4px, -4px)" : "none" }} />
+      </button>
+      
+      {/* Desktop Exit button tucked here to keep the left side populated */}
+      <button className="portal-nav-desktop" onClick={() => { setScreen("landing"); setUser(null); setIsAdmin(false); }}
+        style={{ padding: "4px 10px", background: "transparent", border: `1px solid ${c.border}`, borderRadius: 6, color: c.sub, cursor: "pointer", fontSize: 12 }}>
+        Exit
+      </button>
+    </div>
 
-          {/* Desktop: tab row */}
-          <div className="desktop-tabs" style={{ gap: 1, flex: 1, minWidth: 0 }}>
-            {TABS.map(tb => (
-              <button key={tb.id} onClick={() => setTab(tb.id)}
-                style={{ padding: "5px 12px", borderRadius: 6, border: "none", background: tab === tb.id ? c.chipSel : "transparent", color: tab === tb.id ? c.text : c.sub, fontSize: 14, fontWeight: tab === tb.id ? 600 : 400, cursor: "pointer", whiteSpace: "nowrap", flexShrink: 0, fontFamily: "'Inter',sans-serif", transition: "all 0.12s" }}>
-                {tb.label}
-              </button>
-            ))}
+    {/* CENTER: Title */}
+    <div style={{ display: "flex", alignItems: "center", gap: 6, cursor: "pointer" }} onClick={() => setTab("leaderboard")}>
+      <span style={{ fontSize: 18 }}>🚀</span>
+      <span style={{ fontFamily: "'Inter',sans-serif", fontWeight: 800, fontSize: 16, color: c.text, letterSpacing: "-0.02em" }}>GEAR Up</span>
+    </div>
+
+    {/* RIGHT: Points and Rank */}
+    <div style={{ display: "flex", alignItems: "center", justifyContent: "flex-end", gap: 10 }}>
+      {!isAdmin && myOf ? (
+        <div style={{ textAlign: "right", lineHeight: 1.1 }}>
+          <div style={{ fontSize: 15, fontWeight: 800, color: c.text }}>
+            {myAvail} <span style={{ fontSize: 10, color: c.muted, fontWeight: 400 }}>PTS</span>
           </div>
-
-          {/* Mobile: current tab label + hamburger */}
-          <div className="hamburger-btn" style={{ flex: 1, display: "flex", alignItems: "center", gap: 6, minWidth: 0 }}>
-            <span style={{ fontSize: 14, fontWeight: 600, color: c.text, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{activeLabel}</span>
-          </div>
-
-          {/* Right side */}
-          <div style={{ display: "flex", alignItems: "center", gap: 8, flexShrink: 0 }}>
-            {!isAdmin && myOf && (
-              <div style={{ textAlign: "right" }}>
-                <div style={{ fontFamily: "'Inter',sans-serif", fontSize: 15, color: c.text, fontWeight: 700, lineHeight: 1 }}>{myAvail} <span style={{ fontSize: 11, fontWeight: 400, color: c.muted }}>PTS</span></div>
-                <div style={{ fontSize: 11, color: c.muted }}>Rank #{myRank}</div>
-              </div>
-            )}
-            <div style={{ width: 28, height: 28, borderRadius: "50%", background: c.chipSel, border: `1px solid ${c.border}`, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 11, fontWeight: 700, color: c.text, flexShrink: 0 }}>
-              {isAdmin ? "AD" : (user ? initials(user.name) : "?")}
-            </div>
-            {/* Hamburger button — mobile only */}
-            <button className="hamburger-btn" onClick={() => setMenuOpen(o => !o)}
-              style={{ display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", gap: 4, width: 32, height: 32, background: menuOpen ? c.chipSel : "transparent", border: `1px solid ${menuOpen ? c.borderA : c.border}`, borderRadius: 6, cursor: "pointer", flexShrink: 0, padding: 0 }}>
-              <span style={{ width: 14, height: 1.5, background: c.text, borderRadius: 2, transition: "all 0.18s", transform: menuOpen ? "rotate(45deg) translate(4px, 4px)" : "none" }} />
-              <span style={{ width: 14, height: 1.5, background: c.text, borderRadius: 2, transition: "all 0.18s", opacity: menuOpen ? 0 : 1 }} />
-              <span style={{ width: 14, height: 1.5, background: c.text, borderRadius: 2, transition: "all 0.18s", transform: menuOpen ? "rotate(-45deg) translate(4px, -4px)" : "none" }} />
-            </button>
-            <button onClick={() => { setScreen("landing"); setSelBranch(""); setSelName(""); setAdminIn(""); setAdminBox(false); setMenuOpen(false); }}
-              style={{ padding: "3px 9px", background: "transparent", border: `1px solid ${c.border}`, borderRadius: 5, color: c.sub, cursor: "pointer", fontSize: 12, fontFamily: "'Inter',sans-serif" }}>
-              Exit
-            </button>
-            <Toggle />
-          </div>
+          <div style={{ fontSize: 11, color: c.goldText, fontWeight: 600 }}>#{myRank} RANK</div>
         </div>
-
-        {/* Mobile dropdown menu */}
-        {menuOpen && (
-          <div className="mobile-menu hamburger-btn" style={{ borderTop: `1px solid ${c.border}`, background: c.nav, padding: "8px 18px 12px" }}>
-            {TABS.map(tb => (
-              <button key={tb.id} onClick={() => { setTab(tb.id); setMenuOpen(false); }}
-                style={{ display: "block", width: "100%", textAlign: "left", padding: "11px 14px", borderRadius: 7, border: "none", background: tab === tb.id ? c.chipSel : "transparent", color: tab === tb.id ? c.text : c.sub, fontSize: 14, fontWeight: tab === tb.id ? 600 : 400, cursor: "pointer", fontFamily: "'Inter',sans-serif", marginBottom: 2 }}>
-                {tb.label}
-              </button>
-            ))}
-          </div>
-        )}
+      ) : isAdmin && (
+        <span style={{ fontSize: 12, fontWeight: 700, color: c.sub }}>ADMIN</span>
+      )}
+      
+      <div style={{ width: 30, height: 30, borderRadius: "50%", background: c.chipSel, border: `1px solid ${c.border}`, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 11, fontWeight: 700, color: c.text }}>
+        {isAdmin ? "AD" : (user ? initials(user.name) : "?")}
       </div>
+      
+      <Toggle />
+    </div>
+  </div>
+
+  {/* Mobile Dropdown remains the same */}
+  {menuOpen && (
+    <div className="mobile-menu" style={{ borderTop: `1px solid ${c.border}`, background: c.nav, padding: "8px 18px 12px" }}>
+      {TABS.map(tb => (
+        <button key={tb.id} onClick={() => { setTab(tb.id); setMenuOpen(false); }}
+          style={{ display: "block", width: "100%", textAlign: "left", padding: "12px", borderRadius: 8, border: "none", background: tab === tb.id ? c.chipSel : "transparent", color: tab === tb.id ? c.text : c.sub, fontSize: 14, fontWeight: tab === tb.id ? 600 : 400, marginBottom: 2 }}>
+          {tb.label}
+        </button>
+      ))}
+      <button onClick={() => setScreen("landing")} style={{ width: "100%", textAlign: "left", padding: "12px", color: "#f87171", background: "none", border: "none", fontSize: 14 }}>Logout</button>
+    </div>
+  )}
+</div>
 
       <div className="portal-layout" style={{ flex: 1, minHeight: 0, minWidth: 0 }}>
         {/* Sidebar: desktop only */}
@@ -615,7 +672,7 @@ export default function App() {
           <div style={{ padding: "0 14px 14px", borderBottom: `1px solid ${c.border}`, marginBottom: 12 }}>
             <button onClick={() => setScreen("landing")}
               style={{ display: "flex", alignItems: "center", gap: 7, background: c.chip, border: `1px solid ${c.border}`, borderRadius: 7, cursor: "pointer", padding: "6px 10px", width: "100%", justifyContent: "flex-start" }}>
-              <span style={{ fontSize: 15 }}>🏆</span>
+              <span style={{ fontSize: 15 }}>🚀</span>
               <span style={{ fontFamily: "'Inter',sans-serif", fontWeight: 700, fontSize: 14, color: c.text }}>GEAR Up</span>
             </button>
           </div>
@@ -629,7 +686,7 @@ export default function App() {
           </nav>
         </aside>
 
-        <div className="portal-main" style={{ maxWidth: 1060, margin: "0 auto", padding: "28px 18px 60px", display: "flex", flexDirection: "column", alignItems: "stretch", width: "100%", minWidth: 0, boxSizing: "border-box", overflow: "hidden" }}>
+        <div className="portal-main" style={{ maxWidth: 1060, margin: "0 auto", padding: "28px 18px 60px", display: "flex", flexDirection: "column", alignItems: "center", width: "100%", minWidth: 0, boxSizing: "border-box", overflow: "hidden" }}>
 
           {/* ── Log Activity ── */}
           {tab === "submit" && !isAdmin && (
@@ -639,7 +696,7 @@ export default function App() {
               <div style={{
                 marginBottom: 26, borderRadius: 14, padding: "22px 22px 20px",
                 background: dark
-                  ? "linear-gradient(135deg, rgba(255,255,255,0.055) 0%, rgba(255,255,255,0.02) 100%)"
+                  ? "linear-gradient(135deg, rgb(238, 103, 0) 0%, rgb(255, 183, 0) 100%)"
                   : "linear-gradient(135deg, #ffffff 0%, #f0f0f0 100%)",
                 border: `1px solid ${dark ? "rgba(255,255,255,0.13)" : "rgba(0,0,0,0.1)"}`,
                 boxShadow: dark
@@ -748,84 +805,69 @@ export default function App() {
 
           {/* ── Leaderboard ── */}
           {tab === "leaderboard" && (
-            <div className="up" style={{ width: "100%", minWidth: 0 }}>
-              <p style={{ fontSize: 12, color: c.muted, letterSpacing: 2, marginBottom: 16, textTransform: "uppercase" }}>Top 3 Officers</p>
-              <div className="portal-top3" style={{ display: "grid", gridTemplateColumns: "1fr 1.12fr 1fr", gap: 8, maxWidth: 500, marginBottom: 32 }}>
+            <div className="up" style={{ width: "100%", maxWidth: 800, margin: "0 auto", minWidth: 0 }}>
+              <p style={{ fontSize: 12, color: c.muted, letterSpacing: 2, marginBottom: 16, textTransform: "uppercase", textAlign: "center" }}>Top 3 Officers</p>
+              
+              {/* Centered Top 3 Grid */}
+              <div className="portal-top3" style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 12, marginBottom: 32, width: "100%" }}>
                 {[sorted[1], sorted[0], sorted[2]].map((o, i) => {
                   if (!o) return <div key={i} />;
-                  const pos  = [2, 1, 3][i];
-                  const col  = ["#9ca3af", "#c9a227", "#b87333"][i];
+                  const pos = [2, 1, 3][i];
                   const isMe = user && o.id === user.id;
-                  const mv   = getMovement(o.id, pos);
                   return (
-                    <div key={o.id} style={{ ...card, padding: pos === 1 ? "20px 12px" : "14px 10px", textAlign: "center", border: isMe ? `1px solid ${c.borderA}` : pos === 1 ? `1px solid ${c.gold}` : `1px solid ${c.border}`, background: pos === 1 ? (dark ? "rgba(201,162,39,0.05)" : "rgba(255,248,210,0.5)") : c.surface }}>
-                      <div style={{ fontSize: pos === 1 ? 28 : 22, marginBottom: 9 }}>{["🥈","🥇","🥉"][i]}</div>
-                      <div style={{ fontFamily: "'Inter',sans-serif", fontSize: 14, fontWeight: 700, color: c.text, lineHeight: 1.3, marginBottom: 2 }}>{o.name}</div>
-                      <div style={{ fontSize: 11, color: c.sub, marginBottom: 10, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{o.unit}</div>
-                      <div style={{ fontFamily: "'Inter',sans-serif", fontSize: pos === 1 ? 22 : 17, fontWeight: 800, color: col, lineHeight: 1 }}>{o.total_points}</div>
-                      <div style={{ fontSize: 11, color: c.muted, marginBottom: 4 }}>pts</div>
-                      {mv && (
-                        <div style={{ display: "flex", gap: 4, justifyContent: "center", flexWrap: "wrap" }}>
-                          {mv.rankDiff !== 0 && <span style={{ fontSize: 11, fontWeight: 700, color: mv.rankDiff > 0 ? "#4ade80" : "#f87171" }}>{mv.rankDiff > 0 ? `▲${mv.rankDiff}` : `▼${Math.abs(mv.rankDiff)}`}</span>}
-                          {mv.ptsDiff > 0 && <span style={{ fontSize: 11, color: c.muted }}>+{mv.ptsDiff}pts</span>}
-                        </div>
-                      )}
-                      <div style={{ fontSize: 11, color: c.goldText, marginTop: 4 }}>★ Special Prize</div>
+                    <div key={o.id} style={{ ...card, padding: pos === 1 ? "24px 12px" : "16px 10px", textAlign: "center", border: isMe ? `2px solid ${c.borderA}` : pos === 1 ? `1px solid ${c.gold}` : `1px solid ${c.border}`, background: pos === 1 ? (dark ? "rgba(201,162,39,0.08)" : "rgba(255,248,210,0.6)") : c.surface, transform: pos === 1 ? "scale(1.05)" : "scale(1)", zIndex: pos === 1 ? 2 : 1 }}>
+                      <div style={{ fontSize: pos === 1 ? 32 : 24, marginBottom: 8 }}>{["🥈","🥇","🥉"][i]}</div>
+                      <div style={{ fontFamily: "'Inter',sans-serif", fontSize: 14, fontWeight: 700, color: c.text, lineHeight: 1.2, marginBottom: 2 }}>{o.name}</div>
+                      <div style={{ fontSize: 11, color: c.sub, marginBottom: 10 }}>{o.unit}</div>
+                      <div style={{ fontFamily: "'Inter',sans-serif", fontSize: pos === 1 ? 24 : 18, fontWeight: 800, color: pos === 1 ? c.goldText : c.text, lineHeight: 1 }}>{o.total_points}</div>
+                      <div style={{ fontSize: 10, color: c.muted }}>PTS</div>
                     </div>
                   );
                 })}
               </div>
-              <div className="portal-leaderboard-grid">
-                <div style={{ minWidth: 0 }}>
-                  <p style={{ fontSize: 12, color: c.muted, letterSpacing: 2, marginBottom: 12, textTransform: "uppercase" }}>All Officers</p>
+
+              {/* Table Toggle Switch */}
+              <div style={{ display: "flex", background: c.chip, padding: 4, borderRadius: 10, marginBottom: 20, border: `1px solid ${c.border}` }}>
+                <button onClick={() => setLeaderboardTab("officers")} style={{ flex: 1, padding: "10px", borderRadius: 8, border: "none", cursor: "pointer", background: leaderboardTab === "officers" ? c.surface : "transparent", color: leaderboardTab === "officers" ? c.text : c.sub, fontWeight: 600, fontSize: 14 }}>
+                  👥 Officers
+                </button>
+                <button onClick={() => setLeaderboardTab("branches")} style={{ flex: 1, padding: "10px", borderRadius: 8, border: "none", cursor: "pointer", background: leaderboardTab === "branches" ? c.surface : "transparent", color: leaderboardTab === "branches" ? c.text : c.sub, fontWeight: 600, fontSize: 14 }}>
+                  🏢 Branches
+                </button>
+              </div>
+
+              {/* Conditional Table Rendering */}
+              <div className="up" key={leaderboardTab}>
+                {leaderboardTab === "officers" ? (
                   <div style={{ ...card, overflow: "hidden" }}>
-                    {sorted.slice(3).map((o, i) => {
-                      const isMe = user && o.id === user.id;
-                      const mv   = getMovement(o.id, i + 4);
-                      return (
-                        <div key={o.id} className="row-hover"
-                          style={{ display: "flex", alignItems: "center", gap: 10, padding: "11px 16px", borderBottom: `1px solid ${c.border}`, background: isMe ? c.infoBg : "transparent" }}>
-                          <span style={{ fontFamily: "'Inter',sans-serif", fontSize: 13, color: c.muted, width: 24, flexShrink: 0 }}>#{i + 4}</span>
-                          <div style={{ flex: 1, minWidth: 0 }}>
-                            <div style={{ fontSize: 14, fontWeight: 600, color: c.text, display: "flex", alignItems: "center", gap: 5 }}>
-                              {o.name}
-                              {isMe && <span style={{ fontSize: 11, color: c.sub, background: c.chipSel, padding: "1px 5px", borderRadius: 3, fontWeight: 600, border: `1px solid ${c.border}` }}>YOU</span>}
-                            </div>
-                            <div style={{ fontSize: 11, color: c.muted, marginTop: 1, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{o.unit}</div>
-                          </div>
-                          <div style={{ textAlign: "right", flexShrink: 0 }}>
-                            <div style={{ fontFamily: "'Inter',sans-serif", fontSize: 14, fontWeight: 700, color: c.text }}>{o.total_points}</div>
-                            {mv && (
-                              <div style={{ display: "flex", gap: 3, justifyContent: "flex-end", marginTop: 1 }}>
-                                {mv.rankDiff !== 0 && <span style={{ fontSize: 11, fontWeight: 700, color: mv.rankDiff > 0 ? "#4ade80" : "#f87171" }}>{mv.rankDiff > 0 ? `▲${mv.rankDiff}` : `▼${Math.abs(mv.rankDiff)}`}</span>}
-                                {mv.ptsDiff > 0 && <span style={{ fontSize: 11, color: c.muted }}>+{mv.ptsDiff}pts</span>}
-                              </div>
-                            )}
-                          </div>
+                    {sorted.slice(3).map((o, i) => (
+                      <div key={o.id} className="row-hover" style={{ display: "flex", alignItems: "center", gap: 10, padding: "12px 16px", borderBottom: `1px solid ${c.border}`, background: user && o.id === user.id ? c.infoBg : "transparent" }}>
+                        <span style={{ fontSize: 13, color: c.muted, width: 24 }}>#{i + 4}</span>
+                        <div style={{ flex: 1 }}>
+                          <div style={{ fontSize: 14, fontWeight: 600, color: c.text }}>{o.name}</div>
+                          <div style={{ fontSize: 11, color: c.muted }}>{o.unit}</div>
                         </div>
-                      );
-                    })}
+                        <div style={{ textAlign: "right", fontWeight: 700, color: c.text }}>{o.total_points}</div>
+                      </div>
+                    ))}
                   </div>
-                </div>
-                <div>
-                  <p style={{ fontSize: 12, color: c.muted, letterSpacing: 2, marginBottom: 4, textTransform: "uppercase" }}>Branch Standings</p>
-                  <p style={{ fontSize: 11, color: c.muted, marginBottom: 12, lineHeight: 1.5 }}>Avg pts per officer</p>
+                ) : (
                   <div style={{ ...card, overflow: "hidden" }}>
                     {unitScores.map((u, i) => (
-                      <div key={u.unit} style={{ padding: "11px 13px", display: "flex", alignItems: "center", gap: 8, borderBottom: i < unitScores.length - 1 ? `1px solid ${c.border}` : "none", background: i === 0 ? (dark ? "rgba(201,162,39,0.04)" : "rgba(255,248,210,0.4)") : "transparent" }}>
-                        <span style={{ fontSize: 14 }}>{["🥇","🥈","🥉","4️⃣","5️⃣","6️⃣","7️⃣"][i]}</span>
-                        <div style={{ flex: 1, minWidth: 0 }}>
-                          <div style={{ fontSize: 13, fontWeight: 600, color: i === 0 ? c.goldText : c.text, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{u.unit}</div>
+                      <div key={u.unit} style={{ padding: "14px 16px", display: "flex", alignItems: "center", gap: 12, borderBottom: `1px solid ${c.border}` }}>
+                        <span style={{ fontSize: 16, width: 24 }}>{i === 0 ? "🥇" : i + 1}</span>
+                        <div style={{ flex: 1 }}>
+                          <div style={{ fontSize: 14, fontWeight: 600, color: c.text }}>{u.unit}</div>
                           <div style={{ fontSize: 11, color: c.muted }}>{u.count} officers</div>
                         </div>
-                        <div style={{ textAlign: "right", flexShrink: 0 }}>
-                          <div style={{ fontFamily: "'Inter',sans-serif", fontSize: 15, fontWeight: 700, color: i === 0 ? c.goldText : c.text }}>{u.avg}</div>
-                          <div style={{ fontSize: 10, color: c.muted }}>avg</div>
+                        <div style={{ textAlign: "right" }}>
+                          <div style={{ fontWeight: 800, color: i === 0 ? c.goldText : c.text, fontSize: 16 }}>{u.avg}</div>
+                          <div style={{ fontSize: 10, color: c.muted }}>AVG</div>
                         </div>
                       </div>
                     ))}
                   </div>
-                </div>
+                )}
               </div>
             </div>
           )}
